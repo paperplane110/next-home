@@ -13,7 +13,7 @@ export const MusicPlayerCard = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const isMobile = useMedia("(max-width: 768px)")
   const songList = [
-    "Guess Who I ",
+    "Guess Who I Saw Today",
     "The Risk",
     "May Ninth",
     "Manchild",
@@ -33,11 +33,11 @@ export const MusicPlayerCard = () => {
   }
 
   return (
-    <div className="border border-gray-100 px-0.5 pt-0.5 rounded-2xl shadow-xs">
-      <div className="border border-gray-100 p-2 rounded-xl flex">
+    <div className="border border-gray-100 px-0.5 pt-0.5 rounded-lg shadow-xs">
+      <div className="border border-gray-100 p-2 rounded-md flex">
         <div className="relative group/album-cover">
-          {!isIframeLoaded && <div className="z-25 absolute w-[66px] h-[66px] rounded-xl bg-gray-100 scale-105" />}
-          <div id="album-cover" className="z-20 relative w-[66px] h-[66px] rounded-xl overflow-hidden">
+          {!isIframeLoaded && <div className="z-25 absolute w-[66px] h-[66px] rounded-md bg-gray-100 scale-105" />}
+          <div id="album-cover" className="z-20 relative w-[66px] h-[66px] rounded-md overflow-hidden">
             <iframe
               ref={iframeRef}
               onLoad={() => handleIframeLoad()}
@@ -71,12 +71,12 @@ export const MusicPlayerCard = () => {
               alt="neteast music"
               width={20}
               height={20}
-              className="bg-gray-200 hover:bg-[#ff1b29] hover:cur p-[0.15rem] rounded-full"
+              className="bg-gray-200 hover:bg-[#ff1b29] p-[0.15rem] rounded-full"
             />
           </Link>
         </div>
       </div>
-      <div className="flex items-center py-1 pl-4">
+      <div className="flex items-center py-1 pl-2">
         <span className="inline-block w-[5px] h-[5px] rounded-full bg-pink-500 dot-breath"></span>
         <p className="ml-2 font-sans text-[10px] text-gray-400">Last updated on {lastUpdateDate}</p>
       </div>
