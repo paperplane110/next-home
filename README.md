@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# My Next Blog
 
-## Getting Started
+This is my next blog. Built with Next.js, shadcn and Tailwind CSS.
 
-First, run the development server:
+## Dev logs
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Todo list
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [ ] ? apply liquid glass effect on navigation bar: [link](https://css-tricks.com/getting-clarity-on-apples-liquid-glass/)
+- [ ] pick bg color & texture for the page
+- [ ] design css for mdx
+- [x] Use Nextjs font module: [link](https://nextjs.org/docs/app/api-reference/components/font)
+- [x] "Writting page"
+- [ ] "About page"
+- [ ] "Book page"
+- [ ] add previous and next post link on each post page
+- [ ] Footer component
+- [ ] icon design
+- [ ] meta
+- [ ] seo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2025-10-25
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Today's goal is to finish the "Writting page"
 
-## Learn More
+Here is some tasks:
 
-To learn more about Next.js, take a look at the following resources:
+- [x] posts list
+  - [x] hover style，hover group
+- [x] tags
+  - [ ] hover style？
+  - [x] 实现已经激活的 tag
+- [x] 文章列表用年份来分类，分割线
+  - [x] 点击年份，实现针对年份筛选
+  - [x] 若已经筛选，则需要有按钮来取消年份筛选
+- [x] query by tags, by years
+  - [x] use url query to keep the selected tag
+  - [x] 给文章页面中的 tag 添加链接，链接到 tag 筛选对应的文章列表页面
+- [x] Use Nextjs font module: [link](https://nextjs.org/docs/app/api-reference/components/font)
+  
+迁移文章
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [ ] migrate posts from obsidian
+- [x] migrate posts from resume-nuxt
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2025-10-24
 
-## Deploy on Vercel
+Change
+- 新增：网易云音乐卡片
+  - 新增光盘、黑胶组件
+  - 为 update 状态前添加 breath 效果指示灯
+- 不使用全局居中的容器，而是类似苹果克隆的那个项目，定义 section 和 subsection 类来实现
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Fix
+- 修复：Frame 组件在 sm 屏幕宽度下，页面大于屏幕。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Todo
+- [x] mdx 代码块无样式
+- [x] mdx 表格无样式
+- [x] FrameProvider 中存在 bug，一旦切换路由，frame 状态重置成了默认值

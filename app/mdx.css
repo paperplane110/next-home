@@ -1,0 +1,85 @@
+@layer components {
+  .mdx-content {
+    h2 {
+      @apply font-serif text-3xl;
+    }
+
+    p {
+      @apply font-serif leading-relaxed py-2;
+    }
+
+    pre {
+      @apply font-mono rounded-md border bg-muted/50 p-4 overflow-x-auto my-4;
+    }
+
+    code {
+      @apply font-mono text-sm;
+    }
+
+    pre code {
+      @apply text-sm;
+    }
+
+    table {
+      @apply w-full border-collapse text-sm my-4;
+    }
+
+    th,
+    td {
+      @apply border px-3 py-2;
+    }
+
+    th {
+      @apply bg-muted/50 text-left;
+    }
+
+    [data-rehype-pretty-code-fragment] {
+      @apply my-4;
+    }
+
+    /* 高亮的整行 */
+    .line--highlighted {
+      background-color: color-mix(in oklab, var(--accent) 16%, transparent);
+      border-left: 2px solid pink;
+      display: block;
+      margin-left: -1rem;
+      padding-left: calc(1rem - 2px);
+    }
+
+    /* 高亮的词 */
+    .word--highlighted {
+      background-color: color-mix(in oklab, var(--accent) 28%, transparent);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+
+    /* 行号支持：在代码围栏添加 showLineNumbers 元数据后生效 */
+    pre[data-line-numbers] {
+      code {
+        counter-reset: line;
+      }
+
+      .line {
+        position: relative;
+        padding-left: 2rem;
+
+        &::before {
+          position: absolute;
+          left: 0.5rem;
+          color: var(--muted-foreground);
+          content: counter(line);
+          counter-increment: line;
+        }
+      }
+    }
+
+    /* 可选：代码标题（使用 title="..." 元数据时） */
+    [data-rehype-pretty-code-title] {
+      @apply text-xs text-muted-foreground px-3 py-2 bg-muted/40 rounded-t-md border-b;
+    }
+
+    [data-rehype-pretty-code-fragment] > pre {
+      @apply rounded-t-none;
+    }
+  }
+}
