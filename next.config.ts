@@ -4,7 +4,7 @@ import { withContentCollections } from "@content-collections/next";
 const nextConfig: NextConfig = {
   /* config options here */
   turbopack: {
-    root: "./"
+    root: "/Users/tyyuan/Desktop/code/next-home"
   }
 };
 
