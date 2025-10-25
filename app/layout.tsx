@@ -19,7 +19,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 // mono
 const jetbrains_mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 // serif
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
+const fraunces = Fraunces({ 
+  subsets: ["latin"], 
+  variable: "--font-fraunces", 
+  axes: ["opsz"]
+});
 const pingXianZhenSong = localFont({
   src: "./fonts/pxzs/pingxianzhensong.ttf",
   variable: "--font-ping-xian-zhen-song",
