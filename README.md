@@ -2,6 +2,10 @@
 
 This is my next blog. Built with Next.js, shadcn and Tailwind CSS.
 
+## Reference
+
+- Google Design: [link](https://design.google/?home=)
+
 ## Dev logs
 
 Todo list
@@ -9,8 +13,10 @@ Todo list
 - [ ] ? apply liquid glass effect on navigation bar: [link](https://css-tricks.com/getting-clarity-on-apples-liquid-glass/)
 - [ ] pick bg color & texture for the page
 - [ ] design css for mdx
+  - [ ] design custom components to replace the original components: [link](https://mdxjs.com/table-of-components/#components)
+    - [ ] blockquote
 - [x] Use Nextjs font module: [link](https://nextjs.org/docs/app/api-reference/components/font)
-- [x] "Writting page"
+- [x] "writing page"
 - [ ] "About page"
 - [ ] "Book page"
 - [ ] add previous and next post link on each post page
@@ -18,10 +24,39 @@ Todo list
 - [ ] icon design
 - [ ] meta
 - [ ] seo
+- [ ] Progress indicator for posts.
+- [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
+- [ ] 
+
+### 2025-10-27
+
+Finish mdx's components:
+- [x] blockquote
+- [ ] code block
+  - [rehype-pretty-code custom styles](https://rehype-pretty.pages.dev/)
+    - [x] light mode.
+    - [ ] apply styles for dark mode.
+  - [Shiki code themes](https://shiki.style/themes#themes)
+  - Nested CSS: `&` represents the parent element.
+  - CSS attribute selector: `[data-rehype-pretty-code-figure]` to select `<element data-rehype-pretty-code-figure>`
+- [x] inline code
+  - Manually set the font-size because font-mono looks bigger than font-serif.
+- [x] hyperlink
+- [x] order list item
+- [x] "tips" component
+  - [ ] variation for more color? use clsx?
+
+Polish:
+- [x] the head of post is a little bit far from the top of the contents.
+
+### 2025-10-26
+
+- 对齐了 home page, writing page and post page 的标题
+- add soft 70 font variation setting
 
 ### 2025-10-25
 
-Today's goal is to finish the "Writting page"
+Today's goal is to finish the "writing page"
 
 Here is some tasks:
 

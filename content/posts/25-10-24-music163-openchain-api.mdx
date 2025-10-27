@@ -11,7 +11,7 @@ readingTime: 8
 
 网易云外部播放器链接参数
 
-```js title="player.js" {1,3}
+```js title="player.js" caption="一个歌单播放器" {1-3} showLineNumbers
 <iframe 
     className="rounded-md transform"
     width={200} 
@@ -26,7 +26,7 @@ readingTime: 8
 - 歌单播放器
 - 单曲播放器
 
-播放器由两部分组成：首先是播放器容器，样式由 iframe 定义；其次是播放器本身，这部分样式没办法直接修改，需要通过修改 src 中的请求参数来实现
+播放器由两部分组成：首先是播放器容器，样式由 `<iframe>{:js}` 定义；其次是播放器本身，这部分样式没办法直接修改，需要通过修改 src 中的请求参数来实现
 
 ## iframe 参数 
 

@@ -14,7 +14,8 @@ readingTime: 15
 
 <div className='section'>
 <div className='subsection'>
-### Before we start...
+
+## Before we start...
 
 When building this website, I found that the page of `articles` always leaves a lot of 
 blank space while loading those image covers. 
@@ -22,7 +23,7 @@ It's very boring and crude to leave those spaces,
 so I was thinking about adding some _interesting_ effects while waiting for the loading.
 
 I came up with the <b>blur effect</b> immediately, 
-cause I have seen a similar effect in `Nextjs <Image>`.
+cause I have seen a similar effect in Nextjs `<Image>{:js}`.
 So, I decided to apply the same effect to my article's covers.
 After hours of searching and coding, I finally achieved this effect.
 
@@ -31,6 +32,8 @@ Briefly, there will be two layers:
 1. The blur image layer, which could be loaded immediately
 2. The image layer, which might take some time to download
 
+<br />
+
 The blur layer's opacity is 100 while downloading the image, 
 As long as the image is completely downloaded, 
 the blur layer's opacity will transit to 0 and reveal the image. 
@@ -38,22 +41,22 @@ the blur layer's opacity will transit to 0 and reveal the image.
 
 {/* <BlurTutorialSketch></BlurTutorialSketch> */}
 
-Now, let's build this `<ImageBg>` with blur effect step by step!
+Now, let's build this `<ImageBg>{:js}` with blur effect step by step!
 
-{/* ::tip{type="tip" title="Pre-requisite"}
+<Tips title="Pre-requisite">
 
 - Know the base knowledge of HTML, CSS, JS, and Vue3
 - Have a playground where you can build the Vue component (like [Codepen](https://codepen.io/))
 - Better have a look at this [Blurhash](https://blurha.sh/), where we would generate the 'magic code' of blur images
   
-:: */}
+</Tips>
 
 ### 1. A div with the image background
 
 At the first, create a new component called `ImageBg.vue`. 
 It will contain a blur layer and an image layer. 
 
-Then let's build a `div` with a simple image background in `ImageBg.vue`.
+Then let's build a `<div>{:js}` with a simple image background in `ImageBg.vue`.
 
 ```vue [ImageBg.vue]
 <template>
@@ -99,12 +102,12 @@ Add some settings in `CSS`, and we could see the image is displayed properly.
 
 {/* <BlurTutorialStep2></BlurTutorialStep2> */}
 
-::tip{type="tip"}
+<Tips>
 - background-position: means the relative position between the background image and div. 
   We pass 'center' to it means that the image would be placed at the center of the div.
 - background-size: 'cover' means the image will try to fill the whole div and keep its aspect ratio.
   The image won't be deformed.
-::
+</Tips>
 
 Now, the image layer is fully prepared. 
 In the next step, we will learn how to generate a blurred image and make it a component.
@@ -327,7 +330,7 @@ Finally, you have your ImageBg with blur effect. Voila 🎉
 
 ### Thanks for reading!
 
-{/* ::tip{type="tip" title="Bonus"} */}
+<Tips title="Bonus">
 If you want the round corner like the image above, 
 try to add `border-radius` and `overflow` to the container's CSS
 
@@ -350,5 +353,6 @@ try to add `border-radius` and `overflow` to the container's CSS
 }
 </style>
 ```
+</Tips>
 </div>
 </div>

@@ -127,10 +127,18 @@
 }
 
 @layer components {
+  /* font variation settings */
+  .soft-70 { font-variation-settings: "SOFT" 70; }
+  .soft-60 { font-variation-settings: "SOFT" 60; }
+  .soft-50 { font-variation-settings: "SOFT" 50; }
+  .soft-40 { font-variation-settings: "SOFT" 40; }
+
+  /* font-size */
   .headline {
-    @apply text-3xl sm:text-5xl;
+    @apply text-5xl sm:text-7xl;
   }
-  
+
+  /* div */
   .section {
     @apply w-full flex flex-col items-center;
   }

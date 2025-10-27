@@ -3,7 +3,7 @@ import Link from "next/link"
 import YearProgress from "./components/year-progress"
 import OuterLink from "@/components/link";
 import { MusicPlayerCard } from "@/components/music-player-card";
-import { ArrowBigRight, ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const nowDate = new Date().toDateString().split(" ").slice(1, 3).join(", ");
@@ -14,9 +14,10 @@ export default function Home() {
     <div className="min-h-screen pt-16 font-serif">
       <div className="section">
         <div className="subsection mt-16 mb-12">
-          <p className="ml-1 text-gray-600">Tianyu&apos;s</p>
-          <h1 className="text-7xl">Blog<span className="text-pink-600">.</span></h1>
-          <h3 className="ml-1 text-xl italic">{nowYear}</h3>
+          {/* <p className="ml-1 text-muted-foreground">Tianyu&apos;s</p> */}
+          <Badge variant="secondary" className="text-muted-foreground">Tianyu&apos;s</Badge>
+          <h1 className="text-7xl font-light soft-60">Blog<span className="text-pink-600">.</span></h1>
+          <h3 className="ml-1 text-xl italic font-light">{nowYear}</h3>
         </div>
         <div className="subsection mb-6">
           <section id="about">
@@ -38,24 +39,28 @@ export default function Home() {
 
         <div className="subsection mb-8">
           <div className="grid grid-cols-2">
-            <div id="writting">
-              <h3 className="mb-4">Writting</h3>
+            <div id="writing">
+              <OuterLink href="/posts">
+                <h3 className="mb-2 font-bold">Writing</h3>
+              </OuterLink>
               <div>
                 <ul>
                   {allPosts
                     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                     .slice(0, 4)
                     .map((post) => (
-                    <li key={post._meta.path} className="flex items-center">
+                    <li key={post._meta.path} className="mt-1 text-muted-foreground hover:text-black">
                       {/* <span className="block size-1 bg-pink-600 rounded-full mr-2" /> */}
                       <h3>
                         <Link href={`/posts/${post._meta.path}`}>{post.title}</Link>
                       </h3>
                     </li>
                   ))}
-                  <li>
-                    <Link href="/posts">More Posts<ArrowRight size={16} className="inline-block ml-2" /></Link>
-                  </li>
+                  {allPosts.length > 4 && (
+                    <li className="mt-3">
+                      More posts……
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>

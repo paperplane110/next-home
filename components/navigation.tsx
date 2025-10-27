@@ -13,11 +13,11 @@ const routes = [
   },
   {
     href: "/posts",
-    label: "Writting"
+    label: "Writing"
   },
   {
-    href: "/books",
-    label: "Books"
+    href: "/reading",
+    label: "Reading"
   },
   {
     href: "/gallery",
@@ -30,7 +30,7 @@ const routes = [
 ]
 
 export const Navigation = () => {
-  const isMobile = useMedia("(max-width: 600px)");
+  const isMobile = useMedia("(max-width: 600px)", true);
   const pathname = usePathname();
 
   console.log(pathname)

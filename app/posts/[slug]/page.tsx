@@ -4,6 +4,9 @@ import { MDXContent } from "@content-collections/mdx/react"
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
+import { BlockQuote } from "../components/block-quote";
+import { A } from "../components/a";
+import { Tips } from "../components/tips";
 
 function PostContent({ slug }: { slug: string }) {
   const post = allPosts.find((post) => post._meta.path === slug);
@@ -14,9 +17,9 @@ function PostContent({ slug }: { slug: string }) {
 
   return (
     <article>
-      <header className="mt-16 mb-8 section">
+      <header className="pt-12 sm:pb-8 sm:pt-18 section">
         <div className="subsection">
-          <h1 className="headline font-serif font-medium mb-6">{post.title}</h1>
+          <h1 className="text-4xl sm:text-5xl font-medium font-serif soft-60 mb-6">{post.title}</h1>
           <p className="text-sm text-muted-foreground mb-4">
             {post.summary}
           </p>
@@ -48,7 +51,16 @@ function PostContent({ slug }: { slug: string }) {
         </div>
       </header>
       <div className="mdx-content">
-        <MDXContent code={post.mdx} />
+        <MDXContent 
+          code={post.mdx}
+          components={{
+            blockquote: BlockQuote,
+            a: A,
+            Tips: ({ children, title }: { children: React.ReactNode, title: string | undefined }) => (
+              <Tips title={title}>{children}</Tips>
+            ),
+          }}
+        />
       </div>
     </article>
   );
@@ -62,7 +74,7 @@ export default async function PostPage({
   const { slug } = await params;
 
   return (
-    <div className="pt-16">
+    <div className="pt-18">
       <PostContent slug={slug} />
     </div>
   )

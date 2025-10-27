@@ -1,7 +1,7 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import { compileMDX } from "@content-collections/mdx";
 import remarkGfm from "remark-gfm";
-import rehypePrettyCode, { CharsElement, LineElement } from "rehype-pretty-code";
+import rehypePrettyCode, { LineElement } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 
 
@@ -11,7 +11,7 @@ import rehypeSlug from "rehype-slug";
 
 /** @type {import('rehype-pretty-code').Options;} */
 const prettyCodeOptions = {
-  theme: "github-light",
+  theme: "one-light",
   keepBackground: false, // 让我们自己用 CSS 控制背景
   defaultLang: "plaintext",
   onVisitLine(node: LineElement) {
@@ -19,18 +19,6 @@ const prettyCodeOptions = {
       // 避免空行高度为 0
       node.children = [{ type: "text", value: " " }];
     }
-  },
-  onVisitHighlightedLine(node: LineElement) {
-    node.properties.className = [
-      ...(node.properties.className || []),
-      "line--highlighted",
-    ];
-  },
-  onVisitHighlightedChars(node: CharsElement) {
-    node.properties.className = [
-      ...(node.properties.className || []),
-      "word--highlighted",
-    ];
   },
 };
 

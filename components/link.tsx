@@ -9,7 +9,7 @@ export default function OuterLink({ href, children }: { href: string, children: 
         href={href} 
         target={target} 
         rel="noopener noreferrer" 
-        className="inline-flex text-primary hover:text-muted-foreground"
+        className="inline-flex hover:text-muted-foreground"
     >
       {children}
       <ArrowUpRightIcon width={12} className="text-pink-600 -mt-1 -mr-0.5" />

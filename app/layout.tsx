@@ -22,7 +22,7 @@ const jetbrains_mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-je
 const fraunces = Fraunces({ 
   subsets: ["latin"], 
   variable: "--font-fraunces", 
-  axes: ["opsz"]
+  axes: ["opsz", "SOFT"],
 });
 const pingXianZhenSong = localFont({
   src: "./fonts/pxzs/pingxianzhensong.ttf",

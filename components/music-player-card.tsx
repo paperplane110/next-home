@@ -11,7 +11,7 @@ import { format } from "date-fns";
 export const MusicPlayerCard = () => {
   const [isIframeLoaded, setIsIframeLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const isMobile = useMedia("(max-width: 768px)")
+  const isMobile = useMedia("(max-width: 768px)", true)
   const songList = [
     "Guess Who I Saw Today",
     "The Risk",

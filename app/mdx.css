@@ -1,25 +1,82 @@
 @layer components {
   .mdx-content {
     h2 {
-      @apply font-serif text-3xl;
+      @apply font-serif text-3xl pt-8 pb-4;
+
+      span[data-rehype-pretty-code-figure] code {
+        @apply text-xl;
+        /* font-mono looks bigger than p, so manually set the font-size */
+      }
+    }
+
+    h3 {
+      @apply font-serif text-xl pt-4 pb-2;
+
+      /* font-mono looks bigger than p, so manually set the font-size */
+      span[data-rehype-pretty-code-figure] code {
+        @apply text-base;
+      }
     }
 
     p {
       @apply font-serif leading-relaxed py-2;
+
+      span[data-rehype-pretty-code-figure] code {
+        @apply text-sm;
+        /* font-mono looks bigger than p, so manually set the font-size */
+      }
     }
 
-    pre {
-      @apply font-mono rounded-md border bg-muted/50 p-4 overflow-x-auto my-4;
+    ol {
+      @apply font-serif;
+      list-style-position: outside;
+      list-style-type: decimal;
+      padding-left: 1.5rem;
+
+      ol {
+        list-style-type: lower-alpha;
+        padding-left: 1.5rem;
+
+        ol {
+          list-style-type: lower-roman;
+          padding-left: 1.5rem;
+        }
+      }
     }
 
-    code {
-      @apply font-mono text-sm;
+    ul {
+      @apply font-serif;
+      list-style-type: disc;
+      list-style-position: outside;
+      padding-left: 1.5rem;
+
+      ul {
+        list-style-type: circle;
+        padding-left: 1.5rem;
+      }
     }
 
-    pre code {
-      @apply text-sm;
+    li {
+      @apply leading-relaxed;
+      text-indent: 0;
+
+      p {
+        margin: 0;
+        display: inline;
+      }
+
+      /* font-mono looks bigger than p, so manually set the font-size */
+      span[data-rehype-pretty-code-figure] code {
+        @apply text-sm;
+      }
+
     }
 
+    hr {
+      @apply my-4;
+    }
+
+    /* Table Style */
     table {
       @apply w-full border-collapse text-sm my-4;
     }
@@ -33,53 +90,87 @@
       @apply bg-muted/50 text-left;
     }
 
-    [data-rehype-pretty-code-fragment] {
-      @apply my-4;
-    }
+    /* Code Block Style */
+    pre {
+      @apply font-mono rounded-md border bg-muted/50 overflow-x-auto my-4 py-4;
 
-    /* 高亮的整行 */
-    .line--highlighted {
-      background-color: color-mix(in oklab, var(--accent) 16%, transparent);
-      border-left: 2px solid pink;
-      display: block;
-      margin-left: -1rem;
-      padding-left: calc(1rem - 2px);
-    }
-
-    /* 高亮的词 */
-    .word--highlighted {
-      background-color: color-mix(in oklab, var(--accent) 28%, transparent);
-      border-radius: 2px;
-      padding: 0 2px;
-    }
-
-    /* 行号支持：在代码围栏添加 showLineNumbers 元数据后生效 */
-    pre[data-line-numbers] {
       code {
-        counter-reset: line;
-      }
+        @apply font-mono text-sm;
 
-      .line {
-        position: relative;
-        padding-left: 2rem;
+        [data-line] {
+          padding-left: 0.75rem;
+        }
 
-        &::before {
-          position: absolute;
-          left: 0.5rem;
-          color: var(--muted-foreground);
-          content: counter(line);
-          counter-increment: line;
+        [data-line][data-highlighted-line] {
+          @apply border-l-2 border-orange-400 pl-[calc(0.75rem-2px)];
         }
       }
     }
 
-    /* 可选：代码标题（使用 title="..." 元数据时） */
-    [data-rehype-pretty-code-title] {
-      @apply text-xs text-muted-foreground px-3 py-2 bg-muted/40 rounded-t-md border-b;
+    [data-highlighted-line],
+    [data-highlighted-char] {
+      @apply bg-orange-100/60;
     }
 
-    [data-rehype-pretty-code-fragment] > pre {
-      @apply rounded-t-none;
+    /* Code number style */
+    code[data-line-numbers] {
+      counter-reset: line;
+    }
+
+    code[data-line-numbers]>[data-line]::before {
+      counter-increment: line;
+      content: counter(line);
+
+      /* Other styling */
+      display: inline-block;
+      width: 0.75rem;
+      margin-right: 1rem;
+      text-align: right;
+      color: gray;
+    }
+
+    code[data-line-numbers-max-digits="2"]>[data-line]::before {
+      width: 1.25rem;
+    }
+
+    code[data-line-numbers-max-digits="3"]>[data-line]::before {
+      width: 1.75rem;
+    }
+
+    code[data-line-numbers-max-digits="4"]>[data-line]::before {
+      width: 2.25rem;
+    }
+
+    /* END Code number style */
+
+    /* Code block title style */
+    div[data-rehype-pretty-code-title] {
+      @apply px-4 py-2 bg-muted/50 rounded-t-md border font-mono text-sm;
+    }
+
+    figure:has(div[data-rehype-pretty-code-title]) pre {
+      @apply rounded-t-none border-t-0 mt-0 pt-0;
+    }
+
+    /* Code block caption style */
+    figcaption {
+      @apply pt-2 pb-4 font-mono text-xs text-muted-foreground text-center;
+    }
+
+    figure:has(figcaption) pre {
+      @apply mb-0;
+    }
+
+
+    /* Code block line style */
+    span[data-rehype-pretty-code-figure] code {
+      @apply font-mono bg-accent py-[0.1rem] px-[0.4rem] rounded-md;
+
+      /* &::before,
+      &::after {
+        content: "`";
+        @apply font-mono text-pink-600 font-semibold;
+      } */
     }
   }
 }
