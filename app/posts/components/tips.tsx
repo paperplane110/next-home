@@ -5,11 +5,9 @@ export const Tips = ({ children, title }: {
   title?: string,
 }) => {
   return (
-    // NOTE MDXContent will pass string "undefined" to title
-    // when there is no title prop.
     <div className={cn(
-      "relative bg-[#f0f9eb] text-[#0f5132] px-4 pb-4 pt-2 my-2 rounded-md",
-      title !== "undefined" && "pt-4"
+      "relative bg-[#f0f9eb] text-[#0f5132] px-4 pt-4 pb-4 my-2 rounded-md",
+      title && "pt-2"
     )}>
       {title && <p className="font-bold">{title}</p>}
       {children}
