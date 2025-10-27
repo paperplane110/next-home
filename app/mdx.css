@@ -92,7 +92,7 @@
 
     /* Code Block Style */
     pre {
-      @apply font-mono rounded-md border bg-muted/50 overflow-x-auto my-4 py-4;
+      @apply font-mono rounded-md border bg-muted/50 overflow-x-auto mt-2 mb-4 py-4;
 
       code {
         @apply font-mono text-sm;
@@ -144,20 +144,25 @@
     /* END Code number style */
 
     /* Code block title style */
-    div[data-rehype-pretty-code-title] {
-      @apply px-4 py-2 bg-muted/50 rounded-t-md border font-mono text-sm;
+    div[data-rehype-pretty-code-title],
+    figcaption[data-rehype-pretty-code-title] {
+      @apply mt-2 px-4 py-1 bg-muted rounded-t-md border font-mono text-muted-foreground text-sm text-center;
     }
 
-    figure:has(div[data-rehype-pretty-code-title]) pre {
+    /* if a code block figure has a element has [data-rehype-pretty-code-title] */
+    figure:has(
+      div[data-rehype-pretty-code-title],
+      figcaption[data-rehype-pretty-code-title]
+    ) pre {
       @apply rounded-t-none border-t-0 mt-0 pt-0;
     }
 
     /* Code block caption style */
-    figcaption {
+    figcaption[data-rehype-pretty-code-caption] {
       @apply pt-2 pb-4 font-mono text-xs text-muted-foreground text-center;
     }
 
-    figure:has(figcaption) pre {
+    figure:has(figcaption[data-rehype-pretty-code-caption]) pre {
       @apply mb-0;
     }
 

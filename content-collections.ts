@@ -13,7 +13,10 @@ import rehypeSlug from "rehype-slug";
 const prettyCodeOptions = {
   theme: "one-light",
   keepBackground: false, // 让我们自己用 CSS 控制背景
-  defaultLang: "plaintext",
+  defaultLang: {
+    block: "plaintext",
+    inline: "js",
+  },
   onVisitLine(node: LineElement) {
     if (node.children.length === 0) {
       // 避免空行高度为 0

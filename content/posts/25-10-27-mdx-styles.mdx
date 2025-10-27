@@ -1,0 +1,145 @@
+---
+title: "MDX Example"
+summary: "A playground for MDX styles"
+date: 2025-10-27
+tags: ["Code"]
+readingTime: 5
+---
+
+<div className='section'>
+<div className='subsection'>
+
+## Heading
+
+Only have two levels of heading
+
+## h2 with `inline code` *italic* and **bold**
+### h3 with `inline code` *italic* and **bold**
+
+## Paragraph
+
+paragraph and `inline code`
+
+To control the opacity of the blur layer, we define a variable, `onLoaded()`, with an initialized value of `false`,
+which means the image is **not loaded** at the beginning.
+
+After the image is loaded, it will change to `true`, 
+as we defined this action in `bgImage.onload()` callback function.
+
+In the style definition of `<ImageBlur>`, we use the [Conditional operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator)
+to manipulate the opacity.
+
+Furthermore, we could define the opacity transition in 500ms, to have a smooth transition from blur to clear.
+
+Finally, you have your ImageBg with blur effect. Voila 🎉
+
+`inline code` won't overlap with next line.
+`inline code` won't overlap with next line.
+`inline code` won't overlap with next line.
+`inline code` won't overlap with next line.
+
+## List
+
+### Ordered List
+
+把大象放进冰箱需要几步？
+
+1. 打开冰箱
+2. 把大象放进去
+3. 关闭冰箱
+
+### Unordered List
+
+播放器目前探索出来两种类型：
+
+- 歌单播放器
+- 单曲播放器
+    - 可以直接播放单首歌曲，不需要歌单
+    - 不可以播放会员歌曲
+        - 会员歌曲需要登录后才能播放 #BUG 3rd level list-style-type should dot
+
+播放器由两部分组成：首先是播放器容器，样式由 `<iframe>{:js}` 定义；
+其次是播放器本身，这部分样式没办法直接修改，需要通过修改 src 中的请求参数来实现.
+
+
+## Code Block
+
+Plain code block
+
+```python
+if __name__ == "__main__":
+    print("Hello, World!")
+```
+Code block with title, with groups char highlighting. #BUG different group has same highlight color.
+
+```ts title="code_block.ts" /theme/#v /keepBackground/#v /onVisitLine/#f
+/** @type {import('rehype-pretty-code').Options;} */
+const prettyCodeOptions = {
+  theme: "one-light",
+  keepBackground: false, // 让我们自己用 CSS 控制背景
+  defaultLang: {
+    block: "plaintext",
+    inline: "js",
+  },
+  onVisitLine(node: LineElement) {
+    if (node.children.length === 0) {
+      // 避免空行高度为 0
+      node.children = [{ type: "text", value: " " }];
+    }
+  },
+};
+```
+
+Code block with caption, line numbers, line highlighting.
+
+```postcss caption="code_block.css" {4} showLineNumbers
+/* Code Block Style */
+pre {
+    @apply font-mono rounded-md border bg-muted/50 overflow-x-auto py-4;
+    margin: 0.5rem 0 1rem;
+
+    code {
+        @apply font-mono text-sm;
+
+        [data-line] {
+            padding-left: 0.75rem;
+        }
+
+        [data-line][data-highlighted-line] {
+            @apply border-l-2 border-orange-400 pl-[calc(0.75rem-2px)];
+        }
+    }
+}
+```
+
+<Tips title="Tips">
+
+List in Tips
+
+    - 歌单播放器可以直接播放单首歌曲，不需要歌单
+    - 单曲播放器不可以播放会员歌曲，需要登录后才能播放
+
+Code block in Tips
+
+```tsx title="tips.tsx"
+import { cn } from "@/lib/utils";
+
+export const Tips = ({ children, title }: {
+  children: React.ReactNode,
+  title?: string,
+}) => {
+  return (
+    <div className={cn(
+      "relative bg-[#f0f9eb] text-[#0f5132] px-4 pt-4 pb-4 my-2 rounded-md",
+      title && "pt-2"
+    )}>
+      {title && <p className="font-bold">{title}</p>}
+      {children}
+    </div>
+  );
+}
+```
+</Tips>
+
+</div>
+</div>
