@@ -19,6 +19,8 @@ Todo list
 - [x] "writing page"
 - [ ] "About page"
 - [ ] "Book page"
+- [ ] "Photos page"
+  - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
 - [ ] add previous and next post link on each post page
 - [ ] Footer component
 - [ ] icon design
@@ -27,6 +29,12 @@ Todo list
 - [ ] Progress indicator for posts.
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] 
+
+### 2025-10-28
+
+Fix
+- 解决了 mdx 内部 import 路径解析错误的问题
+  - [x] write a TIL
 
 ### 2025-10-27
 
@@ -53,6 +61,7 @@ Polish:
 
 - 对齐了 home page, writing page and post page 的标题
 - add soft 70 font variation setting
+- [ ] write a TIL
 
 ### 2025-10-25
 

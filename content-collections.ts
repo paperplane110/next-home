@@ -43,7 +43,11 @@ const posts = defineCollection({
       {
         remarkPlugins: [remarkGfm],
         rehypePlugins: [[rehypePrettyCode, prettyCodeOptions], rehypeSlug],
-      }
+        // 引入 components/mdx 目录下的所有文件, 并将其引入路径设置为 @/
+        files(appender) {
+          appender.directory("@/", "components/mdx")
+        },
+      },
     );
     return {
       ...document,
