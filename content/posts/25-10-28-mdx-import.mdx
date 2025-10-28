@@ -1,0 +1,145 @@
+---
+title: "Import Components in MDX"
+summary: "How to import custom components with Content Collections MDX"
+date: 2025-10-28
+tags: ["Code", "TIL"]
+readingTime: 5
+---
+<div className='section'>
+<div className='subsection'>
+
+Today, when I tried to import a TSX component into an `.mdx` post, the MDX compiler threw an error saying it could not resolve the import path.
+
+```log
+✘ [ERROR] Could not resolve "@/componets/mdx/hello"
+
+    _mdx_bundler_entry_point-99f92080-831f-47fe-be1c-20425edcc1d3.mdx:2:20:
+      2 │ import {Hello} from "@/componets/mdx/hello";
+        ╵                     ~~~~~~~~~
+
+  You can mark the path "@/componets/mdx/hello" as external to exclude it from the bundle, which will remove this
+  error and leave the unresolved path in the bundle.
+
+... error Error: Build failed with 1 error:
+_mdx_bundler_entry_point-99f92080-831f-47fe-be1c-20425edcc1d3.mdx:2:20: ERROR: Could not resolve "@/componets/mdx/hello"
+```
+
+Here is some background information:
+
+- I use Content Collections as my MDX compiler.
+- My components live in `components/mdx/hello.tsx`.
+- The MDX originally looked like this:
+
+```mdx
+import { Hello } from "components/mdx/hello"
+
+<Hello />
+```
+
+After reading the Content Collections documentation, I found that you need to manually add import paths in the Content Collections configuration.
+
+```ts title="content-collections.ts" {11-13} showLineNumbers
+// posts 集合
+const posts = defineCollection({
+  /* ... some code ... */
+  transform: async (document, context) => {
+    const mdx = await compileMDX(
+      context, document,
+      {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [[rehypePrettyCode, prettyCodeOptions], rehypeSlug],
+        // 引入 components/mdx 目录下的所有文件, 并将其引入路径设置为 @/
+        files(appender) {
+          appender.directory("@/", "components/mdx")
+        },
+      },
+    );
+    return {
+      ...document,
+      mdx,
+    };
+  },
+});
+```
+
+`compileMDX()` has an optional `files()` parameter that lets you add import paths. There are two options:
+
+- `appender.file(importName, filePath)`: add a single file to the import path.
+- `appender.directory(importName, filePath)`: add all files in a directory to the import path.
+
+### Import a single component
+
+If you want to import a single component, use `appender.file(importName, filePath)` to add its path.
+
+For example, to import the `Hello` component defined in `components/mdx/hello.tsx`, use `appender.file("hello", "components/mdx/hello.tsx")`:
+
+```ts showLineNumbers {8-10}
+const posts = defineCollection({
+  /* ... some code ... */
+  transform: async (document, context) => {
+    const mdx = await compileMDX(
+      context, document,
+      {
+        /* ... some code ... */
+        files(appender) {
+          appender.file("hello", "components/mdx/hello.tsx")
+        },
+      },
+    );
+    return {
+      ...document,
+      mdx,
+    };
+  },
+});
+```
+
+Then, in the MDX file, you can import it using the alias `hello`:
+
+```mdx
+import { Hello } from "hello"
+
+<Hello />
+```
+
+### Import an entire directory
+
+Suppose you have a `components/mdx` directory containing multiple components,
+and you want to import all components in a directory, use `appender.directory(importName, filePath)`.
+
+You can add all of them with:
+
+```ts showLineNumbers {8-10}
+const posts = defineCollection({
+  /* ... some code ... */
+  transform: async (document, context) => {
+    const mdx = await compileMDX(
+      context, document,
+      {
+        /* ... some code ... */
+        files(appender) {
+          appender.directory("mdx/", "components/mdx")
+        },
+      },
+    );
+    return {
+      ...document,
+      mdx,
+    };
+  },
+});
+```
+
+Note that the `importName` should end with a slash (for example, `mdx/`), 
+and the `filePath` should not end with a slash (for example, `components/mdx`).
+
+Then, in the MDX file, you can import a component by path, such as `mdx/hello`:
+
+```mdx
+import { Hello } from "mdx/hello"
+
+<Hello />
+```
+
+</div>
+</div>
