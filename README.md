@@ -12,23 +12,32 @@ Todo list
 
 - [ ] ? apply liquid glass effect on navigation bar: [link](https://css-tricks.com/getting-clarity-on-apples-liquid-glass/)
 - [ ] pick bg color & texture for the page
-- [ ] design css for mdx
-  - [ ] design custom components to replace the original components: [link](https://mdxjs.com/table-of-components/#components)
-    - [ ] blockquote
+- [x] design css for mdx
+  - [x] design custom components to replace the original components: [link](https://mdxjs.com/table-of-components/#components)
+    - [x] blockquote
 - [x] Use Nextjs font module: [link](https://nextjs.org/docs/app/api-reference/components/font)
 - [x] "writing page"
 - [ ] "About page"
 - [ ] "Book page"
-- [ ] "Photos page"
+- [ ] "Gallery page"
   - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
+  - like this [udara.io/photos/](https://udara.io/photos/)
 - [ ] add previous and next post link on each post page
 - [ ] Footer component
 - [ ] icon design
 - [ ] meta
 - [ ] seo
 - [ ] Progress indicator for posts.
+  - [ ] use [motion scroll](https://motion.dev/docs/react-scroll-animations?platform=react)
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
-- [ ] 
+
+### 2025-10-29
+
+Feat:
+
+- add a typography page in playground
+- add playground to navbar
+- add gallery page
 
 ### 2025-10-28
 

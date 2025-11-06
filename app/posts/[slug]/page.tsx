@@ -17,7 +17,7 @@ function PostContent({ slug }: { slug: string }) {
 
   return (
     <article>
-      <header className="pt-12 sm:pb-8 sm:pt-18 section">
+      <header className="page-top-margin sm:pb-8 section">
         <div className="subsection">
           <h1 className="text-4xl sm:text-5xl font-medium font-serif soft-60 mb-6">{post.title}</h1>
           <p className="text-sm text-muted-foreground mb-4">
@@ -74,8 +74,8 @@ export default async function PostPage({
   const { slug } = await params;
 
   return (
-    <div className="pt-18">
+    <>
       <PostContent slug={slug} />
-    </div>
+    </>
   )
 }

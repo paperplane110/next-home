@@ -43,7 +43,12 @@ export const Navigation = () => {
   }
 
   return (
-    <div className="section fixed top-0 left-0 right-0 backdrop-blur-md border-b border-gray-100">
+    <div className="section fixed top-0 left-0 right-0 border-b border-gray-100"
+    // TODO: Polish navbar in dark background
+      style={{
+        background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7) 60%, rgba(255, 255, 255, 0.3))"
+      }}
+    >
       <nav className="subsection py-4 flex items-center justify-start gap-4">
         {isMobile ? routes.slice(0, 1).map((route) => (
           <Link
@@ -70,6 +75,15 @@ export const Navigation = () => {
             </Link>
           ))
         )}
+        <Link
+          href="/playground"
+          className={cn(
+            "py-2 text-sm font-serif text-transparent hover:text-pink-600",
+            isActive("/playground") ? "text-pink-700" : ""
+          )}
+        >
+          Playground
+        </Link>
       </nav>
     </div>
   )

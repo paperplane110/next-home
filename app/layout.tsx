@@ -7,6 +7,7 @@ import { FrameProvider } from "@/components/frame-context";
 import { Frame } from "@/components/frame";
 import ControlPanel from "@/components/control-panel";
 import { Navigation } from "@/components/navigation";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Tianyu",
@@ -60,7 +61,10 @@ export default function RootLayout({
           <ControlPanel />
           <Frame />
           <Navigation />
-          {children}
+          <div className="min-h-[calc(100vh-8rem)] pt-16">
+            {children}
+          </div>
+          <Footer />
         </FrameProvider>
       </body>
     </html>

@@ -5,6 +5,7 @@ import { createContext, useContext, useState } from "react";
 type FrameContextType = {
   isShowFrame: boolean;
   toggleFrame: () => void;
+  enableFrame: () => void;
 };
 
 const FrameContext = createContext<FrameContextType | undefined>(undefined);
@@ -16,8 +17,12 @@ export function FrameProvider({ children }: { children: React.ReactNode }) {
     setIsShowFrame((prev) => !prev);
   };
 
+  const enableFrame = () => {
+    setIsShowFrame(true)
+  }
+
   return (
-    <FrameContext.Provider value={{ isShowFrame, toggleFrame }}>
+    <FrameContext.Provider value={{ isShowFrame, toggleFrame, enableFrame }}>
       {children}
     </FrameContext.Provider>
   );

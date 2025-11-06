@@ -51,7 +51,7 @@ export const MusicPlayerCard = () => {
             </iframe>
           </div>
           <div className="absolute top-[4px] group-hover/album-cover:translate-x-[-40px] transition-transform">
-            <BlackVinyl />
+            {isIframeLoaded && <BlackVinyl />}
             {/* <Disk /> */}
           </div>
         </div>

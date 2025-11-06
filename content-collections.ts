@@ -80,6 +80,37 @@ const projects = defineCollection({
   },
 });
 
+// reading 集合
+const reading = defineCollection({
+  name: "reading",
+  directory: "content/reading",
+  include: ["*.mdx"],
+  schema: (z) => ({
+    title: z.string(),
+    summary: z.string(),
+    date: z.coerce.date(),
+    tags: z.array(z.string()),
+    readingTime: z.number(),
+  }),
+  transform: async (document, context) => {
+    const mdx = await compileMDX(
+      context, document,
+      {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [[rehypePrettyCode, prettyCodeOptions], rehypeSlug],
+        // 引入 components/mdx 目录下的所有文件, 并将其引入路径设置为 @/
+        files(appender) {
+          appender.directory("@/", "components/mdx")
+        },
+      },
+    );
+    return {
+      ...document,
+      mdx,
+    };
+  },
+});
+
 export default defineConfig({
-  collections: [posts, projects],
+  collections: [posts, projects, reading],
 });

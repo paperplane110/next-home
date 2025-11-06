@@ -135,7 +135,7 @@
 
   /* font-size */
   .headline {
-    @apply text-5xl sm:text-7xl;
+    @apply text-5xl sm:text-6xl;
   }
 
   /* div */
@@ -145,6 +145,14 @@
   
   .subsection {
     @apply w-full px-6 max-w-[480px] md:max-w-screen-sm;
+  }
+
+  /* 
+    Apply to the first section of the page.
+    Keep same vertical padding from page title to the navigation bar.
+  */
+  .page-top-margin {
+    @apply mt-10 sm:mt-16;
   }
 }
 

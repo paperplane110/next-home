@@ -1,22 +1,22 @@
 import { Suspense } from "react";
-import { PostsSection, PostsSectionSkeleton } from "./posts-section";
+import { ReadingsSection, ReadingsSectionSkeleton } from "./readings-section";
 
-export default function Posts() {
+export default function Reading() {
   return (
     <div className="section font-serif">
       <div className="subsection page-top-margin">
         <h1 className="headline font-light soft-70">
-          Writing<span className="text-pink-600">.</span>
+          Reading<span className="text-pink-600">.</span>
         </h1>
       </div>
       <div id="desc" className="subsection pt-8 text-muted-foreground">
         <p>
-          仔细想想，<br />
-          得以存在便是一个奇迹，能够思考就是一件乐事
+          通过阅读，<br />
+          理解更复杂的世界
         </p>
       </div>
-      <Suspense fallback={<PostsSectionSkeleton />}>
-        <PostsSection />
+      <Suspense fallback={<ReadingsSectionSkeleton />}>
+        <ReadingsSection />
       </Suspense>
     </div>
   )

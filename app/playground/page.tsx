@@ -1,0 +1,39 @@
+import Link from "next/link"
+
+export default function Playground() {
+  const routeList = [
+    {
+      name: "Node tree",
+      path: "/tree",
+    },
+    {
+      name: "fonts",
+      path: "/fonts",
+    },
+    {
+      name: "typography",
+      path: "/typography",
+    },
+  ]
+  return (
+    <div className="section">
+      <header className="page-top-margin subsection">
+        <h1 className="headline font-serif font-light soft-70">Playground
+          <span className="text-pink-600">.</span>
+        </h1>
+      </header>
+      <div className="subsection mt-16">
+        {routeList.map((route) => (
+          <div key={route.path} className="flex items-center">
+            <Link
+              href={`/playground${route.path}`}
+              className="text-sm font-medium text-gray-500 hover:text-gray-700"
+            >
+              {route.name}
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
