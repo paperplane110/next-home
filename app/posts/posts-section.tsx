@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { allPosts } from "content-collections";
@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 // PostsSection component
 // Extract useSearchParams from page level component.
 export const PostsSection = () => {
+  
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -29,26 +30,6 @@ export const PostsSection = () => {
 
   const tags = ["All"].concat([...new Set(posts.flatMap(post => post.tags))].sort());
   // const years = [...new Set(posts.map(post => format(new Date(post.date), "yyyy")))];
-
-  const filteredPosts = posts
-    .filter(post => selectedTag === "All" || post.tags.includes(selectedTag))
-    .filter(post => selectedYear === "" || format(new Date(post.date), "yyyy") === selectedYear);
-
-  const convertDate = (date: string): string => {
-    return format(new Date(date), "LLL/dd")
-  }
-
-  // mark the first post of each year, for display the year interval.
-  let currYear = "";
-  const yearIntervalIndex: Record<string, number> = {};
-  filteredPosts.forEach((post, index) => {
-    const year = format(new Date(post.date), "yyyy");
-    if (year !== currYear) {
-      currYear = year;
-      yearIntervalIndex[year] = index;
-    }
-  });
-
 
   const handleFilter = (tag?: string, year?: string) => {
     const params = new URLSearchParams(searchParams);
@@ -71,8 +52,30 @@ export const PostsSection = () => {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
+  const convertDate = (date: string): string => {
+    return format(new Date(date), "LLL/dd")
+  }
+
+  const filteredPosts = useMemo(() => {
+    return posts
+      .filter(post => selectedTag === "All" || post.tags.includes(selectedTag))
+      .filter(post => selectedYear === "" || format(new Date(post.date), "yyyy") === selectedYear);
+  }, [selectedTag, selectedYear, posts]);
+
+  // mark the first post of each year, for display the year interval.
+  let currYear = "";
+  const yearIntervalIndex: Record<string, number> = {};
+  filteredPosts.forEach((post, index) => {
+    const year = format(new Date(post.date), "yyyy");
+    if (year !== currYear) {
+      currYear = year;
+      yearIntervalIndex[year] = index;
+    }
+  });
+
   return (
     <>
+      {/* tags filter */}
       <div id="tags" className="subsection pt-8 flex flex-wrap gap-2">
         {tags.map((tag, index) => {
           return (
@@ -95,6 +98,8 @@ export const PostsSection = () => {
           const year = format(new Date(post.date), "yyyy");
           return (
             <div key={index}>
+              
+              {/* year interval */}
               {index === yearIntervalIndex[year] && (
                 <div
                   id={`year-${year}`}
@@ -109,6 +114,8 @@ export const PostsSection = () => {
                   )}
                 </div>
               )}
+
+              {/* post item */}
               <Link
                 href={`/posts/${post._meta.path}`}
                 className="flex justify-between group py-1"
