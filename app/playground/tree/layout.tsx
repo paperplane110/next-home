@@ -65,12 +65,18 @@ const data = [
 export default async function TreePage({ children }: { children: React.ReactNode }) {
 
   return (
-    <div className="min-h-screen grid place-content-center">
+    <div className="section page-top-margin">
+      <div className="subsection">
+        <h1 className="headline font-serif font-light soft-70">
+          Node Tree Component
+          <span className="text-pink-600">.</span>
+        </h1>
+      </div>
       {/* 若使用 ResizablePanelGroup，direction 之外的方向需要明确定义，否则 shrink */}
-      <div className="h-[400px]">
+      <div className="h-[400px] mt-16">
         <ResizablePanelGroup
           direction="horizontal"
-          className="min-w-5xl border"
+          className="min-w-xl md:min-w-3xl lg:min-w-5xl border border-black"
         >
           {/* 
             min-w-[10rem] 用来配置侧边栏最小宽度
@@ -79,7 +85,7 @@ export default async function TreePage({ children }: { children: React.ReactNode
           */}
           <ResizablePanel
             defaultSize={10}
-            className="min-w-[10rem] max-w-[20rem] flex flex-col"
+            className="min-w-40 max-w-[20rem] flex flex-col"
           >
             <h1 className="border-b">Tree Page</h1>
             <div className="overflow-y-scroll">

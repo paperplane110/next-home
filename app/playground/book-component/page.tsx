@@ -30,14 +30,14 @@ export default function BookComponentPage() {
         <div>
           <h2 className="font-bold">Book List Preview</h2>
         </div>
-        <div className="grid grid-cols-3 mt-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mt-4">
           <Book
             coverColor="#658C58"
             href="/reading/25-08-17-never-let-me-go"
             titleTextColor="#FFFFFF"
             bookEdgeDepth={5}
           >
-            <span className="text-2xl">Never Let Me Go</span>
+            <span className="text-xl">Never Let Me Go</span>
           </Book>
           <Book
             coverColor="#811844"
@@ -48,18 +48,21 @@ export default function BookComponentPage() {
             <span className="text-2xl">1984</span>
           </Book>
           <Book
-            coverColor="#E9B63B"
+            coverColor="#FFC400"
             href="/reading/24-12-06-master-of-doom"
             titleTextColor="#0F0F0F"
             bookEdgeDepth={5}
           >
-            <span className="text-2xl">Master of Doom</span>
+            <div className="font-mono h-full">
+              <p className="text-xl">Master of Doom</p>
+              <p className="pt-12 text-[11px]/3 text-muted-foreground">How Two Guys Created an Empire and Transformed Pop Culture</p>
+            </div>
           </Book>
         </div>
       </div>
 
-      <div className="subsection mt-12 grid grid-cols-3 gap-8">
-        <div className="col-span-3">
+      <div className="subsection mt-12 grid grid-cols-2 sm:grid-cols-3 gap-8">
+        <div className="col-span-2 sm:col-span-3">
           <h2 className="mb-4 font-bold">Book Component Controls</h2>
           <p className="mb-2">Book Title: <Input className="inline-block w-40" value={bookTitle} onChange={(e) => setBookTitle(e.target.value)} /></p>
           <p className="mb-2">Title Size: <Input className="inline-block w-20" type="number" step={0.1} value={titleSize} onChange={(e) => setTitleSize(e.target.value)} /> rem</p>
