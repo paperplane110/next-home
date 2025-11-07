@@ -40,7 +40,7 @@ export default function Home() {
         <div className="grid grid-cols-2">
           <div id="writing">
             <OuterLink href="/posts">
-              <h3 className="mb-2 font-bold">Writing</h3>
+              <span className="font-bold">Writing</span>
             </OuterLink>
             <div>
               <ul>

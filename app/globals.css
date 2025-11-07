@@ -127,11 +127,23 @@
 }
 
 @layer components {
+
   /* font variation settings */
-  .soft-70 { font-variation-settings: "SOFT" 70; }
-  .soft-60 { font-variation-settings: "SOFT" 60; }
-  .soft-50 { font-variation-settings: "SOFT" 50; }
-  .soft-40 { font-variation-settings: "SOFT" 40; }
+  .soft-70 {
+    font-variation-settings: "SOFT" 70;
+  }
+
+  .soft-60 {
+    font-variation-settings: "SOFT" 60;
+  }
+
+  .soft-50 {
+    font-variation-settings: "SOFT" 50;
+  }
+
+  .soft-40 {
+    font-variation-settings: "SOFT" 40;
+  }
 
   /* font-size */
   .headline {
@@ -142,7 +154,7 @@
   .section {
     @apply w-full flex flex-col items-center;
   }
-  
+
   .subsection {
     @apply w-full px-6 max-w-[480px] md:max-w-screen-sm;
   }
@@ -153,6 +165,55 @@
   */
   .page-top-margin {
     @apply mt-10 sm:mt-16;
+  }
+
+  .book-cover {
+    /* book will rotate from right to left, so right side cover looks more rounded */
+    @apply rounded-l-sm rounded-r-md;
+
+    /* Add a subtle darker border to make it more realistic. */
+    border: 1px solid rgba(0, 0, 0, .08);
+
+    /* Add a subtle glow to the cover's edge. */
+    box-shadow: inset 0 1px 2px 0 hsla(0, 0%, 100%, .3);
+  }
+
+  .book-cover::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* 核心：创建微小、随机的噪点 */
+    background-image:
+      radial-gradient(#000000 1px, transparent 1px),
+      /* 黑色小点 */
+      radial-gradient(#ffffff 1px, transparent 1px);
+    /* 白色小点 */
+
+    /* 设置背景大小，控制噪点密度。值越小，点越密集。 */
+    background-size: 5px 5px;
+
+    /* 调整透明度，使其看起来像微妙的纸张/印刷质感 */
+    opacity: 0.05;
+
+    /* 可选：混合模式让噪点与背景色更好地融合 */
+    mix-blend-mode: multiply;
+
+    pointer-events: none;
+    /* 确保伪元素不干扰点击事件 */
+  }
+
+  .book-text-shadow {
+    text-shadow: .025em .5px color-mix(in srgb, var(--book-color) 80%, #fff 20%), -.02em -.02em .5px color-mix(in srgb, var(--book-color) 80%, #000 20%);
+  }
+
+  /* Use overlay blend mode to make the bind's shadow. */
+  .book-bind-bg {
+    mix-blend-mode: overlay;
+    background: linear-gradient(90deg, hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, 0) 12%, hsla(0, 0%, 100%, .25) 29.25%, hsla(0, 0%, 100%, 0) 50.5%, hsla(0, 0%, 100%, 0) 75.25%, hsla(0, 0%, 100%, .25) 91%, hsla(0, 0%, 100%, 0)), linear-gradient(90deg, rgba(0, 0, 0, .03), rgba(0, 0, 0, .1) 12%, transparent 30%, rgba(0, 0, 0, .02) 50%, rgba(0, 0, 0, .2) 73.5%, rgba(0, 0, 0, .5) 75.25%, rgba(0, 0, 0, .15) 85.25%, transparent);
   }
 }
 

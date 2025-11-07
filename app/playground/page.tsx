@@ -14,6 +14,10 @@ export default function Playground() {
       name: "typography",
       path: "/typography",
     },
+    {
+      name: "book component",
+      path: "/book-component",
+    }
   ]
   return (
     <div className="section">

@@ -120,7 +120,7 @@ export const ReadingsSection = () => {
                 </div>
               )}
               <Link
-                href={`/posts/${post._meta.path}`}
+                href={`/reading/${post._meta.path}`}
                 className="flex justify-between group py-1"
               >
                 <div className="group-hover:underline decoration-pink-600">

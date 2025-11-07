@@ -26,9 +26,9 @@ export default function Typography() {
   return (
     <div className="section page-top-margin">
       <header className="subsection">
-        <h1 className="">Typography.</h1>
+        <h1 className="headline font-serif font-light soft-70">Typography<span className="text-pink-600">.</span></h1>
       </header>
-      <div className="mt-8">
+      <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Grid/circle/info 布局</h2>
         <p className="mb-4">取自影视飓风的
           <OuterLink href="https://www.bilibili.com/video/BV1y3nizVEq3?spm_id_from=333.788.recommend_more_video.-1&trackid=web_related_0.router-related-2206419-zjg6v.1761708800298.667&vd_source=0f6b43e09abf3b0bbe74b006f5977c60">
