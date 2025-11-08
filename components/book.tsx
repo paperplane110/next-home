@@ -40,7 +40,7 @@ export function Book({
         }}
       >
         <div id="book-bind" className="h-full book-bind-bg" style={{ width: `${bookBindWitdth}%` }} />
-        <div id="book-cover" className="p-2 text-base font-serif font-semibold soft-70 book-text-shadow">
+        <div id="book-cover" className="flex-1 p-2 text-base font-serif font-semibold soft-70 book-text-shadow">
           {children}
         </div>
       </div>

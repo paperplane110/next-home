@@ -55,7 +55,7 @@ export default function BookComponentPage() {
           >
             <div className="font-mono h-full">
               <p className="text-xl">Master of Doom</p>
-              <p className="pt-12 text-[11px]/3 text-muted-foreground">How Two Guys Created an Empire and Transformed Pop Culture</p>
+              <p className="pt-12 text-[11px]/3 text-yellow-800">How Two Guys Created an Empire and Transformed Pop Culture</p>
             </div>
           </Book>
         </div>
@@ -145,10 +145,10 @@ export default function BookComponentPage() {
         </div>
       </div>
       <div className="subsection mt-12">
-        <p className="mt-4">References:</p>
-        <ul className="mt-2 list-disc text-muted-foreground">
+        <h2 className="font-bold">References</h2>
+        <ul className="mt-4 list-disc text-muted-foreground">
           <li>CSS 3D rotate: <OuterLink className="underline" href="https://3dtransforms.desandro.com/perspective">https://3dtransforms.desandro.com/perspective</OuterLink></li>
-          <li>Book cover shadow: <OuterLink className="underline" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/box-shadow">https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/box-shadow</OuterLink></li>
+          <li>Book cover edge&apos;s highlight: <OuterLink className="underline" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/box-shadow">inset shadow</OuterLink></li>
         </ul>
       </div>
     </div>
