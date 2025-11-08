@@ -43,7 +43,7 @@ export const Navigation = () => {
   }
 
   return (
-    <div className="section fixed top-0 left-0 right-0 border-b border-gray-100"
+    <div className="z-999 section fixed top-0 left-0 right-0 backdrop-blur-sm"
     // TODO: Polish navbar in dark background
       style={{
         background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7) 60%, rgba(255, 255, 255, 0.3))"
