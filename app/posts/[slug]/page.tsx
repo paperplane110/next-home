@@ -4,9 +4,9 @@ import { MDXContent } from "@content-collections/mdx/react"
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { BlockQuote } from "../components/block-quote";
-import { A } from "../components/a";
-import { Tips } from "../components/tips";
+import { BlockQuote } from "@/components/mdx/block-quote";
+import { A } from "@/components/mdx/a";
+import { Tips } from "@/components/mdx/tips";
 
 function PostContent({ slug }: { slug: string }) {
   const post = allPosts.find((post) => post._meta.path === slug);

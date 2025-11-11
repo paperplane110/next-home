@@ -119,7 +119,7 @@ export default function BookComponentPage() {
                 top: `${edgeMarginY}px`,
                 height: `calc(100% - ${edgeMarginY * 2}px)`,
                 width: `${bookThickness}px`,
-                translate: `${width - bookThickness/2 - bookEdgeDepth}px 0 0`
+                translate: `${width - bookThickness / 2 - bookEdgeDepth}px 0 0`
               }}
             />
             <div
@@ -165,7 +165,7 @@ export default function BookComponentPage() {
                 top: `${edgeMarginY}px`,
                 height: `calc(100% - ${edgeMarginY * 2}px)`,
                 width: `${bookThickness}px`,
-                translate: `${width - bookThickness/2 - bookEdgeDepth}px 0 0`
+                translate: `${width - bookThickness / 2 - bookEdgeDepth}px 0 0`
               }}
             />
             <div
@@ -201,17 +201,17 @@ export default function BookComponentPage() {
             >
               <div id="book-bind" className="h-full book-bind-bg w-[10%]" />
               <div id="book-cover-content" className="z-1 flex-1 wrap-break-word whitespace-normal p-2 text-base font-serif font-semibold soft-70 book-text-shadow">
-                <span className="text-white" style={{ fontSize: `${titleSize}rem`, lineHeight: "1.2"}}>{bookTitle}</span>
+                <span className="text-white" style={{ fontSize: `${titleSize}rem`, lineHeight: "1.2" }}>{bookTitle}</span>
               </div>
             </div>
             <div
               id="book-right-edge"
-              className="absolute z-[-1] bg-muted border-b border-gray-300 transform rotate-y-90"
+              className="absolute z-[-1] bg-muted border-b border-gray-300 transform rotate-y-90 book-right-edge-bg"
               style={{
                 top: `${edgeMarginY}px`,
                 height: `calc(100% - ${edgeMarginY * 2}px)`,
                 width: `${bookThickness}px`,
-                translate: `${width - bookThickness/2 - bookEdgeDepth}px 0 0`
+                translate: `${width - bookThickness / 2 - bookEdgeDepth}px 0 0`
               }}
             />
             <div
@@ -222,6 +222,243 @@ export default function BookComponentPage() {
           </div>
         </div>
       </div>
+
+      <div className="subsection mt-12">
+        <h2 className="font-bold">Book shelf and pick out anmation</h2>
+        <div className="mt-4 text-muted-foreground">Summary:
+          <ul className="mt-2 list-disc">
+            <li>首先，效果不是很理想，因为俯视图来看，书封书底厚度为 0</li>
+            <li>book 组件应该重新编写，其“正面”应该是 book-bind，而非目前的 book-cover。
+              原因在于当书籍横向排列时，使用 flex 布局，每个元素的宽度为书的宽度，而非厚度，导致了间隔过大。
+            </li>
+            <li>book 组件不应该包含作为 3d 容器的 scene，应该单独写一个 3d 容器组件，内部放置多个 book</li>
+          </ul>
+        </div>
+        <div id="scene"
+          className="mt-8 flex flex-row justify-start"
+          style={{
+            perspective: `${perspective}px`,
+          }}
+        >
+          <div id="book-wrapper" className={cn(
+            "z-20",
+            "h-full relative",
+            "will-change-transform transition-transform duration-300 ease-out transform-3d rotate-y-90",
+            // isRotated && "-rotate-z-20"
+          )}
+            style={{
+              width: `${width}px`,
+              aspectRatio: `${aspectRatio}`
+            }}
+            onClick={() => setIsRotated(!isRotated)}
+          >
+            <div
+              id="book-cover"
+              className={cn(
+                "absolute top-0 left-0 w-full h-full",
+                "flex bg-[#2b4768] book-cover dot-texture transform"
+              )}
+              style={{
+                translate: `0 0 ${bookCoverZ}px`
+              }}
+            >
+              <div id="book-cover-bind" className="h-full book-bind-bg w-[10%]" />
+              <div id="book-cover-content" className="z-1 flex-1 wrap-break-word whitespace-normal p-2 text-base font-serif font-semibold soft-70 book-text-shadow">
+                <span className="text-white" style={{ fontSize: `${titleSize}rem`, lineHeight: "1.2" }}>{bookTitle}</span>
+              </div>
+            </div>
+            <div
+              id="book-right-edge"
+              className="absolute z-[-1] bg-muted border-b border-gray-300 rotate-y-90 book-right-edge-bg"
+              style={{
+                top: `${edgeMarginY}px`,
+                height: `calc(100% - ${edgeMarginY * 2}px)`,
+                width: `${bookThickness}px`,
+                translate: `${width - bookThickness / 2 - bookEdgeDepth}px 0 0`
+              }}
+            />
+            <div
+              id="book-bind"
+              className="absolute z-[-1] -rotate-y-90 bg-[#2b4768]"
+              style={{
+                top: `${edgeMarginY}px`,
+                height: `calc(100% - ${edgeMarginY * 2}px)`,
+                width: `${bookThickness + 3}px`,
+                translate: `${-bookThickness / 2}px 0 0`
+              }}
+            >
+              <div id="book-bind-title" className="h-full w-full flex items-center justify-center text-white font-bold text-xl"
+                style={{
+                  writingMode: "vertical-lr",
+                  textOrientation: "mixed"
+                }}
+              >
+                Animal Farm
+              </div>
+            </div>
+            <div
+              id="book-top"
+              className="absolute top-0 left-0 bg-muted border rotate-x-90"
+              style={{
+                height: `${bookThickness}px`,
+                width: `calc(${width}px - ${bookEdgeDepth}px)`,
+                translate: `0 ${-bookThickness / 2 + 3}px 0`
+              }}
+            >
+
+            </div>
+            <div
+              id="book-back"
+              className="absolute z-[-2] top-0 left-0 w-full h-full book-cover bg-[#5082ba] transform"
+              style={{ translate: `0 0 ${bookBackZ}px` }}
+            />
+          </div>
+
+          <div id="book-wrapper" className={cn(
+            "w-[150px] h-full relative",
+            "will-change-transform transition-transform duration-300 ease-out transform-3d rotate-y-90",
+            isRotated && "-rotate-z-20 translate-z-[50px]"
+          )}
+            style={{
+              width: `${width}px`,
+              aspectRatio: `${aspectRatio}`
+            }}
+            onClick={() => setIsRotated(!isRotated)}
+          >
+            <div
+              id="book-cover"
+              className={cn(
+                "absolute top-0 left-0 w-full h-full",
+                "flex bg-[#2b4768] book-cover dot-texture transform"
+              )}
+              style={{
+                translate: `0 0 ${bookCoverZ}px`
+              }}
+            >
+              <div id="book-cover-bind" className="h-full book-bind-bg w-[10%]" />
+              <div id="book-cover-content" className="z-1 flex-1 wrap-break-word whitespace-normal p-2 text-base font-serif font-semibold soft-70 book-text-shadow">
+                <span className="text-white" style={{ fontSize: `${titleSize}rem`, lineHeight: "1.2" }}>{bookTitle}</span>
+              </div>
+            </div>
+            <div
+              id="book-right-edge"
+              className="absolute z-[-1] bg-muted border-b border-gray-300 rotate-y-90 book-right-edge-bg"
+              style={{
+                top: `${edgeMarginY}px`,
+                height: `calc(100% - ${edgeMarginY * 2}px)`,
+                width: `${bookThickness}px`,
+                translate: `${width - bookThickness / 2 - bookEdgeDepth}px 0 0`
+              }}
+            />
+            <div
+              id="book-bind"
+              className="absolute z-[-1] -rotate-y-90 bg-[#2b4768]"
+              style={{
+                top: `${edgeMarginY}px`,
+                height: `calc(100% - ${edgeMarginY * 2}px)`,
+                width: `${bookThickness + 3}px`,
+                translate: `${-bookThickness / 2}px 0 0`
+              }}
+            >
+              <div id="book-bind-title" className="h-full w-full flex items-center justify-center text-white font-bold text-xl"
+                style={{
+                  writingMode: "vertical-lr",
+                  textOrientation: "mixed"
+                }}
+              >
+                Animal Farm
+              </div>
+            </div>
+            <div
+              id="book-top"
+              className="absolute top-0 left-0 bg-muted border rotate-x-90"
+              style={{
+                height: `${bookThickness}px`,
+                width: `calc(${width}px - ${bookEdgeDepth}px)`,
+                translate: `0 ${-bookThickness / 2 + 3}px 0`
+              }}
+            />
+            <div
+              id="book-back"
+              className="absolute z-[-2] top-0 left-0 w-full h-full book-cover bg-[#5082ba] transform"
+              style={{ translate: `0 0 ${bookBackZ}px` }}
+            />
+          </div>
+
+          <div id="book-wrapper" className={cn(
+            "w-[150px] h-full relative",
+            "will-change-transform transition-transform duration-300 ease-out transform-3d rotate-y-90",
+            // isRotated && "-rotate-z-20 translate-z-[50px]"
+          )}
+            style={{
+              width: `${width}px`,
+              aspectRatio: `${aspectRatio}`
+            }}
+            onClick={() => setIsRotated(!isRotated)}
+          >
+            <div
+              id="book-cover"
+              className={cn(
+                "absolute top-0 left-0 w-full h-full",
+                "flex bg-[#2b4768] book-cover dot-texture transform"
+              )}
+              style={{
+                translate: `0 0 ${bookCoverZ}px`
+              }}
+            >
+              <div id="book-cover-bind" className="h-full book-bind-bg w-[10%]" />
+              <div id="book-cover-content" className="z-1 flex-1 wrap-break-word whitespace-normal p-2 text-base font-serif font-semibold soft-70 book-text-shadow">
+                <span className="text-white" style={{ fontSize: `${titleSize}rem`, lineHeight: "1.2" }}>{bookTitle}</span>
+              </div>
+            </div>
+            <div
+              id="book-right-edge"
+              className="absolute z-[-1] bg-muted border-b border-gray-300 rotate-y-90 book-right-edge-bg"
+              style={{
+                top: `${edgeMarginY}px`,
+                height: `calc(100% - ${edgeMarginY * 2}px)`,
+                width: `${bookThickness}px`,
+                translate: `${width - bookThickness / 2 - bookEdgeDepth}px 0 0`
+              }}
+            />
+            <div
+              id="book-bind"
+              className="absolute z-[-1] -rotate-y-90 bg-[#2b4768]"
+              style={{
+                top: `${edgeMarginY}px`,
+                height: `calc(100% - ${edgeMarginY * 2}px)`,
+                width: `${bookThickness + 3}px`,
+                translate: `${-bookThickness / 2}px 0 0`
+              }}
+            >
+              <div id="book-bind-title" className="h-full w-full flex items-center justify-center text-white font-bold text-xl"
+                style={{
+                  writingMode: "vertical-lr",
+                  textOrientation: "mixed"
+                }}
+              >
+                Animal Farm
+              </div>
+            </div>
+            <div
+              id="book-top"
+              className="absolute top-0 left-0 bg-muted border rotate-x-90"
+              style={{
+                height: `${bookThickness}px`,
+                width: `calc(${width}px - ${bookEdgeDepth}px)`,
+                translate: `0 ${-bookThickness / 2 + 3}px 0`
+              }}
+            />
+            <div
+              id="book-back"
+              className="absolute z-[-2] top-0 left-0 w-full h-full book-cover bg-[#5082ba] transform"
+              style={{ translate: `0 0 ${bookBackZ}px` }}
+            />
+          </div>
+        </div>
+      </div>
+
+
       <div className="subsection mt-12">
         <h2 className="font-bold">References</h2>
         <ul className="mt-4 list-disc text-muted-foreground">

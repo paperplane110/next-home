@@ -8,7 +8,7 @@ import { HomeIcon, Italic } from "lucide-react";
 export default function ControlPanel() {
   const pathname = usePathname()
   return (
-    <div className="fixed top-4 right-4 z-50 border p-2 flex gap-2">
+    <div className="fixed top-4 right-4 z-1000 border p-2 flex gap-2">
       <FrameSwitch />
       <Link
         className={cn(

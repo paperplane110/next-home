@@ -5,6 +5,7 @@ This is my next blog. Built with Next.js, shadcn and Tailwind CSS.
 ## Reference
 
 - Google Design: [link](https://design.google/?home=)
+- Benji's blog: [link](https://benji.org/)
 
 ## Dev logs
 
@@ -30,6 +31,16 @@ Todo list
 - [ ] Progress indicator for posts.
   - [ ] use [motion scroll](https://motion.dev/docs/react-scroll-animations?platform=react)
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
+
+### 2025-11-11
+
+
+
+### 2025-11-08
+
+Feat:
+
+- add a "book component"
 
 ### 2025-10-29
 

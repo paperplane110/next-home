@@ -85,12 +85,23 @@ const reading = defineCollection({
   name: "reading",
   directory: "content/reading",
   include: ["*.mdx"],
+  exclude: ["_*"],
   schema: (z) => ({
     title: z.string(),
     summary: z.string(),
     date: z.coerce.date(),
     tags: z.array(z.string()),
     readingTime: z.number(),
+    book: z.object({
+      name: z.string(),
+      author: z.array(z.string()),
+      coverColor: z.string(),
+      backColor: z.string(),
+      titleTextColor: z.string().optional().default("#0F0F0F"),
+      pageNumber: z.number().optional().default(300),
+      bookMarginRight: z.number().optional().default(5),
+      bookBindWidth: z.number().optional().default(10),
+    }),
   }),
   transform: async (document, context) => {
     const mdx = await compileMDX(

@@ -36,7 +36,7 @@ function PostContent({ slug }: { slug: string }) {
               {post.tags.map((tag) => (
                 <Link
                   key={tag}
-                  href={`/posts?tag=${tag}`}
+                  href={`/reading?tag=${tag}`}
                 >
                   <Badge
                     variant="secondary"

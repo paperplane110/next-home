@@ -5,14 +5,17 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { allPosts } from "content-collections";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Undo2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ArticleTag } from "@/components/article-tag";
+import { Separator } from "@/components/ui/separator";
 
 // PostsSection component
 // Extract useSearchParams from page level component.
 export const PostsSection = () => {
-  
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -28,8 +31,42 @@ export const PostsSection = () => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 
-  const tags = ["All"].concat([...new Set(posts.flatMap(post => post.tags))].sort());
+  const tags: Record<string, number> = {};
+  posts.forEach(post => {
+    post.tags.forEach(tag => {
+      if (tags[tag]) {
+        tags[tag]++;
+      } else {
+        tags[tag] = 1;
+      }
+    })
+  })
+  const sortedTags = Object.fromEntries(
+    Object.entries(tags).sort((a, b) => b[1] - a[1])
+  )
+
   // const years = [...new Set(posts.map(post => format(new Date(post.date), "yyyy")))];
+  const convertDate = (date: string): string => {
+    return format(new Date(date), "LLL/dd")
+  }
+
+  const filteredPosts = useMemo(() => {
+    return posts
+      .filter(post => selectedTag === "All" || post.tags.includes(selectedTag))
+      .filter(post => selectedYear === "" || format(new Date(post.date), "yyyy") === selectedYear);
+  }, [selectedTag, selectedYear, posts]);
+
+  // mark the first post of each year, for display the year interval.
+  let currYear = "";
+  const yearIntervalIndex: Record<string, number> = {};
+  filteredPosts.forEach((post, index) => {
+    const year = format(new Date(post.date), "yyyy");
+    if (year !== currYear) {
+      currYear = year;
+      yearIntervalIndex[year] = index;
+    }
+  });
+
 
   const handleFilter = (tag?: string, year?: string) => {
     const params = new URLSearchParams(searchParams);
@@ -52,44 +89,28 @@ export const PostsSection = () => {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
-  const convertDate = (date: string): string => {
-    return format(new Date(date), "LLL/dd")
-  }
-
-  const filteredPosts = useMemo(() => {
-    return posts
-      .filter(post => selectedTag === "All" || post.tags.includes(selectedTag))
-      .filter(post => selectedYear === "" || format(new Date(post.date), "yyyy") === selectedYear);
-  }, [selectedTag, selectedYear, posts]);
-
-  // mark the first post of each year, for display the year interval.
-  let currYear = "";
-  const yearIntervalIndex: Record<string, number> = {};
-  filteredPosts.forEach((post, index) => {
-    const year = format(new Date(post.date), "yyyy");
-    if (year !== currYear) {
-      currYear = year;
-      yearIntervalIndex[year] = index;
-    }
-  });
-
   return (
     <>
       {/* tags filter */}
-      <div id="tags" className="subsection pt-8 flex flex-wrap gap-2">
-        {tags.map((tag, index) => {
+      <div id="tags" className="subsection mt-8 flex flex-wrap items-center gap-2">
+        <ArticleTag
+          tag="All"
+          count={filteredPosts.length}
+          isActivated={selectedTag === "All"}
+          onClick={() => handleFilter("All")}
+        />
+        <div className="h-4">
+          <Separator orientation="vertical" />
+        </div>
+        {Object.entries(sortedTags).map(([tag, count], index) => {
           return (
-            <Badge
+            <ArticleTag
               key={index}
-              variant={selectedTag === tag ? "default" : "secondary"}
+              tag={tag}
+              count={count}
+              isActivated={selectedTag === tag}
               onClick={() => handleFilter(tag)}
-              className={cn(
-                "inline-block transition-none text-muted-foreground cursor-pointer",
-                selectedTag === tag ? "text-white" : ""
-              )}
-            >
-              {tag}
-            </Badge>
+            />
           );
         })}
       </div>
@@ -98,7 +119,7 @@ export const PostsSection = () => {
           const year = format(new Date(post.date), "yyyy");
           return (
             <div key={index}>
-              
+
               {/* year interval */}
               {index === yearIntervalIndex[year] && (
                 <div
@@ -110,7 +131,8 @@ export const PostsSection = () => {
                 >
                   <p className={cn("cursor-pointer hover:text-pink-600", selectedYear === year && "text-pink-600")} onClick={() => handleFilter(undefined, year)}>{year}</p>
                   {selectedYear !== "" && (
-                    <div className="cursor-pointer hover:text-pink-600" onClick={() => handleFilter(undefined, "")}>Back</div>
+                    <div className="flex items-center gap-1 cursor-pointer hover:text-pink-600" onClick={() => handleFilter(undefined, "")}>
+                      <Undo2 className="-translate-y-px" size={12} />Back</div>
                   )}
                 </div>
               )}

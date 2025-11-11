@@ -94,6 +94,12 @@
     mix-blend-mode: overlay;
     background: linear-gradient(90deg, hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, 0) 12%, hsla(0, 0%, 100%, .25) 29.25%, hsla(0, 0%, 100%, 0) 50.5%, hsla(0, 0%, 100%, 0) 75.25%, hsla(0, 0%, 100%, .25) 91%, hsla(0, 0%, 100%, 0)), linear-gradient(90deg, rgba(0, 0, 0, .03), rgba(0, 0, 0, .1) 12%, transparent 30%, rgba(0, 0, 0, .02) 50%, rgba(0, 0, 0, .2) 73.5%, rgba(0, 0, 0, .5) 75.25%, rgba(0, 0, 0, .15) 85.25%, transparent);
   }
+
+  .book-right-edge-bg {
+    background: 
+      linear-gradient(90deg, rgba(182, 182, 182, 0.9), rgba(182, 182, 182, 0.5) 30%, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 1) 100%),
+      linear-gradient(rgb(255, 255, 255) 95%, rgba(99, 99, 99, 0.1) 100%);
+  }
 }
 
 

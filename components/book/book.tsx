@@ -58,7 +58,7 @@ export function Book({
     >
       <div id="book-wrapper" className={cn(
         "w-full h-full relative",
-        "will-change-transform transition-transform duration-300",
+        "will-change-transform transition-transform duration-300 ease-out",
         "transform-3d hover:-rotate-y-20 hover:-translate-x-1 hover:translate-z-[50px]"
       )}
       >
@@ -84,7 +84,7 @@ export function Book({
         </div>
         <div
           id="book-right-edge"
-          className="absolute z-[-1] bg-muted border-y rotate-y-90"
+          className="absolute z-[-1] book-right-edge-bg border-y rotate-y-90"
           style={{
             top: `${edgeMarginY}px`,
             height: `calc(100% - ${edgeMarginY * 2}px)`,
