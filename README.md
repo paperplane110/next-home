@@ -19,22 +19,38 @@ Todo list
 - [x] Use Nextjs font module: [link](https://nextjs.org/docs/app/api-reference/components/font)
 - [x] "writing page"
 - [ ] "About page"
-- [ ] "Book page"
+- [x] "Book page"
 - [ ] "Gallery page"
   - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
   - like this [udara.io/photos/](https://udara.io/photos/)
 - [ ] add previous and next post link on each post page
-- [ ] Footer component
+- [x] Footer component
 - [ ] icon design
 - [ ] meta
 - [ ] seo
 - [ ] Progress indicator for posts.
   - [ ] use [motion scroll](https://motion.dev/docs/react-scroll-animations?platform=react)
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
+- [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
+
+### 2025-11-13
+
+Fix
+
+- 多层级 li marker 显示大于 2 层都是 disc 的问题
 
 ### 2025-11-11
 
+Feat
 
+- 重构 book component
+- 给读书笔记添加 meta
+
+Polish
+
+- 年度返回添加 icon
+- tag 抽象成一个新组件
+- tag All 和其他使用 separator 分开
 
 ### 2025-11-08
 

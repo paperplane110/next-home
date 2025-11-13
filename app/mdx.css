@@ -49,11 +49,20 @@
       list-style-type: disc;
       list-style-position: outside;
       padding-left: 1.5rem;
+    }
 
-      ul {
-        list-style-type: circle;
-        padding-left: 1.5rem;
-      }
+    /* odds levels are disc  */
+    ul>li,
+    ul>li ul>li ul>li,
+    ul>li ul>li ul>li ul>li ul>li {
+      list-style-type: disc;
+    }
+
+    /* even levels are circle */
+    ul>li ul>li,
+    ul>li ul>li ul>li ul>li,
+    ul>li ul>li ul>li ul>li ul>li ul>li {
+      list-style-type: circle;
     }
 
     li {
@@ -62,7 +71,6 @@
 
       p {
         margin: 0;
-        display: inline;
       }
 
       /* font-mono looks bigger than p, so manually set the font-size */
@@ -150,10 +158,8 @@
     }
 
     /* if a code block figure has a element has [data-rehype-pretty-code-title] */
-    figure:has(
-      div[data-rehype-pretty-code-title],
-      figcaption[data-rehype-pretty-code-title]
-    ) pre {
+    figure:has(div[data-rehype-pretty-code-title],
+      figcaption[data-rehype-pretty-code-title]) pre {
       @apply rounded-t-none border-t-0 mt-0 pt-2;
     }
 
