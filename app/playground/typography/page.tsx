@@ -26,7 +26,7 @@ export default function Typography() {
   return (
     <div className="section page-top-margin">
       <header className="subsection">
-        <h1 className="headline font-serif font-light soft-70">Typography<span className="text-pink-600">.</span></h1>
+        <h1 className="headline font-serif font-light soft-70">Typography</h1>
       </header>
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Grid/circle/info 布局</h2>

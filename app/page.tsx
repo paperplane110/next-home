@@ -1,21 +1,20 @@
-import { allPosts } from "content-collections"
+import { allPosts, allReadings } from "content-collections"
 import Link from "next/link"
 import YearProgress from "./components/year-progress"
 import OuterLink from "@/components/link";
 import { MusicPlayerCard } from "@/components/music-player-card";
 import { Badge } from "@/components/ui/badge";
+import { PostItem } from "@/components/post-item";
 
 export default function Home() {
-  const nowDate = new Date().toDateString().split(" ").slice(1, 3).join(", ");
   const nowYear = new Date().getFullYear();
-  // console.log(allPosts[0])
 
   return (
     <div className="section font-serif">
       <div className="subsection page-top-margin mb-12">
         {/* <p className="ml-1 text-muted-foreground">Tianyu&apos;s</p> */}
         <Badge variant="secondary" className="text-muted-foreground">Tianyu&apos;s</Badge>
-        <h1 className="text-7xl font-light soft-60">Blog<span className="text-pink-600">.</span></h1>
+        <h1 className="text-7xl font-light soft-60">Blog<span className="text-primary">.</span></h1>
         <h3 className="ml-1 text-xl italic font-light">{nowYear}</h3>
       </div>
       <div className="subsection mb-6">
@@ -32,53 +31,68 @@ export default function Home() {
         </section>
       </div>
 
-      <div className="subsection mb-8">
+      <div className="subsection mb-12">
         <MusicPlayerCard />
       </div>
 
-      <div className="subsection mb-8">
-        <div className="grid grid-cols-2">
-          <div id="writing">
-            <OuterLink href="/posts">
-              <span className="font-bold">Writing</span>
-            </OuterLink>
-            <div>
-              <ul>
-                {allPosts
-                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                  .slice(0, 4)
-                  .map((post) => (
-                    <li key={post._meta.path} className="mt-1 text-muted-foreground hover:text-black">
-                      {/* <span className="block size-1 bg-pink-600 rounded-full mr-2" /> */}
-                      <h3>
-                        <Link href={`/posts/${post._meta.path}`}>{post.title}</Link>
-                      </h3>
-                    </li>
-                  ))}
-                {allPosts.length > 4 && (
-                  <li className="mt-3">
-                    More posts……
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
-          <div id="projects">
-            <h3 className="">Projects</h3>
-          </div>
+      <div className="subsection mb-12">
+        <h2 className="text-muted-foreground font-sans text-sm">Today</h2>
+        <div className="flex items-center text-muted-foreground text-sm">
+          {/* <div className="hidden sm:block sm:flex-2 font-sans text-sm opacity-0 sm:opacity-100">Today</div> */}
+          <div className="flex-1 border-b border-dotted border-muted-foreground transform translate-y-px"></div>
+          <YearProgress/>
+          <div className="flex-1 border-b border-dotted border-muted-foreground transform translate-y-px"/>
+          {/* <div className="flex-0 sm:flex-2"/> */}
         </div>
-      </div>
-
-      <div className="subsection mb-8">
-        <p>
-          <span className="font-bold">Today</span>
-          &nbsp;is {nowDate}. Time flies so quickly. I&apos;m still trying to catch the moment.
+        <p className="mt-2">
+          今天是北京的秋天，金色的太阳，金色的银杏叶，秋风微冷，吹散了昏沉的思绪
         </p>
-        <div className="flex justify-center p-4">
-          <YearProgress />
+      </div>
+
+      <div className="subsection mb-12">
+        <h2 className="text-muted-foreground font-sans text-sm">Writing</h2>
+        <div className="mt-4 grid grid-cols-1 gap-y-1">
+          {allPosts
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .slice(0, 4)
+            .map((post, index) => (
+              <PostItem key={index} post={post} />
+            ))}
+          {allPosts.length > 4 && (
+            <Link href="/posts">
+              <div className="group/more mt-1 flex justify-between items-center">
+                <div className="flex-1 border-b border-muted-foreground border-dotted" />
+                <div className="font-mono text-xs text-muted-foreground group-hover/more:text-primary">
+                  &gt;&gt;&gt; More posts
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
 
+      <div className="subsection mb-12">
+        <h2 className="text-muted-foreground font-sans text-sm">Reading</h2>
+        <div className="mt-4 grid grid-cols-1 gap-y-1">
+          {allReadings
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .slice(0, 4)
+            .map((post, index) => (
+              <PostItem key={index} post={post} />
+            ))}
+          {allReadings.length > 4 && (
+            <Link href="/reading">
+              <div className="group/more mt-1 flex justify-between items-center">
+                <div className="flex-1 border-b border-muted-foreground border-dotted" />
+                <div className="font-mono text-xs text-muted-foreground group-hover/more:text-primary">
+                  &gt;&gt;&gt; More book reviews
+                </div>
+              </div>
+            </Link>
+          )}
+        </div>
+      </div>
+      {/* 
       <div className="subsection mb-8">
         <p>Besides, I have a lot out hobbies, including:
           reading, hiking, photography, games and music.</p>
@@ -86,7 +100,7 @@ export default function Home() {
         <p>
           Recently, I&apos;m interested in ice staking, and just started learning about it.
         </p>
-      </div>
+      </div> */}
     </div>
   )
 }

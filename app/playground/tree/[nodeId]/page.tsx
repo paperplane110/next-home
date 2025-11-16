@@ -11,7 +11,7 @@ export default function NodePage({ params }: NodePageProps) {
   const { nodeId } = use(params)
   return (
     <div>
-      <h1>Node {nodeId}</h1>
+      <h1 className="text-primary">Detail Page of Node {nodeId}</h1>
     </div>
   )
 }

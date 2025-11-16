@@ -6,7 +6,7 @@ export default function Posts() {
     <div className="section font-serif">
       <div className="subsection page-top-margin">
         <h1 className="headline font-light soft-70">
-          Writing<span className="text-pink-600">.</span>
+          Writing
         </h1>
       </div>
       <div id="desc" className="subsection pt-8 text-muted-foreground">

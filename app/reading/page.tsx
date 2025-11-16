@@ -6,7 +6,7 @@ export default function Reading() {
     <div className="section font-serif">
       <div className="subsection page-top-margin">
         <h1 className="headline font-light soft-70">
-          Reading<span className="text-pink-600">.</span>
+          Reading
         </h1>
       </div>
       <div id="desc" className="subsection pt-8 text-muted-foreground">

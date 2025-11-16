@@ -33,15 +33,15 @@ export const MusicPlayerCard = () => {
   }
 
   return (
-    <div className="border border-gray-100 px-0.5 pt-0.5 rounded-lg shadow-xs">
-      <div className="border border-gray-100 p-2 rounded-md flex">
+    <div className="border border-accent px-0.5 pt-0.5 rounded-lg shadow-xs">
+      <div className="border border-accent p-2 rounded-md flex">
         <div className="relative group/album-cover">
-          {!isIframeLoaded && <div className="z-25 absolute w-[66px] h-[66px] rounded-md bg-gray-100 scale-105" />}
-          <div id="album-cover" className="z-20 relative w-[66px] h-[66px] rounded-md overflow-hidden">
+          {!isIframeLoaded && <div className="z-5 absolute w-[66px] h-[66px] rounded-md bg-accent scale-105" />}
+          <div id="album-cover" className="z-4 relative w-[66px] h-[66px] rounded-md overflow-hidden">
             <iframe
               ref={iframeRef}
               onLoad={() => handleIframeLoad()}
-              className="absolute top-[-10px] left-[-10px] filter brightness-150"
+              className="absolute -top-2.5 -left-2.5 filter brightness-150"
               title="Song List Player"
               referrerPolicy="no-referrer"
               width={86}
@@ -50,7 +50,7 @@ export const MusicPlayerCard = () => {
             >
             </iframe>
           </div>
-          <div className="absolute top-[4px] group-hover/album-cover:translate-x-[-40px] transition-transform">
+          <div className="absolute top-1 group-hover/album-cover:-translate-x-10 transition-transform">
             {isIframeLoaded && <BlackVinyl />}
             {/* <Disk /> */}
           </div>
@@ -71,7 +71,7 @@ export const MusicPlayerCard = () => {
               alt="neteast music"
               width={20}
               height={20}
-              className="bg-gray-200 hover:bg-[#ff1b29] p-[0.15rem] rounded-full"
+              className="bg-[#ff1b29] hover:bg-[#ff1b29]/60 p-[0.15rem] rounded-full transition-colors ease-in-out"
             />
           </Link>
         </div>

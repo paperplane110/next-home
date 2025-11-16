@@ -69,14 +69,20 @@ export default async function TreePage({ children }: { children: React.ReactNode
       <div className="subsection">
         <h1 className="headline font-serif font-light soft-70">
           Node Tree Component
-          <span className="text-pink-600">.</span>
         </h1>
+      </div>
+      <div className="subsection mt-16 text-muted-foreground">
+        节点树/侧边栏布局
+        <ul className="mt-2">
+          <li>点击节点后，跳转到该节点的路由，支持节点详情页（动态路由）</li>
+          <li>节点树位于侧边栏，侧边栏宽度支持左右变动</li>
+        </ul>
       </div>
       {/* 若使用 ResizablePanelGroup，direction 之外的方向需要明确定义，否则 shrink */}
       <div className="h-[400px] mt-16">
         <ResizablePanelGroup
           direction="horizontal"
-          className="min-w-xl md:min-w-3xl lg:min-w-5xl border border-black"
+          className="min-w-sm sm:min-w-md md:min-w-3xl lg:min-w-5xl border border-black"
         >
           {/* 
             min-w-[10rem] 用来配置侧边栏最小宽度

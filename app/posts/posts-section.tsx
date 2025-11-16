@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArticleTag } from "@/components/article-tag";
 import { Separator } from "@/components/ui/separator";
+import { PostItem } from "@/components/post-item";
 
 // PostsSection component
 // Extract useSearchParams from page level component.
@@ -44,11 +45,6 @@ export const PostsSection = () => {
   const sortedTags = Object.fromEntries(
     Object.entries(tags).sort((a, b) => b[1] - a[1])
   )
-
-  // const years = [...new Set(posts.map(post => format(new Date(post.date), "yyyy")))];
-  const convertDate = (date: string): string => {
-    return format(new Date(date), "LLL/dd")
-  }
 
   const filteredPosts = useMemo(() => {
     return posts
@@ -138,31 +134,7 @@ export const PostsSection = () => {
               )}
 
               {/* post item */}
-              <Link
-                href={`/posts/${post._meta.path}`}
-                className="flex justify-between group py-1"
-              >
-                <div className="group-hover:underline decoration-pink-600">
-                  {post.title}
-                </div>
-                {/* <div className="flex-1 flex items-center px-4">
-                    <div className="w-full h-[2px] group-hover:bg-muted-foreground/20"></div>
-                  </div> */}
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.map((tag, index) => {
-                      return (
-                        <Badge key={index} variant="secondary" className="text-muted-foreground">
-                          {tag}
-                        </Badge>
-                      );
-                    })}
-                  </div>
-                  <p className="text-xs font-mono text-muted-foreground group-hover:text-pink-600">
-                    {convertDate(post.date.toString())}
-                  </p>
-                </div>
-              </Link>
+              <PostItem post={post} />
             </div>
           );
         })}

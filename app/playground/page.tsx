@@ -17,14 +17,16 @@ export default function Playground() {
     {
       name: "book component",
       path: "/book-component",
+    },
+    {
+      name: "flow gradient",
+      path: "/flow-gradient",
     }
   ]
   return (
     <div className="section">
       <header className="page-top-margin subsection">
-        <h1 className="headline font-serif font-light soft-70">Playground
-          <span className="text-pink-600">.</span>
-        </h1>
+        <h1 className="headline font-serif font-light soft-70">Playground</h1>
       </header>
       <div className="subsection mt-16">
         {routeList.map((route) => (

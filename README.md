@@ -33,6 +33,28 @@ Todo list
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
 
+### 2025-11-14
+
+Feat
+
+- Change all pink color to `color-primary`
+- nav menu drawer
+- update nav bg with linear gradient transparent and slightly blur
+- bg with noise
+- extract post item component
+- work experience component
+- Home page v1.0 done
+
+Polish
+
+- YearProgress 
+
+Question
+
+- tailwindcss selector: `data-[state=closed]:`
+- tailwindcss animation: `animate-collapsible-up`, `animate-collapsible-down`
+- tailwindcss `@theme inline {}`, `@layout base {}`, `@layout components {}`
+
 ### 2025-11-13
 
 Fix

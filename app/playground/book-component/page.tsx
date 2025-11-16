@@ -24,7 +24,6 @@ export default function BookComponentPage() {
       <div className="subsection">
         <h1 className="headline font-serif font-light soft-70">
           Book Component
-          <span className="text-pink-600">.</span>
         </h1>
       </div>
       <div className="subsection mt-8">

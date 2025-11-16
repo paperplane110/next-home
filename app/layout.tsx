@@ -8,6 +8,7 @@ import { Frame } from "@/components/frame";
 import ControlPanel from "@/components/control-panel";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import PaperBg from "@/components/paper-bg";
 
 export const metadata: Metadata = {
   title: "Tianyu",
@@ -58,7 +59,6 @@ export default function RootLayout({
         `}
       >
         <FrameProvider>
-          <ControlPanel />
           <Frame />
           <Navigation />
           <div className="min-h-[calc(100vh-8rem)] pt-16">
@@ -66,6 +66,7 @@ export default function RootLayout({
           </div>
           <Footer />
         </FrameProvider>
+        <PaperBg />
       </body>
     </html>
   );
