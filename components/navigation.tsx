@@ -65,11 +65,11 @@ export const Navigation = () => {
   }
 
   return (
-    <div className={cn(
-      "z-10 section fixed top-0 left-0 right-0 border-b border-cream-100/50 border-dotted",
-      "bg-linear-to-b from-background/80 via-60% via-background/70 to-background/0",
-      "backdrop-blur-[2px]"
-    )}
+    <div
+      className={cn(
+        "z-10 section fixed top-0 left-0 right-0 border-b border-neutral-200 border-dotted",
+        "bg-white/75 backdrop-blur-lg"
+      )}
     >
       <nav className={cn(
         "subsection py-4 flex items-center justify-start gap-4",

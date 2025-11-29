@@ -37,7 +37,7 @@ export default function Home() {
 
       <div className="subsection mb-12">
         <h2 className="text-muted-foreground font-sans text-sm">Today</h2>
-        <div className="flex items-center text-muted-foreground text-sm">
+        <div className="mt-4 flex items-center text-muted-foreground text-sm">
           {/* <div className="hidden sm:block sm:flex-2 font-sans text-sm opacity-0 sm:opacity-100">Today</div> */}
           <div className="flex-1 border-b border-dotted border-muted-foreground transform translate-y-px"></div>
           <YearProgress/>

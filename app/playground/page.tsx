@@ -19,8 +19,12 @@ export default function Playground() {
       path: "/book-component",
     },
     {
-      name: "flow gradient",
-      path: "/flow-gradient",
+      name: "Colorful drop shadow effect on text",
+      path: "/colorful-drop-shadow-effect-on-text",
+    },
+    {
+      name: "album",
+      path: "/album",
     }
   ]
   return (

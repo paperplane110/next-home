@@ -30,6 +30,7 @@ const posts = defineCollection({
   name: "posts",
   directory: "content/posts",
   include: ["*.mdx"],
+  exclude: ["_*"],
   schema: (z) => ({
     title: z.string(),
     summary: z.string(),

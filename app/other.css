@@ -37,7 +37,7 @@
   }
 
   .subsection {
-    @apply w-full px-6 max-w-[480px] md:max-w-screen-sm;
+    @apply w-full px-6 max-w-[480px] sm:max-w-screen-sm;
   }
 
   /* 

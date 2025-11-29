@@ -38,7 +38,7 @@ export default function YearProgress() {
       >{progress}%</span>
       <span
         id="date"
-        className="absolute -top-5.5 font-sans text-[11px] text-black"
+        className="absolute -top-5.5 font-sans text-[10px] text-black"
         style={{ left: `${progressLeftOffset}px` }}
       >
         {nowDate}

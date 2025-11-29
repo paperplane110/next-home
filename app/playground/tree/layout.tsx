@@ -16,7 +16,7 @@ const data = [
         children: [
           {
             id: 5,
-            name: "Grandchild Node 5",
+            name: "Greatchild Node 5",
             children: [
               {
                 id: 6,

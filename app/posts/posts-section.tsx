@@ -2,12 +2,10 @@
 
 import { useState, useMemo } from "react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
 import { allPosts } from "content-collections";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Undo2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArticleTag } from "@/components/article-tag";
 import { Separator } from "@/components/ui/separator";
@@ -91,7 +89,7 @@ export const PostsSection = () => {
       <div id="tags" className="subsection mt-8 flex flex-wrap items-center gap-2">
         <ArticleTag
           tag="All"
-          count={filteredPosts.length}
+          count={allPosts.length}
           isActivated={selectedTag === "All"}
           onClick={() => handleFilter("All")}
         />
