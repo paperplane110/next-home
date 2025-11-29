@@ -33,6 +33,12 @@ Todo list
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
 
+### 2025-11-29
+
+Feat
+
+- dub like colourful drop shadow effect on text
+
 ### 2025-11-14
 
 Feat
