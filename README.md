@@ -33,11 +33,24 @@ Todo list
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
 
+### 2025-11-30
+
+Feat
+
+- add folder component
+
 ### 2025-11-29
 
 Feat
 
 - dub like colourful drop shadow effect on text
+
+BUG
+
+- Cannot deploy by Cloudflare workder:
+  - https://github.com/opennextjs/opennextjs-cloudflare/issues/913
+  - https://github.com/opennextjs/opennextjs-cloudflare/issues/861
+  - https://github.com/sdorra/content-collections/issues/331
 
 ### 2025-11-14
 

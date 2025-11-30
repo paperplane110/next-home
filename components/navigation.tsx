@@ -33,11 +33,11 @@ const routes = [
     label: "Reading",
     icon: LibraryIcon,
   },
-  {
-    href: "/gallery",
-    label: "Gallery",
-    icon: CameraIcon,
-  },
+  // {
+  //   href: "/gallery",
+  //   label: "Gallery",
+  //   icon: CameraIcon,
+  // },
   {
     href: "/about",
     label: "About",
@@ -47,7 +47,7 @@ const routes = [
     href: "/playground",
     label: "Playground",
     icon: PuzzleIcon,
-    hidden: true,
+    hidden: false,
   }
 ]
 

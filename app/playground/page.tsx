@@ -25,6 +25,10 @@ export default function Playground() {
     {
       name: "album",
       path: "/album",
+    },
+    {
+      name: "Folder component",
+      path: "/folder-component",
     }
   ]
   return (

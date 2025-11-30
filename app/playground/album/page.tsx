@@ -78,7 +78,7 @@ export default function AlbumPage() {
     <div className="section page-top-margin">
       <div className="subsection">
         <h1 className="headline soft-70 font-serif font-light">Album</h1>
-        <p className="mt-8 text-sm font-medium text-gray-500">
+        <p className="mt-8 text-sm font-medium text-muted-foreground">
           An Album component inspired by &quot;Racing Mount Pleasant&quot;
         </p>
       </div>
