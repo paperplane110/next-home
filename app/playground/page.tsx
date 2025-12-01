@@ -29,7 +29,11 @@ export default function Playground() {
     {
       name: "Folder component",
       path: "/folder-component",
-    }
+    },
+    {
+      name: "Glossy icon",
+      path: "/glossy-icon",
+    },
   ]
   return (
     <div className="section">

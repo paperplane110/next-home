@@ -1,4 +1,7 @@
 @layer components {
+  code {
+    @apply text-sm font-mono bg-muted p-1 rounded-md;
+  }
 
   /* font variation settings */
   .soft-70 {

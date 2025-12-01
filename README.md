@@ -33,6 +33,10 @@ Todo list
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
 
+### 2025-12-01
+
+Feat
+
 ### 2025-11-30
 
 Feat
