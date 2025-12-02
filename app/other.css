@@ -43,6 +43,30 @@
     @apply w-full px-6 max-w-[480px] sm:max-w-screen-sm;
   }
 
+  /* apple icon squircle rounded */
+  .icon-rounded-57 {
+    border-radius: 16px;
+  }
+
+  @supports (corner-shape: squircle) {
+    .icon-rounded-57 {
+      border-radius: 57px;
+      corner-shape: squircle;
+    }
+  }
+
+  /* apple icon squircle rounded */
+  .icon-rounded-59 {
+    border-radius: 16px;
+  }
+
+  @supports (corner-shape: squircle) {
+    .icon-rounded-59 {
+      border-radius: 59px;
+      corner-shape: squircle;
+    }
+  }
+
   /* 
     Apply to the first section of the page.
     Keep same vertical padding from page title to the navigation bar.

@@ -33,9 +33,16 @@ Todo list
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
 
-### 2025-12-01
+### 2025-12-01 - 02
 
 Feat
+
+- add glossy icon component
+  - shape
+    - Apple's app icon shape: [link](https://hackernoon.com/apples-icons-have-that-shape-for-a-very-good-reason-720d4e7c8a14)
+    - squircle shape: [link](https://www.cocoanetics.com/2013/06/ios-7-icon-squircle/)
+    - css corner shape: [link](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape)
+    - css fallback, `@supports` query: [link](https://developer.mozilla.org/en-US/docs/Web/CSS/@supports)
 
 ### 2025-11-30
 
