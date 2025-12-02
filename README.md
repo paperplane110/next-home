@@ -12,7 +12,7 @@ This is my next blog. Built with Next.js, shadcn and Tailwind CSS.
 Todo list
 
 - [ ] ? apply liquid glass effect on navigation bar: [link](https://css-tricks.com/getting-clarity-on-apples-liquid-glass/)
-- [ ] pick bg color & texture for the page
+- [x] pick bg color & texture for the page
 - [x] design css for mdx
   - [x] design custom components to replace the original components: [link](https://mdxjs.com/table-of-components/#components)
     - [x] blockquote
@@ -43,6 +43,11 @@ Feat
     - squircle shape: [link](https://www.cocoanetics.com/2013/06/ios-7-icon-squircle/)
     - css corner shape: [link](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape)
     - css fallback, `@supports` query: [link](https://developer.mozilla.org/en-US/docs/Web/CSS/@supports)
+
+Deployment
+
+- [x] static export
+- [x] /playground/tree/\[nodeId\]
 
 ### 2025-11-30
 
