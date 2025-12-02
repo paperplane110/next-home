@@ -1,7 +1,6 @@
 "use client"
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import OuterLink from "@/components/link";
