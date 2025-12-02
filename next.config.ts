@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
 
   // static export
   output: "export",
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default withContentCollections(nextConfig);
