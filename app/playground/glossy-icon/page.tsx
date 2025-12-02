@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react";
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -104,7 +105,7 @@ export default function GlossyIcon() {
                 "hidden absolute size-57 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border border-primary",
                 showSquircle && "block"
               )}
-              style={{ cornerShape: "squircle", borderRadius: "228px" }}
+              style={{ cornerShape: "squircle", borderRadius: "228px" } as CSSProperties}
             >
             </div>
 
