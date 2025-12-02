@@ -3,7 +3,10 @@ import { withContentCollections } from "@content-collections/next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  turbopack: {}
+  turbopack: {},
+
+  // static export
+  output: "export",
 };
 
 export default withContentCollections(nextConfig);

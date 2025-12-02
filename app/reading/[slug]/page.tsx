@@ -66,6 +66,13 @@ function PostContent({ slug }: { slug: string }) {
   );
 }
 
+// Return a list of `params` to populate the [slug] dynamic segment
+export async function generateStaticParams() {
+  return allReadings.map((reading) => ({
+    slug: reading._meta.path,
+  }))
+}
+
 export default async function PostPage({ 
   params 
 }: { 
