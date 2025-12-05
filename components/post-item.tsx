@@ -6,11 +6,12 @@ import { allPosts } from "content-collections";
 type Post = typeof allPosts[0];
 
 interface PostItemProps {
+  leadingURL: string;
   post: Post;
   disableTags?: boolean;
 }
 
-export const PostItem = ({ post, disableTags }: PostItemProps) => {
+export const PostItem = ({ leadingURL, post, disableTags }: PostItemProps) => {
   // const years = [...new Set(posts.map(post => format(new Date(post.date), "yyyy")))];
   const convertDate = (date: string): string => {
     return format(new Date(date), "LLL/dd")
@@ -18,7 +19,7 @@ export const PostItem = ({ post, disableTags }: PostItemProps) => {
 
   return (
     <Link
-      href={`/posts/${post._meta.path}`}
+      href={`${leadingURL}/${post._meta.path}`}
       className="flex justify-between group py-1"
     >
       <div className="group-hover:underline decoration-primary">

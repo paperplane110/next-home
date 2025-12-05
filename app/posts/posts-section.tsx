@@ -132,7 +132,7 @@ export const PostsSection = () => {
               )}
 
               {/* post item */}
-              <PostItem post={post} />
+              <PostItem leadingURL="/posts" post={post} />
             </div>
           );
         })}

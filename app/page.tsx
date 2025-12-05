@@ -56,7 +56,7 @@ export default function Home() {
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice(0, 4)
             .map((post, index) => (
-              <PostItem key={index} post={post} />
+              <PostItem key={index} leadingURL="/posts" post={post} />
             ))}
           {allPosts.length > 4 && (
             <Link href="/posts">
@@ -78,7 +78,7 @@ export default function Home() {
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice(0, 4)
             .map((post, index) => (
-              <PostItem key={index} post={post} />
+              <PostItem key={index} leadingURL="/reading" post={post} />
             ))}
           {allReadings.length > 4 && (
             <Link href="/reading">
