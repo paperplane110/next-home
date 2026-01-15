@@ -45,13 +45,13 @@ export default function Home() {
           {/* <div className="flex-0 sm:flex-2"/> */}
         </div>
         <p className="mt-2">
-          今天是北京的秋天，金色的太阳，金色的银杏叶，秋风微冷，吹散了昏沉的思绪
+          今天是北京的冬日，周围都是顶着寒风匆匆为生活奔波的人们
         </p>
       </div>
 
       <div className="subsection mb-12">
         <h2 className="text-muted-foreground font-sans text-sm">Writing</h2>
-        <div className="mt-4 grid grid-cols-1 gap-y-1">
+        <div className="mt-4 grid grid-cols-1 gap-y-0.5">
           {allPosts
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice(0, 4)
@@ -73,7 +73,7 @@ export default function Home() {
 
       <div className="subsection mb-12">
         <h2 className="text-muted-foreground font-sans text-sm">Reading</h2>
-        <div className="mt-4 grid grid-cols-1 gap-y-1">
+        <div className="mt-4 grid grid-cols-1 gap-y-0.5">
           {allReadings
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice(0, 4)
