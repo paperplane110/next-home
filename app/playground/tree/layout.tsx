@@ -1,7 +1,7 @@
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/components/ui/resizable";
 import Tree from "./components/tree";
 
-export const data = [
+const data = [
   {
     id: 1,
     name: "Node 1",
