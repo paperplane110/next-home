@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter, JetBrains_Mono, Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
 import { FrameProvider } from "@/components/frame-context";
 import { Frame } from "@/components/frame";
-import ControlPanel from "@/components/control-panel";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import PaperBg from "@/components/paper-bg";
@@ -67,6 +67,7 @@ export default function RootLayout({
           <Footer />
         </FrameProvider>
         <PaperBg />
+        <Analytics />
       </body>
     </html>
   );
