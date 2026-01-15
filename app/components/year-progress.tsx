@@ -1,7 +1,12 @@
+"use client"
+
+import { useState } from "react";
+import { useMedia } from "react-use";
 
 export default function YearProgress() {
+  const isMobile = useMedia("(max-width: 600px)", true);
   // calculate the how much progress we have made this year
-  const now = new Date();
+  const [now, setNow] = useState(() => new Date());
   const start = new Date(now.getFullYear(), 0, 1);
   const diff = now.getTime() - start.getTime();
   const oneWeek = 1000 * 60 * 60 * 24 * 7;
@@ -11,8 +16,8 @@ export default function YearProgress() {
   const progressLeftOffset = (currentWeek * 6.38 + 6.34 + 10).toFixed(0);
   const progress = (diff / (1000 * 60 * 60 * 24 * 365) * 100).toFixed(1)
 
-  const nowDate = new Date().toDateString().split(" ").slice(1, 3).join(",")
-  const dateLeftOffset = (currentWeek * 6.38 - 10).toFixed(0);
+  const nowDate = now.toDateString().split(" ").slice(1, 3).join(",")
+  // const dateLeftOffset = (currentWeek * 6.38 - 10).toFixed(0);
 
   return (
     <span className="relative">
@@ -35,13 +40,13 @@ export default function YearProgress() {
       <span
         className="absolute -top-2 font-sans text-[10px] text-black"
         style={{ left: `${progressLeftOffset}px` }}
-      >{progress}%</span>
+      >{progress}%{isMobile && ` ${nowDate}`}</span>
       <span
         id="date"
         className="absolute -top-5.5 font-sans text-[10px] text-black"
         style={{ left: `${progressLeftOffset}px` }}
       >
-        {nowDate}
+        {!isMobile && nowDate}
       </span>
     </span>
   )

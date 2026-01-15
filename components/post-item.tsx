@@ -22,7 +22,7 @@ export const PostItem = ({ leadingURL, post, disableTags }: PostItemProps) => {
       href={`${leadingURL}/${post._meta.path}`}
       className="flex justify-between group py-1"
     >
-      <div className="group-hover:underline decoration-primary">
+      <div className="group-hover:underline decoration-primary truncate">
         {post.title}
       </div>
       {/* <div className="flex-1 flex items-center px-4">
@@ -30,7 +30,7 @@ export const PostItem = ({ leadingURL, post, disableTags }: PostItemProps) => {
                   </div> */}
       <div className="flex items-center gap-2">
         {!disableTags && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex gap-2">
             {post.tags.map((tag, index) => {
               return (
                 <Badge key={index} variant="secondary" className="text-muted-foreground">
