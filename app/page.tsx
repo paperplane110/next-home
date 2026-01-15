@@ -45,7 +45,7 @@ export default function Home() {
           {/* <div className="flex-0 sm:flex-2"/> */}
         </div>
         <p className="mt-2">
-          今天是北京的冬日，周围都是顶着寒风匆匆为生活奔波的人们
+          今天是北京的冬日，周围都是顶着寒风、脚步匆匆为生活奔波的人们
         </p>
       </div>
 
