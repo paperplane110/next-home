@@ -30,7 +30,7 @@ export const PostItem = ({ leadingURL, post, disableTags }: PostItemProps) => {
                   </div> */}
       <div className="flex items-center gap-2">
         {!disableTags && (
-          <div className="flex flex gap-2">
+          <div className="flex gap-2">
             {post.tags.map((tag, index) => {
               return (
                 <Badge key={index} variant="secondary" className="text-muted-foreground">

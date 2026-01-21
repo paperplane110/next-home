@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
@@ -9,6 +9,15 @@ import OuterLink from "@/components/link";
 export default function GlossyIcon() {
   const [showRounded, setShowRounded] = useState(true);
   const [showSquircle, setShowSquircle] = useState(true);
+  const [isSquircleSupported, setIsSquircleSupported] = useState(false);
+
+  useEffect(() => {
+    if (window.CSS?.supports?.("corner-shape", "squircle")) {
+      setIsSquircleSupported(true);
+    } else {
+      setShowSquircle(false);
+    }
+  }, []);
 
   return (
     <div className="page-top-margin sm:pb-8 section">
@@ -95,7 +104,7 @@ export default function GlossyIcon() {
         </p>
         <div
           id="container"
-          className="relative mt-8 h-100 w-full border border-dashed border-gray-300 rounded-4xl flex flex-col items-center justify-center"
+          className="relative mt-8 h-100 w-full bg-white border border-dashed border-gray-300 rounded-4xl flex flex-col items-center justify-center"
         >
           <div className="absolute h-px w-full bg-gray-300 top-1/2 -translate-y-1/2"></div>
           <div className="absolute w-px h-full bg-gray-300 left-1/2 -translate-x-1/2"></div>
@@ -131,8 +140,13 @@ export default function GlossyIcon() {
               <Label htmlFor="rounded">Rounded Corner</Label>
             </div>
             <div className="flex items-center gap-x-2">
-              <Switch id="squircle" checked={showSquircle} onClick={() => setShowSquircle(!showSquircle)} />
-              <Label htmlFor="squircle">Squircle Corner</Label>
+              <Switch id="squircle" checked={showSquircle} disabled={!isSquircleSupported} onClick={() => setShowSquircle(!showSquircle)} />
+              <Label htmlFor="squircle">
+                {!isSquircleSupported
+                  ? "Squircle Corner (Not Supported)"
+                  : "Squircle Corner (Apple style)"
+                }
+              </Label>
             </div>
           </div>
         </div>
