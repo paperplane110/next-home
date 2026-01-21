@@ -1,6 +1,7 @@
 "use client"
+import Image from "next/image";
 import { useState } from "react";
-import { ChevronDown, ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
+import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
   Collapsible,
@@ -11,36 +12,47 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 
-type WorkExperienceProps = {
+type PositionContentType = "h3" | "bullet"
+
+export type WorkExperienceProps = {
   company: string;
   logo: string;
   isCurrent: boolean;
   positions: {
     isCollapsed?: boolean;
+    icon?: string;
     title: string;
     start: string;
     end?: string;
     type: string;
     content: {
-      type: string;
+      type: PositionContentType;
       text: string[];
     }[];
     skills: string[];
   }[];
 }
-type PositionProps = WorkExperienceProps["positions"][0];
+
+type PositionProps = {
+  position: WorkExperienceProps["positions"][0];
+  isFirst: boolean;
+  isLast: boolean;
+}
 
 
-const PositionItem = ({ position }: { position: PositionProps }) => {
+const PositionItem = ({ position, isFirst, isLast }: PositionProps) => {
   const [isOpen, setIsOpen] = useState(!position.isCollapsed);
   return (
-    <div id="exp" className="flex gap-2 mt-2 ml-2">
-      {/* <div id="icon-sideline" className="pt-2 flex flex-col items-center">
-                <div id="icon" className="flex items-center justify-center rounded-md size-6 bg-accent">
-                    <Code size={14} />
-                </div>
-                <div id="vertical-line" />
-            </div> */}
+    <div id="exp" className="flex gap-1">
+      <div id="icon-sideline" className="flex flex-col items-center">
+        <div id="vertical-line" className={cn("h-2 md:h-3 w-px bg-gray-200", isFirst && "bg-transparent")} />
+        <div id="icon" className="flex items-center justify-center size-6 rounded-md border bg-transparent">
+          <div className="flex items-center justify-center size-5  rounded-sm">
+            <span className={`${position.icon ? position.icon : "icon-[lucide--code-xml]"} size-4 text-gray-500`} />
+          </div>
+        </div>
+        <div id="vertical-line" className={cn("flex-1 w-px bg-gray-200", isLast && "hidden")} />
+      </div>
       <Collapsible
         id="exp-content"
         open={isOpen}
@@ -49,8 +61,8 @@ const PositionItem = ({ position }: { position: PositionProps }) => {
       >
         <CollapsibleTrigger asChild>
           <div className={cn(
-            "w-full flex justify-between items-center py-2 px-4 border-l border-gray-200 rounded-r-md ",
-            "transition-colors ease-in-out hover:bg-muted"
+            "w-full flex justify-between items-center py-2 px-3 rounded-md cursor-pointer",
+            "transition-colors ease-in-out hover:bg-muted/70"
           )}>
             <div id="exp-brief-content">
               <div id="exp-brief-title" className="text-start font-semibold">
@@ -93,9 +105,9 @@ const PositionItem = ({ position }: { position: PositionProps }) => {
         </CollapsibleTrigger>
         <CollapsibleContent
           className={cn(
-            "overflow-hidden relative px-4 transition-all duration-250 ease-out",
-            "data-[state=closed]:animate-collapsible-up",
-            "data-[state=open]:animate-collapsible-down",
+            "overflow-hidden relative px-3 transition-all ease-out",
+            "data-[state=closed]:animate-collapsible-up duration-200",
+            "data-[state=open]:animate-collapsible-down duration-200",
           )}
         >
           {/* <div className="absolute top-4 left-0 h-full border-l-2 border-l-primary">
@@ -106,36 +118,37 @@ const PositionItem = ({ position }: { position: PositionProps }) => {
                 <ul
                   key={index}
                   id="exp-bullets"
-                  className="list-disc list-inside pl-2 text-base leading-7 my-2"
+                  className="list-disc list-inside pl-1 text-sm leading-6 my-2 marker:text-gray-300"
                 >
                   {contentItem.text.map((bullet, bulletIndex) => (
                     <li key={bulletIndex}>{bullet}</li>
                   ))}
                 </ul>
               );
-            } else if (contentItem.type === "text") {
+            } else if (contentItem.type === "h3") {
               return (
-                <p
+                <h3
                   key={index}
-                  className="text-base font-semibold fade-in mt-2"
+                  className="text-sm text-muted-foreground fade-in mt-2"
                 >
                   {contentItem.text.join(" ")}
-                </p>
+                </h3>
               );
             } else {
               return null;
             }
           })}
-          <div id="skill-tag-list" className="mt-4 flex gap-x-1">
-            {position.skills.map((skill, index) => (
-              <Badge
-                key={index}
-                variant="outline">
-                {skill}
-              </Badge>
-            ))}
-          </div>
         </CollapsibleContent>
+        <div id="skill-tag-list" className="mt-2 mb-4 pl-3 flex flex-wrap gap-x-1 gap-y-2">
+          {position.skills.map((skill, index) => (
+            <Badge
+              key={index}
+              className="bg-muted rounded-sm text-muted-foreground"
+              variant="outline">
+              {skill}
+            </Badge>
+          ))}
+        </div>
       </Collapsible>
     </div>
   )
@@ -144,11 +157,27 @@ const PositionItem = ({ position }: { position: PositionProps }) => {
 export const WorkExperience = ({ career }: { career: WorkExperienceProps }) => {
   return (
     <div id="work-experience" className="py-4">
-      <div id="company" className="flex items-center gap-3">
-        <div id="company-logo">
-          <span className={`block size-4 bg-[#2529d8] ${career.logo}`}></span>
+      <div id="company" className="flex items-center gap-4 mb-1">
+        <div id="company-logo" className="size-6 flex items-center justify-center">
+          {career.logo.startsWith("icon")
+            ? (
+              <span className={`block size-4 bg-[#2529d8] ${career.logo}`} />
+            )
+            : career.logo.startsWith("/")
+              ? (
+                <Image
+                  src={career.logo}
+                  alt={career.company}
+                  width={16}
+                  height={16}
+                />
+              )
+              : (
+                <span className="text-sm font-light">{career.logo}</span>
+              )
+          }
         </div>
-        <div id="company-name" className="text-xl font-light">
+        <div id="company-name" className="text-xl font-serif soft-70 font-light">
           {career.company}
         </div>
         {career.isCurrent && (
@@ -158,7 +187,13 @@ export const WorkExperience = ({ career }: { career: WorkExperienceProps }) => {
         )}
       </div>
       {career.positions.map((position, index) => (
-        <PositionItem key={index} position={position} />
+        <div key={index} className="">
+          <PositionItem
+            position={position}
+            isFirst={index === 0}
+            isLast={index === career.positions.length - 1}
+          />
+        </div>
       ))}
     </div>
   )

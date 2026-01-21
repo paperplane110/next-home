@@ -2,6 +2,7 @@
 
 This is my next blog. Built with Next.js, shadcn and Tailwind CSS.
 
+
 ## Reference
 
 - Google Design: [link](https://design.google/?home=)
@@ -32,6 +33,18 @@ Todo list
   - [ ] use [motion scroll](https://motion.dev/docs/react-scroll-animations?platform=react)
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
+
+### 2026-1-21
+
+Feat:
+- finish work experience in About page.
+
+Fix
+- add some fallback feature when squircle shape is not supported
+
+Polish
+- WorkExperience component, mark as done!
+
 
 ### 2025-12-01 - 02
 
