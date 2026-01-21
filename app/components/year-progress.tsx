@@ -22,8 +22,7 @@ export default function YearProgress() {
   return (
     <span className="relative">
       <span className="font-pixel text-[10px]">
-        [
-        {
+        [{
           [...Array(52)].map((_, i) => (
             <span key={i} className="h-full">
               {i <= currentWeek ? '#' : '='}
@@ -32,10 +31,10 @@ export default function YearProgress() {
         }]
       </span>
       <span id="cursor"
-        className="absolute -top-1 text-[10px] font-pixel text-primary leading-tight"
+        className="absolute -top-[7px] text-[11px] text-primary font-pixel leading-tight"
         style={{ left: `${leftOffset}px` }}
       >
-        &#x250C;<br />&#x2502;
+        &#x25BC;
       </span>
       <span
         className="absolute -top-2 font-sans text-[10px] text-black"
