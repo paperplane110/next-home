@@ -213,14 +213,14 @@ export default function AboutPage() {
             I recently moved on from my role at <span className="font-bold text-black">DiDi Robotaxi</span>
             &nbsp;to fully immerse myself in <span className="font-bold text-black">Full-Stack development</span>——the area where my true passion lies.
           </p>
-          <p>Outside of work, I love bringing ideas to life through side projects, such as <OuterLink className="underline" href="https://focustimer.pages.dev/">Focus-timer</OuterLink> or <OuterLink className="underline" href="https://github.com/paperplane110/next-home">this blog</OuterLink>.</p>
+          <p>Outside of work, I love bringing ideas to life through side projects, such as <OuterLink className="hover:underline" href="https://focustimer.pages.dev/">Focus-timer</OuterLink> or <OuterLink className="hover:underline" href="https://github.com/paperplane110/next-home">this blog</OuterLink>.</p>
           <p>When I&apos;m not coding, 
             I&apos;m an avid <span className="font-bold text-black">reader</span>, a <span className="font-bold text-black">hiker</span>, a <span className="font-bold text-black">gamer</span>, and a <span className="font-bold text-black">music lover</span>. 
             I&apos;m always open to interesting conversations and collaborations.
           </p>
           <p>Feel free to reach out via email at 
-            &nbsp;<OuterLink className="underline" href="mailto:jyuan7155@gmail.com">jyuan7155@gmail.com</OuterLink> or 
-            find me on <OuterLink className="underline" href="https://github.com/paperplane110">GitHub</OuterLink>.
+            &nbsp;<OuterLink className="hover:underline" href="mailto:jyuan7155@gmail.com">jyuan7155@gmail.com</OuterLink> or 
+            find me on <OuterLink className="hover:underline" href="https://github.com/paperplane110">GitHub</OuterLink>.
           </p>
         </div>
       </div>
