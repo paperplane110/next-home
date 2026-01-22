@@ -24,7 +24,7 @@ export default function Home() {
           </p>
           <br />
           <p>
-            I&apos;m currently based in Beijing and working at DiDi&apos;s Robotaxi team,
+            I&apos;m currently based in Beijing and moved on from my role at DiDi&apos;s Robotaxi team,
             where I&apos;m building the test platform and tools for our team.
             Learn about <OuterLink href="/about"><b>me</b></OuterLink> more, if you are interested.
           </p>

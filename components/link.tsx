@@ -6,12 +6,12 @@ export default function OuterLink({
   href,
   children,
   className
-}: React.ComponentProps<"a"> & { href: string }) {
-  const isInternal = href.startsWith("/");
+}: React.ComponentProps<"a">) {
+  const isInternal = href?.startsWith("/") || true;
   const target = isInternal ? "_self" : "_blank";
   return (
     <Link
-      href={href}
+      href={href || "#"}
       target={target}
       rel="noopener noreferrer"
       className={cn("hover:text-muted-foreground", className)}

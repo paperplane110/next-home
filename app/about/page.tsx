@@ -1,4 +1,5 @@
 import Building from "@/components/building";
+import OuterLink from "@/components/link";
 import { type WorkExperienceProps, WorkExperience } from "@/components/work-experience";
 
 
@@ -115,11 +116,11 @@ export default function AboutPage() {
               text: ["Key Achievements:"],
             },
             {
-              type: "bullet",
+              type: "markdown",
               text: [
-                "Leading a four people group, developing a data management system, managing 20M+ of images’ data and hundreds of benchmarks",
-                "Cooperating with R&D, pass BCTC face anti-spoofing certification.",
-                "Optimized the face recognition test tools with Faiss, shortening test time nearly 4x."
+                "- Leading a four people group, developing a data management system, managing 20M+ of images’ data and hundreds of benchmarks",
+                "- Cooperating with R&D, pass [BCTC face anti-spoofing certification](https://www.bctest.com/content/32.html).",
+                "- Optimized the face recognition test tools with [Faiss](https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/), shortening test time nearly 4x."
               ]
             }
           ],
@@ -149,6 +150,51 @@ export default function AboutPage() {
           skills: ["Python", "Bash", "Numpy", "Pandas", "Pillow", "OpenCV"]
         }
       ]
+    },
+    {
+      company: "Education",
+      logo: "🎓",
+      isCurrent: false,
+      positions: [
+        {
+          title: "M.sc Robotics | University of Bristol",
+          icon: "/img/about/uob_coat.png",
+          start: "2019.09",
+          end: "2020.09",
+          type: "Merit",
+          isCollapsed: true,
+          content: [
+            {
+              type: "markdown",
+              text: [
+                "- **University of Bristol** Master of Science in Robotics",
+                "- Language Proficiency: ILETS 7, C1 English Level."
+              ]
+            }
+          ],
+          skills: ["Robotics", "CV", "Control Theory", "Intro to AI", "Virtual Product Design", "Intelligent Information System"]
+        },
+        {
+          title: "B.Eng Vehicle Engineering | SCUT",
+          icon: "/img/about/scut.png",
+          start: "2015.09",
+          end: "2019.07",
+          type: "3.25/4",
+          isCollapsed: true,
+          content: [
+            {
+              type: "markdown",
+              text: [
+                "- **South China University of Technology (SCUT)** Bachelor of Engineering in Vehicle Engineering",
+                "- Member of SCUT Racing Formula Student Team, aerodynamic kits group.",
+                "- Member of the SCUT Philharmonic Orchestra, First Violin Section; additionally served as Librarian.",
+                "- Language Proficiency: CET6 English Level."
+              ]
+            }
+          ],
+          skills: ["Mechanical Engineering", "Vehicle Dynamics", "Vibrant Analysis", "CET 6"]
+        }
+      ]
     }
   ];
 
@@ -160,17 +206,33 @@ export default function AboutPage() {
       <div className="subsection pt-8">
         <h2 className="text-base font-bold">About Me</h2>
         <hr className="my-4" />
-        <Building />
+        <div className="text-sm text-muted-foreground space-y-4">
+          <p>Hi, I&apos;m <span className="font-bold text-black">Tianyu</span></p>
+          <p>
+            I&apos;m a software engineer with a passion for building beautiful and interesting things.
+            I recently moved on from my role at <span className="font-bold text-black">DiDi Robotaxi</span>
+            &nbsp;to fully immerse myself in <span className="font-bold text-black">Full-Stack development</span>——the area where my true passion lies.
+          </p>
+          <p>Outside of work, I love bringing ideas to life through side projects, such as <OuterLink className="underline" href="https://focustimer.pages.dev/">Focus-timer</OuterLink> or <OuterLink className="underline" href="https://github.com/paperplane110/next-home">this blog</OuterLink>.</p>
+          <p>When I&apos;m not coding, 
+            I&apos;m an avid <span className="font-bold text-black">reader</span>, a <span className="font-bold text-black">hiker</span>, a <span className="font-bold text-black">gamer</span>, and a <span className="font-bold text-black">music lover</span>. 
+            I&apos;m always open to interesting conversations and collaborations.
+          </p>
+          <p>Feel free to reach out via email at 
+            &nbsp;<OuterLink className="underline" href="mailto:jyuan7155@gmail.com">jyuan7155@gmail.com</OuterLink> or 
+            find me on <OuterLink className="underline" href="https://github.com/paperplane110">GitHub</OuterLink>.
+          </p>
+        </div>
       </div>
       <div className="subsection pt-8">
-        <h2 className="text-base font-bold">Work Experience</h2>
+        <h2 className="text-base font-bold">Experience</h2>
         <hr className="my-4" />
         {career.map((careerItem, index) => (
           <WorkExperience key={index} career={careerItem} />
         ))}
       </div>
       <div className="subsection pt-8">
-        <h2 className="text-base font-bold">Education</h2>
+        <h2 className="text-base font-bold">Side Project</h2>
         <hr className="my-4" />
         <Building />
       </div>

@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown"
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -11,8 +12,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import OuterLink from "./link";
 
-type PositionContentType = "h3" | "bullet"
+type PositionContentType = "h3" | "bullet" | "markdown"
 
 export type WorkExperienceProps = {
   company: string;
@@ -47,9 +49,19 @@ const PositionItem = ({ position, isFirst, isLast }: PositionProps) => {
       <div id="icon-sideline" className="flex flex-col items-center">
         <div id="vertical-line" className={cn("h-2 md:h-3 w-px bg-gray-200", isFirst && "bg-transparent")} />
         <div id="icon" className="flex items-center justify-center size-6 rounded-md border bg-transparent">
-          <div className="flex items-center justify-center size-5  rounded-sm">
-            <span className={`${position.icon ? position.icon : "icon-[lucide--code-xml]"} size-4 text-gray-500`} />
-          </div>
+          {
+            position.icon?.startsWith("/") ? (
+              <Image
+                src={position.icon}
+                alt={position.title}
+                className="size-6"
+                width={16}
+                height={16}
+              />
+            ) : (
+              <span className={`${position.icon ? position.icon : "icon-[lucide--code-xml]"} size-4 text-gray-500`} />
+            )
+          }
         </div>
         <div id="vertical-line" className={cn("flex-1 w-px bg-gray-200", isLast && "hidden")} />
       </div>
@@ -113,7 +125,28 @@ const PositionItem = ({ position, isFirst, isLast }: PositionProps) => {
           {/* <div className="absolute top-4 left-0 h-full border-l-2 border-l-primary">
           </div> */}
           {position.content.map((contentItem, index) => {
-            if (contentItem.type === "bullet") {
+            if (contentItem.type === "markdown") {
+              return (
+                <div key={index} 
+                  className="text-sm leading-6 my-2 marker:text-gray-300"
+                >
+                  <ReactMarkdown
+                    components={{
+                      a: ({ href, children }) => (
+                        <OuterLink
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline"
+                        >
+                          {children}
+                        </OuterLink>
+                      ),
+                    }}
+                  >{contentItem.text.join("\n")}</ReactMarkdown>
+                </div>
+              );
+            } else if (contentItem.type === "bullet") {
               return (
                 <ul
                   key={index}
