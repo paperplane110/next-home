@@ -13,7 +13,7 @@ export default function YearProgress() {
   const currentWeek = Math.floor(diff / oneWeek);
   const leftOffset = (currentWeek * 6.38 + 1 + 6.4).toFixed(0);
 
-  const progressLeftOffset = (currentWeek * 6.38 + 6.34 + 10).toFixed(0);
+  const progressLeftOffset = (currentWeek * 6.38 + 6.34 - 2).toFixed(0);
   const progress = (diff / (1000 * 60 * 60 * 24 * 365) * 100).toFixed(1)
 
   const nowDate = now.toDateString().split(" ").slice(1, 3).join(",")
@@ -31,22 +31,22 @@ export default function YearProgress() {
         }]
       </span>
       <span id="cursor"
-        className="absolute -top-[7px] text-[11px] text-primary font-pixel leading-tight"
+        className="absolute -top-[6px] text-[11px] font-pixel leading-tight"
         style={{ left: `${leftOffset}px` }}
       >
         &#x25BC;
       </span>
       <span
-        className="absolute -top-2 font-sans text-[10px] text-black"
+        className="absolute -top-5 font-sans text-[10px]"
         style={{ left: `${progressLeftOffset}px` }}
-      >{progress}%{isMobile && ` ${nowDate}`}</span>
-      <span
+      >{progress}%&nbsp;{nowDate}</span>
+      {/* <span
         id="date"
-        className="absolute -top-5.5 font-sans text-[10px] text-black"
+        className="absolute -top-5.5 font-sans text-[10px] text-muted-foreground"
         style={{ left: `${progressLeftOffset}px` }}
       >
         {!isMobile && nowDate}
-      </span>
+      </span> */}
     </span>
   )
 }

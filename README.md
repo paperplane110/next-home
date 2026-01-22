@@ -20,6 +20,9 @@ Todo list
 - [x] Use Nextjs font module: [link](https://nextjs.org/docs/app/api-reference/components/font)
 - [x] "writing page"
 - [ ] "About page"
+  - [x] about me
+  - [x] work experience
+  - [ ] side projects
 - [x] "Book page"
 - [ ] "Gallery page"
   - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
@@ -29,10 +32,17 @@ Todo list
 - [ ] icon design
 - [ ] meta
 - [ ] seo
-- [ ] Progress indicator for posts.
+- [ ] Progress/Contents indicator for posts.
   - [ ] use [motion scroll](https://motion.dev/docs/react-scroll-animations?platform=react)
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
+- [ ] Helper
+  - [ ] /basement/login
+  - [ ] /basement/upload
+  - [ ] /basement/update-today
+  - [ ] frame switch
+- [ ] setup vercel pg
+- [ ] setup login, with better auth
 
 ### 2026-1-21
 

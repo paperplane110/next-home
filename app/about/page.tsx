@@ -206,7 +206,7 @@ export default function AboutPage() {
       <div className="subsection pt-8">
         <h2 className="text-base font-bold">About Me</h2>
         <hr className="my-4" />
-        <div className="text-sm text-muted-foreground space-y-4">
+        <div className="text-sm text-muted-foreground space-y-6">
           <p>Hi, I&apos;m <span className="font-bold text-black">Tianyu</span></p>
           <p>
             I&apos;m a software engineer with a passion for building beautiful and interesting things.

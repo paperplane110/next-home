@@ -6,6 +6,7 @@ import { useMedia } from "react-use";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
+import { UserButton } from "@neondatabase/auth/react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,

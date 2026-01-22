@@ -34,6 +34,10 @@ export default function Playground() {
       name: "Glossy icon",
       path: "/glossy-icon",
     },
+    {
+      name: "Access denied card",
+      path: "/access-denied",
+    },
   ]
   return (
     <div className="section">

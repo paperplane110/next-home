@@ -4,11 +4,14 @@ import { Inter, JetBrains_Mono, Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
+import { authClient } from "@/feature/auth/client";
+import { NeonAuthUIProvider } from "@neondatabase/auth/react"
 import { FrameProvider } from "@/components/frame-context";
 import { Frame } from "@/components/frame";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import PaperBg from "@/components/paper-bg";
+import ControlPanel from "@/components/control-panel";
 
 export const metadata: Metadata = {
   title: "Tianyu",
@@ -21,9 +24,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 // mono
 const jetbrains_mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 // serif
-const fraunces = Fraunces({ 
-  subsets: ["latin"], 
-  variable: "--font-fraunces", 
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
   axes: ["opsz", "SOFT"],
 });
 const pingXianZhenSong = localFont({
@@ -46,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`
           ${inter.variable} 
@@ -58,16 +61,19 @@ export default function RootLayout({
           antialiased
         `}
       >
-        <FrameProvider>
-          <Frame />
-          <Navigation />
-          <div className="min-h-[calc(100vh-8rem)] pt-16">
-            {children}
-          </div>
-          <Footer />
-        </FrameProvider>
-        <PaperBg />
-        <Analytics />
+        <NeonAuthUIProvider authClient={authClient}>
+          <FrameProvider>
+            {/* <ControlPanel /> */}
+            <Frame />
+            <Navigation />
+            <div className="min-h-[calc(100vh-8rem)] pt-16 flex flex-col">
+              {children}
+            </div>
+            <Footer />
+          </FrameProvider>
+          <PaperBg />
+          <Analytics />
+        </NeonAuthUIProvider>
       </body>
     </html>
   );
