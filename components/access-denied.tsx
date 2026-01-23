@@ -5,7 +5,7 @@ export default function AccessDenied() {
     <div className="flex-1 flex flex-col items-center justify-center gap-3">
       <h1 className="text-3xl font-semibold font-pixel">Access Denied</h1>
       <div className="my-4 font-pixel text-muted-foreground">
-        Please contact the <Link className="underline" href="mailto:jyuan7155@gmail.com">lab admin</Link> for access.
+        Please <Link className="underline" href="/auth/sign-in">login</Link> or contact the <Link className="underline" href="mailto:jyuan7155@gmail.com">lab admin</Link> for access.
       </div>
       <div id="idCard" className="w-[250px] h-[350px] bg-stone-700 rounded-2xl flex flex-col font-pixel">
         {/* card slot */}
@@ -37,7 +37,7 @@ export default function AccessDenied() {
           Mr./Mrs. Anon
         </div>
         <div className="p-4 text-stone-400">
-          Tianyu&apos;s Lab
+          Secret Base
         </div>
       </div>
     </div>

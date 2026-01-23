@@ -27,6 +27,7 @@ Todo list
 - [ ] "Gallery page"
   - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
   - like this [udara.io/photos/](https://udara.io/photos/)
+  - [x] photo upload form
 - [ ] add previous and next post link on each post page
 - [x] Footer component
 - [ ] icon design
@@ -37,12 +38,50 @@ Todo list
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
 - [ ] Helper
-  - [ ] /basement/login
+  - [ ] /auth/sign-in
   - [ ] /basement/upload
   - [ ] /basement/update-today
   - [ ] frame switch
-- [ ] setup vercel pg
-- [ ] setup login, with better auth
+- [x] setup vercel pg
+- [x] setup login, with better auth
+
+### 2026-1-23
+
+Local development
+  - start local server
+    - `npm install -g vercel`
+    - `vercel dev`
+  - drizzle connect to Vercel/Neon Postgres DB need websocket connection: `ws`
+
+Feat
+- DB
+  - complete "photos" table
+  - add [index](https://orm.drizzle.team/docs/indexes-constraints#indexes)
+  - migrate neon
+  - - [drizzle-zod](https://orm.drizzle.team/docs/zod): transfer dizzle schema -> zod -> typescript type
+- photo upload form
+  - To upload a photo(file)
+    - get file from the input [Event](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events)
+    - js [File](https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications#example_using_object_urls_to_display_images)
+    - create [Object URL](https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static) to display the preview image
+      - remember to revoke the Object URL after use: `URL.revokeObjectURL(objectURL)`
+  - parse Image 
+    - get its shape: js [Image](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement)
+    - get BlurHash hash string: create canvas then encode it
+    - do md5 hash of image in client side: [spark-md5](https://www.npmjs.com/package/spark-md5)
+  - [file upload component reference](https://reui.io/docs/file-upload)
+  - Vercel Blob
+    - vercel blob server side upload has size constrain: 1MB
+    - So upload from client
+      - add api route: `/api/blob-upload`: [tutorial](https://vercel.com/docs/vercel-blob/client-upload?framework=nextjs-app)
+        - must after auth: [use neonAuth at the server side](https://neon.com/docs/auth/quick-start/nextjs)
+      - [call upload api from client](https://vercel.com/docs/vercel-blob/using-blob-sdk#client-uploads)
+  - Reset Form
+    - !!! Reset the File input: `fileInputRef.current.value = ""`, otherwise the file will not be uploaded again.
+- api for vercel blob upload from client
+- server action
+  - check is image duplicated
+  - insert image info to database
 
 ### 2026-1-21
 
