@@ -41,8 +41,19 @@ Todo list
 - [ ] "Gallery page"
   - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
   - like this [udara.io/photos/](https://udara.io/photos/)
+  - server actions
+    - [ ] query photos
+    - [ ] update the photo
+  - [ ] how to use Image to display photo from Vercel Blob
+  - [ ] how to display blurhash canvas when image is loading
   - [x] photo upload form
     - [ ] tags
+      - [ ] add tag table, many to many relationship between photos and tags
+      - [ ] creatable select input
+      - [ ] server actions
+        - [ ] add tag
+        - [ ] get tags
+        - [ ] edit tag
   - [ ] ? album (iOS)
 - [ ] add previous and next post link on each post page
 - [x] Footer component

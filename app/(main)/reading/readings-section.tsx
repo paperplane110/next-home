@@ -111,7 +111,7 @@ export const ReadingsSection = () => {
             />
           );
         })}
-        <div className="h-4">
+        {/* <div className="h-4">
           <Separator orientation="vertical" />
         </div>
         <Badge
@@ -125,7 +125,7 @@ export const ReadingsSection = () => {
           onClick={() => setLayout(LayoutType.Grid)}
         >
           <Grid2X2 size={32} />
-        </Badge>
+        </Badge> */}
       </div>
       {layout === LayoutType.List && (
         <div id="readings-list" className="subsection pt-8 flex flex-col items-between">
