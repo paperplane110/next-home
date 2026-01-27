@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { CommandIcon, FrameIcon, ImagePlusIcon, LogInIcon, MessageCircleMoreIcon } from "lucide-react";
+import { CommandIcon, DatabaseIcon, FrameIcon, ImagePlusIcon, LogInIcon, MessageCircleMoreIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Badge } from "./ui/badge";
 import {
@@ -119,6 +119,14 @@ export const HelperCommand = () => {
             >
               <span className="icon-[logos--vercel-icon] size-4" />
               <span>Vercel</span>
+            </CommandItem>
+            <CommandItem
+              key="blob"
+              onSelect={() => goToURL("https://vercel.com/paperplane110s-projects/next-home/stores/blob/store_neuL1shzdDwVm3wD/browser")}
+              className="font-medium"
+            >
+              <DatabaseIcon className="size-4 text-orange-400" />
+              <span>Vercel Blob Storage</span>
             </CommandItem>
             <CommandItem
               key="db"
