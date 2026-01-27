@@ -1,6 +1,6 @@
 import { allPosts, allReadings } from "content-collections"
 import Link from "next/link"
-import YearProgress from "./components/year-progress"
+import YearProgress from "@/components/year-progress"
 import OuterLink from "@/components/link";
 import { MusicPlayerCard } from "@/components/music-player-card";
 import { Badge } from "@/components/ui/badge";

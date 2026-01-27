@@ -8,8 +8,6 @@ import { authClient } from "@/feature/auth/client";
 import { NeonAuthUIProvider } from "@neondatabase/auth/react"
 import { FrameProvider } from "@/components/frame-context";
 import { Frame } from "@/components/frame";
-import { Navigation } from "@/components/navigation";
-import { Footer } from "@/components/footer";
 import PaperBg from "@/components/paper-bg";
 import { PhotoUploadDialog } from "@/feature/photo/components/upload-dialog";
 
@@ -66,11 +64,7 @@ export default function RootLayout({
             {/* <ControlPanel /> */}
             <PhotoUploadDialog />
             <Frame />
-            <Navigation />
-            <div className="min-h-[calc(100vh-8rem)] pt-16 flex flex-col">
-              {children}
-            </div>
-            <Footer />
+            {children}
           </FrameProvider>
           <PaperBg />
           <Analytics />

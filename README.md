@@ -2,6 +2,20 @@
 
 This is my next blog. Built with Next.js, shadcn and Tailwind CSS.
 
+## Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/), [PostCSS](https://postcss.org/)
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/) (Radix UI, Vaul)
+- **Database & ORM**: [Neon Postgres](https://neon.tech/), [Drizzle ORM](https://orm.drizzle.team/)
+- **Authentication**: [Neon Auth](https://neon.com/docs/auth/introduction)
+- **Content Engine**: [Content Collections](https://www.content-collections.dev/) (MDX, Shiki, Rehype Pretty Code)
+- **State Management**: [Jotai](https://jotai.org/) (Global), [React Hook Form](https://react-hook-form.com/) (Forms)
+- **Animation**: [Framer Motion](https://www.framer.com/motion/)
+- **File Storage**: [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)
+- **Image Processing**: [BlurHash](https://blurha.sh/)
+- **Analytics**: [Vercel Analytics](https://vercel.com/analytics)
 
 ## Reference
 
