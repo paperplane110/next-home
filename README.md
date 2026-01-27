@@ -39,13 +39,21 @@ Todo list
   - [ ] use [motion scroll](https://motion.dev/docs/react-scroll-animations?platform=react)
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
-- [ ] cmdk Helper
-  - [ ] /auth/sign-in
-  - [ ] photo upload dialog
+- [x] cmdk Helper
+  - [x] /auth/sign-in
+  - [x] photo upload dialog
   - [ ] /basement/update-today
-  - [ ] frame switch
+  - [x] frame switch
 - [x] setup vercel pg
 - [x] setup login, with better auth
+
+### 2026-1-27
+
+Feat
+- add helper command: [shadcn-command](https://ui.shadcn.com/docs/components/radix/command)
+  - items style: `[&_[item]]: xxx`
+- move upload form into a dialog: [dialog](https://ui.shadcn.com/docs/components/radix/dialog#scrollable-content)
+- use [jotai](https://jotai.org/docs/introduction) to manage dialogs global state
 
 ### 2026-1-23
 

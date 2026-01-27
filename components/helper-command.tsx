@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { CommandIcon, FrameIcon, ImagePlusIcon, LogInIcon, MessageCircleMoreIcon } from "lucide-react";
+import { CommandIcon, FrameIcon, GitBranchIcon, ImagePlusIcon, LogInIcon, MessageCircleMoreIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Badge } from "./ui/badge";
 import {
@@ -65,7 +65,7 @@ export const HelperCommand = () => {
     <div>
       <Badge
         variant="secondary"
-        className="text-muted-foreground select-none cursor-pointer"
+        className="text-muted-foreground border-none py-1 select-none cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <CommandIcon className="size-4 -mr-0.5" />K
@@ -85,6 +85,17 @@ export const HelperCommand = () => {
                 <span>{item.label}</span>
               </CommandItem>
             ))}
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup heading="Repository">
+            <CommandItem
+              key="repo"
+              onSelect={() => onSelect("https://github.com/paperplane110/next-home")}
+              className="font-medium"
+            >
+              <GitBranchIcon className="size-4 text-primary" />
+              <span>Github Repository: next-home</span>
+            </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Dev Opt">

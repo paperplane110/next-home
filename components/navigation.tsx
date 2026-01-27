@@ -113,8 +113,14 @@ export const Navigation = () => {
                 </Link>
               ))
             }</div>
-            <div>
+            <div className="flex items-center gap-2 h-4">
               <HelperCommand />
+              <Separator orientation="vertical" />
+              <Button variant="ghost" size="icon-sm" className="cursor-pointer" asChild>
+                <Link href="https://github.com/paperplane110/next-home">
+                  <span className="icon-[mdi--github] size-5" />
+                </Link>
+              </Button>
             </div>
           </>
         )}

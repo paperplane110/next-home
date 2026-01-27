@@ -210,7 +210,7 @@ export default function AboutPage() {
           <p>Hi, I&apos;m <span className="font-bold text-black">Tianyu</span></p>
           <p>
             I&apos;m a software engineer with a passion for building beautiful and interesting things.
-            I recently moved on from my role at <span className="font-bold text-black">DiDi Robotaxi</span>
+            I recently moved on from my role at <span className="font-bold text-black">DiDi-Voyager (Robotaxi)</span>
             &nbsp;to fully immerse myself in <span className="font-bold text-black">Full-Stack development</span>——the area where my true passion lies.
           </p>
           <p>Outside of work, I love bringing ideas to life through side projects, such as <OuterLink className="hover:underline" href="https://focustimer.pages.dev/">Focus-timer</OuterLink> or <OuterLink className="hover:underline" href="https://github.com/paperplane110/next-home">this blog</OuterLink>.</p>
