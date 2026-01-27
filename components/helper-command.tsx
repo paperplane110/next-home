@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { CommandIcon, FrameIcon, GitBranchIcon, ImagePlusIcon, LogInIcon, MessageCircleMoreIcon } from "lucide-react";
+import { CommandIcon, FrameIcon, ImagePlusIcon, LogInIcon, MessageCircleMoreIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Badge } from "./ui/badge";
 import {
@@ -24,16 +24,17 @@ export const HelperCommand = () => {
   const { toggleFrame } = useFrame();
   const setPhotoUploadDialogOpen = useSetAtom(photoUploadDialogOpenAtom);
 
-  const onSelect = (href: string) => {
+  const goToURL = (href: string) => {
     setIsOpen(false);
     router.push(href);
   }
 
   const devOpts = [
-    { label: "Sign in", icon: LogInIcon, onSelect: () => onSelect("/auth/sign-in") },
+    { label: "Sign in", icon: LogInIcon, onSelect: () => goToURL("/auth/sign-in") },
     {
       label: "Upload Photo", icon: ImagePlusIcon, onSelect: () => {
         setIsOpen(false)
+        // 延迟打开弹窗，避免 dialog 嵌套丢失焦点
         setTimeout(() => {
           setPhotoUploadDialogOpen(true)
         }, 300)
@@ -78,24 +79,13 @@ export const HelperCommand = () => {
             {pageList.map((item) => (
               <CommandItem
                 key={item.href}
-                onSelect={() => onSelect(item.href)}
+                onSelect={() => goToURL(item.href)}
                 className="font-medium"
               >
                 <item.icon className="size-4 text-primary" />
                 <span>{item.label}</span>
               </CommandItem>
             ))}
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Repository">
-            <CommandItem
-              key="repo"
-              onSelect={() => onSelect("https://github.com/paperplane110/next-home")}
-              className="font-medium"
-            >
-              <GitBranchIcon className="size-4 text-primary" />
-              <span>Github Repository: next-home</span>
-            </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Dev Opt">
@@ -109,6 +99,35 @@ export const HelperCommand = () => {
                 <span>{item.label}</span>
               </CommandItem>
             ))}
+          </CommandGroup>
+          <CommandSeparator />
+
+          {/* 仓库、部署、数据库相关链接 */}
+          <CommandGroup heading="Repo & Deployment & Database">
+            <CommandItem
+              key="repo"
+              onSelect={() => goToURL("https://github.com/paperplane110/next-home")}
+              className="font-medium"
+            >
+              <span className="icon-[logos--github-icon] size-4" />
+              <span>Github Repository: next-home</span>
+            </CommandItem>
+            <CommandItem
+              key="deploy"
+              onSelect={() => goToURL("https://vercel.com/paperplane110s-projects/next-home")}
+              className="font-medium"
+            >
+              <span className="icon-[logos--vercel-icon] size-4" />
+              <span>Vercel</span>
+            </CommandItem>
+            <CommandItem
+              key="db"
+              onSelect={() => goToURL("https://console.neon.tech/app/projects/bold-hill-91359463?branchId=br-restless-term-ahc8j6t2")}
+              className="font-medium"
+            >
+              <span className="icon-[logos--neon-icon] size-4" />
+              <span>Neon DB</span>
+            </CommandItem>
           </CommandGroup>
         </CommandList>
       </CommandDialog>
