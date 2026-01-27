@@ -28,6 +28,8 @@ Todo list
   - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
   - like this [udara.io/photos/](https://udara.io/photos/)
   - [x] photo upload form
+    - [ ] tags
+  - [ ] ? album (iOS)
 - [ ] add previous and next post link on each post page
 - [x] Footer component
 - [ ] icon design
@@ -37,9 +39,9 @@ Todo list
   - [ ] use [motion scroll](https://motion.dev/docs/react-scroll-animations?platform=react)
 - [ ] More meta info of mdx by using [ContentCollection](https://www.content-collections.dev/docs/transform#examples)
 - [ ] refactor indicator: [link](https://tailwindcss.com/docs/animation#adding-a-ping-animation)
-- [ ] Helper
+- [ ] cmdk Helper
   - [ ] /auth/sign-in
-  - [ ] /basement/upload
+  - [ ] photo upload dialog
   - [ ] /basement/update-today
   - [ ] frame switch
 - [x] setup vercel pg

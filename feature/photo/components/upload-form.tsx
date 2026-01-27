@@ -7,12 +7,6 @@ import { parseImage } from "@/feature/photo/image-parser"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
-  Card,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
-import {
   Form,
   FormControl,
   FormField,
@@ -30,7 +24,7 @@ import { upload } from "@vercel/blob/client"
 import { type Photo, photoUploadFormSchema, type PhotoUploadForm } from "@/drizzle/schema"
 
 
-export default function PhotoUploadForm() {
+export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isParsingImg, setIsParsingImg] = useState(false)
   const [duplicatePhoto, setDuplicatePhoto] = useState<Photo | null>(null)
@@ -142,6 +136,8 @@ export default function PhotoUploadForm() {
       if (insertResult) {
         handleImageRemove()
       }
+      // procedure: close dialog
+      onSuccess();
     } catch (error) {
       console.error("Error uploading image:", error)
     }
@@ -149,188 +145,183 @@ export default function PhotoUploadForm() {
   }
 
   return (
-    <Card className="w-[470px] px-8">
-      <CardTitle>Upload Photo</CardTitle>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent>
-            <div className="flex flex-col items-center gap-4">
-              <FormField
-                control={form.control}
-                name="imgFile"
-                render={({ field, fieldState }) => (
-                  <FormItem className="w-full">
-                    <FormControl>
-                      <div className="flex flex-col items-center gap-4">
-                        <Input
-                          id="picture-upload"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileChange}
-                          className="hidden"
-                          ref={(e) => {
-                            field.ref(e);
-                            fileInputRef.current = e;
-                          }}
-                          onBlur={field.onBlur}
-                          name={field.name}
-                        />
-                        {!preview ? (
-                          <Label
-                            htmlFor="picture-upload"
-                            className={cn(
-                              "p-4 w-full flex flex-col items-center justify-center border border-dashed rounded-md cursor-pointer text-muted-foreground transition-colors",
-                              fieldState.error ? "border-destructive bg-destructive/5 text-destructive" : "hover:bg-muted"
-                            )}
-                          >
-                            <div className="flex items-center gap-1">
-                              <CirclePlusIcon className="size-4" />
-                              Upload Image
-                            </div>
-                          </Label>
-                        ) : (
-                          <div id="image-preview" className="relative group flex items-center justify-center">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex flex-col items-center gap-4 px-4">
+            <FormField
+              control={form.control}
+              name="imgFile"
+              render={({ field, fieldState }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <div className="flex flex-col items-center gap-4">
+                      <Input
+                        id="picture-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        ref={(e) => {
+                          field.ref(e);
+                          fileInputRef.current = e;
+                        }}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                      />
+                      {!preview ? (
+                        <Label
+                          htmlFor="picture-upload"
+                          className={cn(
+                            "p-4 w-full flex flex-col items-center justify-center border border-dashed rounded-md cursor-pointer text-muted-foreground transition-colors",
+                            fieldState.error ? "border-destructive bg-destructive/5 text-destructive" : "hover:bg-muted"
+                          )}
+                        >
+                          <div className="flex items-center gap-1">
+                            <CirclePlusIcon className="size-4" />
+                            Upload Image
+                          </div>
+                        </Label>
+                      ) : (
+                        <div id="image-preview" className="relative group flex items-center justify-center">
 
-                            {isChecking && (
-                              <div id="image-preview-mask" className={cn(
-                                "absolute top-0 right-0 bottom-0 left-0 bg-black/50 rounded-md text-white px-1 rounded-bl-md flex flex-col items-center justify-center opacity-100"
-                              )}
-                              >
-                                <Loader2Icon className="size-4 animate-spin" />
-                              </div>
-                            )}
-
+                          {isChecking && (
                             <div id="image-preview-mask" className={cn(
-                              "absolute top-0 right-0 bottom-0 left-0 bg-black/50 rounded-md text-white px-1 rounded-bl-md flex flex-col items-center justify-center gap-2",
-                              "transition-opacity duration-200 opacity-0 group-hover:opacity-100",
-                              duplicatePhoto && "opacity-100"
+                              "absolute top-0 right-0 bottom-0 left-0 bg-black/50 rounded-md text-white px-1 rounded-bl-md flex flex-col items-center justify-center opacity-100"
                             )}
                             >
-                              <Button size="sm" variant="destructive" className="cursor-pointer" onClick={handleImageRemove}>
-                                <CircleXIcon className="size-4" />
-                                {duplicatePhoto ? "Duplicated Image" : "Remove"}
-                              </Button>
+                              <Loader2Icon className="size-4 animate-spin" />
                             </div>
-                            <img src={preview} alt="Preview" className="max-h-64 rounded-lg object-contain" />
+                          )}
+
+                          <div id="image-preview-mask" className={cn(
+                            "absolute top-0 right-0 bottom-0 left-0 bg-black/50 rounded-md text-white px-1 rounded-bl-md flex flex-col items-center justify-center gap-2",
+                            "transition-opacity duration-200 opacity-0 group-hover:opacity-100",
+                            duplicatePhoto && "opacity-100"
+                          )}
+                          >
+                            <Button size="sm" variant="destructive" className="cursor-pointer" onClick={handleImageRemove}>
+                              <CircleXIcon className="size-4" />
+                              {duplicatePhoto ? "Duplicated Image" : "Remove"}
+                            </Button>
                           </div>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-center text-xs" />
-                  </FormItem>
-                )}
-              />
+                          <img src={preview} alt="Preview" className="max-h-64 rounded-lg object-contain" />
+                        </div>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-center text-xs" />
+                </FormItem>
+              )}
+            />
 
-              {duplicatePhoto && (
-                <div id="duplicate-info" className="w-full bg-destructive/5 p-4 rounded-md">
-                  <h3 className="text-sm font-medium text-destructive">Alert</h3>
-                  <p className="mt-2 text-xs text-destructive">This image is a duplicate of {duplicatePhoto.url}</p>
-                </div>
-              )}
-              {preview && (
-                <div id="image-info" className="w-full bg-muted p-4 rounded-md">
-                  <h3 className="text-sm font-medium">Image Information</h3>
-                  <ul className="mt-2 list-disc marker:text-muted-foreground text-xs text-muted-foreground">
-                    <li>Name: {form.getValues("imgFile")?.name}</li>
-                    <li>Width / Height: {imageShapeInfo.width} / {imageShapeInfo.height}</li>
-                    <li>Aspect Ratio: {imageShapeInfo.aspectRatio}</li>
-                    <li>Is Vertical: {imageShapeInfo.isVertical ? "Yes" : "No"}</li>
-                    <li>Blurhash: {imageShapeInfo.blurhash}</li>
-                    <li>MD5: {imageShapeInfo.md5}</li>
-                  </ul>
-                </div>
-              )}
-            </div>
+            {duplicatePhoto && (
+              <div id="duplicate-info" className="w-full bg-destructive/5 p-4 rounded-md">
+                <h3 className="text-sm font-medium text-destructive">Alert</h3>
+                <p className="mt-2 text-xs text-destructive">This image is a duplicate of {duplicatePhoto.url}</p>
+              </div>
+            )}
+            {preview && (
+              <div id="image-info" className="w-full bg-muted p-4 rounded-md">
+                <h3 className="text-sm font-medium">Image Information</h3>
+                <ul className="mt-2 list-disc marker:text-muted-foreground text-xs text-muted-foreground">
+                  <li>Name: {form.getValues("imgFile")?.name}</li>
+                  <li>Width / Height: {imageShapeInfo.width} / {imageShapeInfo.height}</li>
+                  <li>Aspect Ratio: {imageShapeInfo.aspectRatio}</li>
+                  <li>Is Vertical: {imageShapeInfo.isVertical ? "Yes" : "No"}</li>
+                  <li>Blurhash: {imageShapeInfo.blurhash}</li>
+                  <li>MD5: {imageShapeInfo.md5}</li>
+                </ul>
+              </div>
+            )}
+          </div>
 
-            <div id="image-meta" className="mt-4 flex flex-col gap-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input
-                        onChange={field.onChange}
-                        onBlur={field.onBlur}
-                        disabled={field.disabled}
-                        name={field.name}
-                        ref={field.ref}
-                        value={field.value ?? ''}
-                        placeholder="e.g. My Beautiful Photo"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="capturedAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Captured At</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. 2026.01" {...field} />
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        value={field.value ?? ''}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
-                    <FormControl>
-                      <Input
-                        onChange={field.onChange}
-                        onBlur={field.onBlur}
-                        disabled={field.disabled}
-                        name={field.name}
-                        ref={field.ref}
-                        value={field.value ?? ''}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="mt-8">
-            <Button
-              disabled={isChecking || isParsingImg || !!duplicatePhoto || isUploading}
-              type="submit"
-              className="w-full"
-            >
-              Upload
-              {isUploading && (
-                <p>
-                  {uploadProgress.toFixed(0)}%
-                </p>
+          <div id="image-meta" className="mt-4 flex flex-col gap-4 px-4">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      disabled={field.disabled}
+                      name={field.name}
+                      ref={field.ref}
+                      value={field.value ?? ''}
+                      placeholder="e.g. My Beautiful Photo"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
               )}
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+            />
+            <FormField
+              control={form.control}
+              name="capturedAt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Captured At</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. 2026.01" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value ?? ''}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
+                  <FormControl>
+                    <Input
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      disabled={field.disabled}
+                      name={field.name}
+                      ref={field.ref}
+                      value={field.value ?? ''}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        <div className="mt-8 px-4">
+          <Button
+            disabled={isChecking || isParsingImg || !!duplicatePhoto || isUploading}
+            type="submit"
+            className="w-full"
+          >
+            Upload
+            {isUploading && (
+              <p>
+                {uploadProgress.toFixed(0)}%
+              </p>
+            )}
+          </Button>
+        </div>
+      </form>
+    </Form>
   )
 }

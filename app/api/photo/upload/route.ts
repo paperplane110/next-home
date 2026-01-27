@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { neonAuth } from "@neondatabase/auth/next/server"
 
 export async function POST(request: Request): Promise<NextResponse> {
+  // authentication
   const auth = await neonAuth()
   if (!auth || auth.user?.name !== "Tianyu Yuan") {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

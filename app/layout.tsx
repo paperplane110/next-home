@@ -11,7 +11,7 @@ import { Frame } from "@/components/frame";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import PaperBg from "@/components/paper-bg";
-import ControlPanel from "@/components/control-panel";
+import { PhotoUploadDialog } from "@/feature/photo/components/upload-dialog";
 
 export const metadata: Metadata = {
   title: "Tianyu",
@@ -64,6 +64,7 @@ export default function RootLayout({
         <NeonAuthUIProvider authClient={authClient}>
           <FrameProvider>
             {/* <ControlPanel /> */}
+            <PhotoUploadDialog />
             <Frame />
             <Navigation />
             <div className="min-h-[calc(100vh-8rem)] pt-16 flex flex-col">

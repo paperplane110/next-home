@@ -13,7 +13,7 @@ export function Frame() {
        border-dashed w-screen h-18 text-gray-300 pr-2 flex justify-end items-end">h-18</div>
       <div className="absolute border-b border-gray-300 border-dashed w-screen h-[calc(50vh-50%)] text-gray-300 pr-2 flex justify-end items-end">mid</div>
       <div className="absolute border-r border-gray-300 border-dashed h-screen translate translate-x-[50vw] w-px text-gray-300"></div>
-      <div className="absolute translateborder-gray-300 translate-x-[calc(50vw-3.5rem)] w-px text-gray-300">center</div>
+      <div className="absolute translate translate-y-18 translate-x-[calc(50vw-3.5rem)] w-px text-gray-300">center</div>
       <div className="absolute border-x border-gray-300 border-dashed h-screen w-full sm:w-[640px] pt-18 text-right translate translate-x-[calc(50vw-50%)] text-gray-300 pr-2">
         <p className="text-gray-300">sm<br/>640px</p>
         <p className="text-sm">sm text</p>

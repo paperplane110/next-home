@@ -4,7 +4,7 @@ import Album from "@/app/playground/album/components/album";
 export default function AlbumPage() {
   const albumTitle = "Racing Mount Pleasant";
   const albumCover = "/music/racing-mount-pleasant.jpg";
-  const labelIcon = "/label-icon/RR-logo.svg";
+  const labelIcon = "/img/playground/label-icon/RR-logo.svg";
   const artist = "Racing Mount Pleasant";
   const releaseDate = "15 August 2025";
   const genre = ["Folk rock", "Post-rock", "Midwest emo", "Baroque pop"];
@@ -102,7 +102,7 @@ export default function AlbumPage() {
           <div className="bg-[#190f1d]">
             <Image src="/music/duets.jpeg" alt="Andrea Bocelli" width={500} height={500} />
             <div className="h-42 flex justify-between items-end px-3 py-3 text-sm">
-              <Image className="filter invert-70" src="/label-icon/Decca_Records.png" alt="Decca Records" width={40} height={40} />
+              <Image className="filter invert-70" src="/img/playground/label-icon/Decca_Records.png" alt="Decca Records" width={40} height={40} />
               <div className="flex flex-col text-right">
                 <p className="font-bold text-white/70">Andrea Bocelli</p>
                 <p className="text-white/70">25 Oct 2023</p>
@@ -127,7 +127,7 @@ export default function AlbumPage() {
           <div className="bg-[#efefef]">
             <Image src="/music/motherland.jpg" alt="共同的土地" width={500} height={500} />
             <div className="h-42 flex justify-between items-end px-3 py-3 text-sm">
-              {/* <Image className="filter opacity-15" src="/label-icon/SJR.png" alt="SJR" width={30} height={30} /> */}
+              {/* <Image className="filter opacity-15" src="/playground/label-icon/SJR.png" alt="SJR" width={30} height={30} /> */}
               <div className="w-6 h-6 flex items-center justify-center border rounded-full border-black/70 text-black/70 text-[10px] font-bold">
                 SJR
               </div>
@@ -155,7 +155,7 @@ export default function AlbumPage() {
           <div>
             <Image src="/music/note.jpg" alt="共同的土地" width={500} height={500} />
             <div className="h-42 flex justify-between items-end px-3 py-3 text-sm">
-              <Image className="filter contrast-200" src="/label-icon/polydor.png" alt="Polydor" width={40} height={40} />
+              <Image className="filter contrast-200" src="/img/playground/label-icon/polydor.png" alt="Polydor" width={40} height={40} />
               <div className="flex flex-col text-right">
                 <p className="font-bold font-serif text-black/70">上白石萌音</p>
                 <p className="font-serif font-semibold text-black/40">二〇二〇 八月 二十六日</p>

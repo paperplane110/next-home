@@ -5,8 +5,6 @@ import { useMedia } from "react-use";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-
-import { UserButton } from "@neondatabase/auth/react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -15,42 +13,12 @@ import {
   DrawerFooter,
   DrawerClose
 } from "@/components/ui/drawer";
-import { CameraIcon, ChevronRight, FileUserIcon, HomeIcon, LibraryIcon, MenuIcon, PencilLineIcon, PuzzleIcon, Undo2Icon } from "lucide-react";
+import { pageList } from "@/lib/page-list";
 import { Separator } from "./ui/separator";
+import { HelperCommand } from "./helper-command";
+import { MenuIcon, Undo2Icon, ChevronRight } from "lucide-react";
 
-const routes = [
-  {
-    href: "/",
-    label: "Home",
-    icon: HomeIcon,
-  },
-  {
-    href: "/posts",
-    label: "Writing",
-    icon: PencilLineIcon,
-  },
-  {
-    href: "/reading",
-    label: "Reading",
-    icon: LibraryIcon,
-  },
-  // {
-  //   href: "/gallery",
-  //   label: "Gallery",
-  //   icon: CameraIcon,
-  // },
-  {
-    href: "/about",
-    label: "About",
-    icon: FileUserIcon,
-  },
-  {
-    href: "/playground",
-    label: "Playground",
-    icon: PuzzleIcon,
-    hidden: false,
-  }
-]
+
 
 export const Navigation = () => {
   const isMobile = useMedia("(max-width: 600px)", true);
@@ -73,20 +41,19 @@ export const Navigation = () => {
       )}
     >
       <nav className={cn(
-        "subsection py-4 flex items-center justify-start gap-4",
-        isMobile && "justify-between"
+        "subsection py-4 flex items-center justify-between"
       )}>
         {isMobile ? (
           <>
             <Link
-              key={routes[0].href}
-              href={routes[0].href}
+              key={pageList[0].href}
+              href={pageList[0].href}
               className={cn(
                 "py-2 text-sm font-serif hover:text-primary",
-                isActive(routes[0].href) ? "font-semibold text-primary" : ""
+                isActive(pageList[0].href) ? "font-semibold text-primary" : ""
               )}
             >
-              {routes[0].label}
+              {pageList[0].label}
             </Link>
             <Drawer>
               <DrawerTrigger asChild>
@@ -106,7 +73,7 @@ export const Navigation = () => {
                     </Link>
                   </DrawerClose>
                   <Separator className="my-1" />
-                  {routes.slice(1).map((route) => (
+                  {pageList.slice(1).map((route) => (
                     <DrawerClose asChild key={route.href}>
                       <Link href={route.href} className="flex items-center">
                         <Button variant="ghost" className="w-full">
@@ -130,19 +97,26 @@ export const Navigation = () => {
             </Drawer>
           </>
         ) : (
-          routes.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className={cn(
-                "py-2 text-sm font-serif hover:text-primary",
-                route.hidden ? "text-transparent" : "",
-                isActive(route.href) ? "text-primary" : ""
-              )}
-            >
-              {route.label}
-            </Link>
-          ))
+          <>
+            <div className="flex gap-4">{
+              pageList.map((route) => (
+                <Link
+                  key={route.href}
+                  href={route.href}
+                  className={cn(
+                    "py-2 text-sm font-serif hover:text-primary",
+                    route.hidden ? "text-transparent" : "",
+                    isActive(route.href) ? "text-primary" : ""
+                  )}
+                >
+                  {route.label}
+                </Link>
+              ))
+            }</div>
+            <div>
+              <HelperCommand />
+            </div>
+          </>
         )}
       </nav>
     </div>
