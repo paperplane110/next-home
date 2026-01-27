@@ -1,11 +1,20 @@
-import AccessDenied from "@/components/access-denied";
+"use client"
+import AccessDeniedCard from "@/components/access-denied-card";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AccessDeniedPage() {
+  const pathname = usePathname();
   return (
     <div className="section page-top-margin">
       <div className="subsection">
-        <AccessDenied />
+        <h1 className="text-3xl font-semibold font-pixel">Access Denied Card</h1>
+        <div className="my-4 font-pixel text-muted-foreground">
+          Please <Link className="underline" href={`/auth/sign-in?redirectTo=${pathname}`}>login</Link> or contact the <Link className="underline" href="mailto:jyuan7155@gmail.com">lab admin</Link> for access.
+        </div>
+        <div className="mt-8 flex justify-center">
+        <AccessDeniedCard />
+        </div>
       </div>
       <div className="subsection mt-12">
         <hr />

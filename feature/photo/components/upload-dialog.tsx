@@ -1,5 +1,8 @@
 "use client"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
+import AccessDeniedCard from "@/components/access-denied-card";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -16,28 +19,40 @@ import { useAtom } from "jotai";
 
 export function PhotoUploadDialog() {
   const [open, setOpen] = useAtom(photoUploadDialogOpenAtom);
-  const { data } = authClient.useSession();
+  const { data, isPending } = authClient.useSession();
+  const pathname = usePathname();
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader className="mb-6">
           <DialogTitle className="flex items-center">
             Upload Images
-            {!data && <Badge className="ml-2 h-5 bg-green-600">Authenticating...</Badge>}
+            {isPending && <Badge className="ml-2 h-5 bg-green-600">Authenticating...</Badge>}
+            {!isPending && !data && <Badge variant="destructive" className="ml-2 h-5">Access Denied</Badge>}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-sm">Upload an image to gallery</DialogDescription>
+          <DialogDescription className="text-muted-foreground text-sm">
+            Upload an image to gallery.
+          </DialogDescription>
         </DialogHeader>
         <div className="no-scrollbar max-h-[60vh] overflow-y-auto">
           {
-            !data ? (
+            isPending ? (
               <div className="flex flex-col items-center justify-center gap-4 px-4">
                 <Skeleton className="w-full h-32" />
                 <Skeleton className="w-full h-10" />
                 <Skeleton className="w-full h-10" />
                 <Skeleton className="w-full h-10" />
               </div>
-            ) : (
+            ) : data ? (
               <PhotoUploadForm onSuccess={() => setOpen(false)} />
+            ) : (
+              <div className="flex flex-col w-full items-center gap-4">
+                <AccessDeniedCard />
+                <p className="text-muted-foreground text-sm">
+                  Please <Link className="underline" href={`/auth/sign-in?redirectTo=${pathname}`} onClick={() => setOpen(false)}>login</Link> or contact the <Link className="underline" href="mailto:jyuan7155@gmail.com">lab admin</Link> for access.
+                </p>
+              </div>
             )
           }
 

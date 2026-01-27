@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CommandIcon, DatabaseIcon, FrameIcon, ImagePlusIcon, LogInIcon, MessageCircleMoreIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Badge } from "./ui/badge";
 import {
   CommandDialog,
@@ -21,6 +21,7 @@ import { photoUploadDialogOpenAtom } from "@/lib/modal-store";
 export const HelperCommand = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const { toggleFrame } = useFrame();
   const setPhotoUploadDialogOpen = useSetAtom(photoUploadDialogOpenAtom);
 
@@ -30,7 +31,7 @@ export const HelperCommand = () => {
   }
 
   const devOpts = [
-    { label: "Sign in", icon: LogInIcon, onSelect: () => goToURL("/auth/sign-in") },
+    { label: "Sign in", icon: LogInIcon, onSelect: () => goToURL(`/auth/sign-in?redirectTo=${pathname}`) },
     {
       label: "Upload Photo", icon: ImagePlusIcon, onSelect: () => {
         setIsOpen(false)
