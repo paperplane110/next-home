@@ -41,10 +41,17 @@ Todo list
 - [ ] "Gallery page"
   - like this [Next image gallery](https://nextjsconf-pics.vercel.app/)
   - like this [udara.io/photos/](https://udara.io/photos/)
+  - 大图展示精选，而后是一些专辑，而后是所有图片
+  - DB
+    - [x] photos table
+      - [ ] 更新长宽 title 信息为必须
+    - [ ] tags table
   - server actions
     - [ ] query photos
     - [ ] update the photo
-  - [ ] how to use Image to display photo from Vercel Blob
+  - [x] how to use Image to display photo from Vercel Blob
+    - [ ] 无线滚动加载
+    - [ ] Image Loader
   - [ ] how to display blurhash canvas when image is loading
   - [x] photo upload form
     - [ ] tags

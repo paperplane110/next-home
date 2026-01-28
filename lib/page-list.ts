@@ -4,6 +4,7 @@ import {
   LibraryIcon,
   FileUserIcon,
   PuzzleIcon,
+  CameraIcon,
 } from "lucide-react";
 
 export const pageList = [
@@ -22,11 +23,12 @@ export const pageList = [
     label: "Reading",
     icon: LibraryIcon,
   },
-  // {
-  //   href: "/gallery",
-  //   label: "Gallery",
-  //   icon: CameraIcon,
-  // },
+  {
+    href: "/gallery",
+    label: "Gallery",
+    icon: CameraIcon,
+    hidden: true,
+  },
   {
     href: "/about",
     label: "About",

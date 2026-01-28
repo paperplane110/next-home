@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label"
 import { CirclePlusIcon, CircleXIcon, Loader2Icon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import insertOneImage, { checkImageDuplicate } from "@/app/actions/photo-actions"
+import { checkImageDuplicate, insertOneImage } from "@/app/actions/photo-actions"
 import { upload } from "@vercel/blob/client"
 import { type Photo, photoUploadFormSchema, type PhotoUploadForm } from "@/drizzle/schema"
 

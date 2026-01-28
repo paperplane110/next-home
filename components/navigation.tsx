@@ -74,7 +74,7 @@ export const Navigation = () => {
                   </DrawerClose>
                   <Separator className="my-1" />
                   {pageList.slice(1).map((route) => (
-                    <DrawerClose asChild key={route.href}>
+                    (!route.hidden && <DrawerClose asChild key={route.href}>
                       <Link href={route.href} className="flex items-center">
                         <Button variant="ghost" className="w-full">
                           <route.icon className="mr-0.5 text-primary" size={16} />
@@ -83,7 +83,7 @@ export const Navigation = () => {
                         </Button>
                       </Link>
                     </DrawerClose>
-                  ))}
+                    )))}
                   <Separator className="mt-2" />
                 </div>
                 <DrawerFooter>
@@ -100,17 +100,16 @@ export const Navigation = () => {
           <>
             <div className="flex gap-4">{
               pageList.map((route) => (
-                <Link
+                (!route.hidden && <Link
                   key={route.href}
                   href={route.href}
                   className={cn(
                     "py-2 text-sm font-serif hover:text-primary",
-                    route.hidden ? "text-transparent" : "",
                     isActive(route.href) ? "text-primary" : ""
                   )}
                 >
                   {route.label}
-                </Link>
+                </Link>)
               ))
             }</div>
             <div className="flex items-center gap-2 h-4">

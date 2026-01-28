@@ -7,7 +7,7 @@ export const photos = pgTable("photos", {
   id: uuid("id").primaryKey().defaultRandom(),
 
   // 基础信息
-  title: varchar("title", { length: 255 }),
+  title: varchar("title", { length: 255 }).notNull(),
   creator: varchar("creator", { length: 255 }), // 图片创作者
   description: text("description"),
   location: varchar("location", { length: 255 }), // 存储图片的地理位置
@@ -17,14 +17,14 @@ export const photos = pgTable("photos", {
   // Vercel Blob 提供的核心字段
   url: text("url").notNull(),          // 图片的访问地址
   pathname: text("pathname").notNull(), // 在 Blob 仓库中的路径（用于删除图片）
-  contentType: varchar("content_type", { length: 50 }), // image/jpeg, image/png 等
-  size: integer("size"),               // 文件大小（字节）
+  contentType: varchar("content_type", { length: 50 }).notNull(), // image/jpeg, image/png 等
+  size: integer("size").notNull(),               // 文件大小（字节）
 
   // 图片属性（建议在上传时获取，方便前端做响应式布局和占位）
-  width: integer("width"),
-  height: integer("height"),
-  aspectRatio: varchar("aspect_ratio", { length: 20 }),
-  isVertical: boolean("is_vertical").default(true), // 是否为垂直图片
+  width: integer("width").notNull(),
+  height: integer("height").notNull(),
+  aspectRatio: varchar("aspect_ratio", { length: 20 }).notNull(),
+  isVertical: boolean("is_vertical").default(true).notNull(), // 是否为垂直图片
   md5: varchar("md5", { length: 32 }).notNull().unique(), // 图片的 MD5 值，用于去重
   blurhash: varchar("blurhash", { length: 255 }), // 存储生成的 BlurHash 字符串
 

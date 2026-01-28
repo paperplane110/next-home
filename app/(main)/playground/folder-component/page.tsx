@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
+import { vercelBlobLoader } from "@/feature/photo/vercel-blob-loader";
 import { ImageIcon } from "lucide-react";
 import { useClickInsideOutside } from "@/hooks/use-click-inside-outside";
 
@@ -126,7 +127,7 @@ export default function FolderComponent() {
             <div id="folder-cover"
               data-state={dataState}
               className={cn(
-                "absolute w-40 h-25 rounded-2xl bg-black/30 border border-black/10 backdrop-blur-[1px] transform-3d -rotate-x-20 translate-y-[10px]",
+                "absolute w-40 h-25 rounded-2xl bg-black/30 border-t border-t-black/10 backdrop-blur-[1px] transform-3d -rotate-x-20 translate-y-[10px]",
                 "transition-transform duration-300 ease-out origin-bottom group-hover:-rotate-x-32",
                 "data-[state=open]:-rotate-x-55"
               )}>
@@ -171,8 +172,13 @@ export default function FolderComponent() {
               )}
               data-state={imgDataState}
             >
-              <Image src="/img/gallery/DSCF6105.jpg"
+              <Image 
+                loader={vercelBlobLoader}
+                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/DSCF6478-nBWFy1mBRDdgvXJeqFyFeXDJAwVfAt.jpeg"
                 width={640} height={480}
+                quality={50}
+                loading="eager"
+                placeholder="empty"
                 className="w-full h-full object-cover rounded-md" alt="DSCF6105"
               />
             </div>
@@ -193,8 +199,13 @@ export default function FolderComponent() {
               )}
               data-state={imgDataState}
             >
-              <Image src="/img/gallery/DSCF6470.jpg"
+              <Image 
+                loader={vercelBlobLoader}
+                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-FsmPFWpt27uSodKe5JhKM5fkoyulgz.jpeg"
                 width={640} height={480}
+                quality={50}
+                loading="eager"
+                placeholder="empty"
                 className="w-full h-full object-cover rounded-md" alt="DSCF6470"
               />
             </div>
@@ -216,8 +227,12 @@ export default function FolderComponent() {
               )}
               data-state={imgDataState}
             >
-              <Image src="/img/gallery/hallstatt.jpeg"
+              <Image 
+                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/hallstatt-RXF9shaQSC1ZCSHQagwgEsKcMKE3oG.jpeg"
                 width={640} height={480}
+                quality={50}
+                loading="eager"
+                placeholder="empty"
                 className="w-full h-full object-cover rounded-md" alt="hallstatt"
               />
             </div>
@@ -225,7 +240,7 @@ export default function FolderComponent() {
             <div id="folder-cover"
               data-state={imgDataState}
               className={cn(
-                "absolute w-40 h-25 rounded-2xl bg-blue-400/30 border border-blue-400/10 backdrop-blur-[1px] transform-3d -rotate-x-20 translate-y-[10px]",
+                "absolute w-40 h-25 rounded-2xl bg-blue-400/30 border-t border-blue-400/10 backdrop-blur-[1px] transform-3d -rotate-x-20 translate-y-[10px]",
                 "transition-transform duration-300 ease-out origin-bottom group-hover:-rotate-x-32 group-hover:translate-z-[5px]",
                 "data-[state=open]:-rotate-x-55",
                 "data-[state=open]:translate-z-[5px]",
