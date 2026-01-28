@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Album from "@/app/playground/album/components/album";
+import Album from "./components/album";
 
 export default function AlbumPage() {
   const albumTitle = "Racing Mount Pleasant";
