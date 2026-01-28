@@ -15,6 +15,13 @@
       "when": 1769570197602,
       "tag": "0001_clean_overlord",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769576440357,
+      "tag": "0002_crazy_golden_guardian",
+      "breakpoints": true
     }
   ]
 }

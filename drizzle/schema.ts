@@ -45,6 +45,24 @@ export const photos = pgTable("photos", {
   index('md5_idx').on(table.md5)
 ]);
 
+// --- Tags: 多对多 ---
+export const tags = pgTable("tags", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 64 }).notNull().unique(), // 人类可读的标签名称
+  slug: varchar("slug", { length: 64 }).unique(), // 用于 URL  slug，例如: "beach-sunset"
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const photoTags = pgTable("photo_tags", {
+  photoId: uuid("photo_id").notNull().references(() => photos.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  tagId: uuid("tag_id").notNull().references(() => tags.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("photo_tags_photo_idx").on(table.photoId),
+  index("photo_tags_tag_idx").on(table.tagId),
+]);
+
 export const photoInsertSchema = createInsertSchema(photos).omit({
   id: true,
   createdAt: true,
@@ -74,6 +92,14 @@ export const photoUploadFormSchema = createInsertSchema(photos, {
   imgFile: z.instanceof(File, { message: "Image is required" }),
 })
 
+export const tagInsertSchema = createInsertSchema(tags).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type Photo = InferSelectModel<typeof photos>
 export type PhotoInsert = z.infer<typeof photoInsertSchema>
 export type PhotoUploadForm = z.infer<typeof photoUploadFormSchema>
+export type Tag = InferSelectModel<typeof tags>
+export type TagInsert = z.infer<typeof tagInsertSchema>
