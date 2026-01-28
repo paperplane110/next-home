@@ -44,7 +44,7 @@ Todo list
   - 大图展示精选，而后是一些专辑，而后是所有图片
   - DB
     - [x] photos table
-      - [ ] 更新长宽 title 信息为必须
+      - [x] 更新长宽 title 信息为必须
     - [ ] tags table
   - server actions
     - [ ] query photos

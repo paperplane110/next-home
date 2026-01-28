@@ -1,6 +1,9 @@
 "use client"
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { authClient } from "@/feature/auth/client";
+import { useAtom } from "jotai";
 
 import AccessDeniedCard from "@/components/access-denied-card";
 import { Badge } from "@/components/ui/badge";
@@ -11,17 +14,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton";
-import { authClient } from "@/feature/auth/client";
 import PhotoUploadForm from "@/feature/photo/components/upload-form";
 import { photoUploadDialogOpenAtom } from "@/lib/modal-store";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { useAtom } from "jotai";
 
 export function PhotoUploadDialog() {
   const [open, setOpen] = useAtom(photoUploadDialogOpenAtom);
-  const { data, isPending } = authClient.useSession();
+  const { data, isPending, error, refetch } = authClient.useSession();
   const pathname = usePathname();
 
+  useEffect(() => {
+    if (open && error?.message.includes("500")) {
+      refetch();
+    }
+  }, [open, error, refetch]);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -30,6 +36,7 @@ export function PhotoUploadDialog() {
             Upload Images
             {isPending && <Badge className="ml-2 h-5 bg-green-600">Authenticating...</Badge>}
             {!isPending && !data && <Badge variant="destructive" className="ml-2 h-5">Access Denied</Badge>}
+            {}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm">
             Upload an image to gallery.
@@ -51,6 +58,7 @@ export function PhotoUploadDialog() {
                 <AccessDeniedCard />
                 <p className="text-muted-foreground text-sm">
                   Please <Link className="underline" href={`/auth/sign-in?redirectTo=${pathname}`} onClick={() => setOpen(false)}>login</Link> or contact the <Link className="underline" href="mailto:jyuan7155@gmail.com">lab admin</Link> for access.
+                  {error?.message}
                 </p>
               </div>
             )

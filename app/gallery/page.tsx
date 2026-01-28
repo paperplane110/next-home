@@ -1,12 +1,17 @@
+import { getPhotos } from "@/app/actions/photo-actions";
+import { HelperCommand } from "@/components/helper-command";
+import { PhotoGallery } from "@/components/photo-gallery";
+
 export default async function GalleryPage() {
+  // 首屏 10 张数据，由服务器直接生成 HTML，SEO 友好
+  const { data: initialPhotos } = await getPhotos(0, 10);
 
   return (
-    <div className="section pt-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <header className="border h-full lg:row-span-2 ">
-        <h1 className="font-serif font-light soft-70">
-          Gallery
-        </h1>
-      </header>
-    </div>
-  )
+    <main className="container mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-8">我的徒步足迹
+        <HelperCommand />
+      </h1>
+      <PhotoGallery initialPhotos={initialPhotos} />
+    </main>
+  );
 }

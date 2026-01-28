@@ -46,7 +46,7 @@ export const MusicPlayerCard = () => {
               referrerPolicy="no-referrer"
               width={86}
               height={86}
-              src="https://music.163.com/outchain/player?type=0&id=14462387674&auto=1&height=66"
+              src="https://music.163.com/outchain/player?type=0&id=14462387674&auto=0&height=66"
             >
             </iframe>
           </div>

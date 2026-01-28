@@ -1,42 +1,67 @@
 "use server";
 
+import { ActionReturn } from "@/lib/types";
 import { db } from "@/drizzle/db";
 import { PhotoInsert, photos } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 
 
-export async function checkImageDuplicate(md5: string) {
-  const existingPhoto = await db
-    .select()
-    .from(photos)
-    .where(eq(photos.md5, md5))
-    .limit(1)
-  if (existingPhoto.length > 0) {
-    return {
-      isDuplicate: true,
-      photo: existingPhoto[0],
+export async function checkImageDuplicate(
+  md5: string
+): Promise<ActionReturn<{
+  isDuplicate: boolean;
+  photo: PhotoInsert | null;
+}>> {
+  try {
+    const existingPhoto = await db
+      .select()
+      .from(photos)
+      .where(eq(photos.md5, md5))
+      .limit(1)
+
+    if (existingPhoto.length > 0) {
+      return {
+        success: true,
+        data: {
+          isDuplicate: true,
+          photo: existingPhoto[0],
+        }
+      }
     }
-  } else {
-    return {
-      isDuplicate: false,
-      photo: null,
+    else {
+      return {
+        success: true,
+        data: {
+          isDuplicate: false,
+          photo: null,
+        }
+      }
     }
+  } catch (e) {
+    console.error(e)
+    return { success: false, data: "Failed to check image duplicate" };
   }
 }
 
-export async function insertOneImage(data: PhotoInsert) {
+export async function insertOneImage(
+  data: PhotoInsert
+): Promise<ActionReturn<PhotoInsert>> {
   try {
     const entry = await db
       .insert(photos)
       .values(data)
       .returning()
-    return { message: "success", data: entry[0] };
-  } catch (error) {
-    return { message: "error", data: error };
+    return { success: true, data: entry[0] };
+  } catch (e) {
+    console.error(e)
+    return { success: false, data: "Failed to insert photo" };
   }
 }
 
-export async function getPhotos(offset: number, limit: number) {
+export async function getPhotos(
+  offset: number,
+  limit: number
+): Promise<ActionReturn<PhotoInsert[]>> {
   try {
     const photoInfos = await db
       .select()
@@ -44,8 +69,9 @@ export async function getPhotos(offset: number, limit: number) {
       .offset(offset)
       .orderBy(desc(photos.createdAt))
       .limit(limit)
-    return { message: "success", data: photoInfos };
-  } catch (error) {
-    return { message: "error", data: error };
+    return { success: true, data: photoInfos };
+  } catch (e) {
+    console.error(e)
+    return { success: false, data: "Failed to get photos" };
   }
 }

@@ -21,17 +21,17 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { checkImageDuplicate, insertOneImage } from "@/app/actions/photo-actions"
 import { upload } from "@vercel/blob/client"
-import { type Photo, photoUploadFormSchema, type PhotoUploadForm } from "@/drizzle/schema"
+import { photoUploadFormSchema, type PhotoUploadForm, PhotoInsert } from "@/drizzle/schema"
 
 
 export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isParsingImg, setIsParsingImg] = useState(false)
-  const [duplicatePhoto, setDuplicatePhoto] = useState<Photo | null>(null)
-  const [isChecking, setIsChecking] = useState(false)
+  const [isParsingImg, setIsParsingImg] = useState(false) // 是否正在解析图片信息
+  const [duplicatePhoto, setDuplicatePhoto] = useState<PhotoInsert | null>(null)
+  const [isChecking, setIsChecking] = useState(false)     // 是否在检查图片是否重复
   const [preview, setPreview] = useState<string | null>(null)
 
-  const [isUploading, setIsUploading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)   // 是否正在上传图片
   const [uploadProgress, setUploadProgress] = useState(0)
 
   const defaultImageShapeInfo = {
@@ -77,11 +77,16 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
       // checking duplicate image
       setIsChecking(true)
       setImageShapeInfo(imageInfo)
-      const { isDuplicate, photo } = await checkImageDuplicate(imageInfo.md5)
-      if (isDuplicate) {
-        setDuplicatePhoto(photo)
+      const checkResult = await checkImageDuplicate(imageInfo.md5)
+      if (checkResult.success) {
+        const { isDuplicate, photo } = checkResult.data
+        if (isDuplicate) {
+          setDuplicatePhoto(photo)
+        } else {
+          setDuplicatePhoto(null)
+        }
       } else {
-        setDuplicatePhoto(null)
+        throw new Error(checkResult.data)
       }
       setIsChecking(false)
 
@@ -111,9 +116,11 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
   }, [preview]);
 
   const onSubmit = async (data: PhotoUploadForm) => {
-    console.log(data)
+    // 1. set isUploading to true
     setIsUploading(true)
+
     try {
+      // 2. upload image to vercel blob
       const newBlob = await upload(data.imgFile.name, data.imgFile, {
         access: "public",
         handleUploadUrl: "/api/photo/upload",
@@ -122,8 +129,11 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
           setUploadProgress(progress.percentage)
         },
       })
+
       // filter out imgFile, because imgFile is MB, too large for Nextjs backend
       const { imgFile, ...metadata } = data;
+
+      // 3. insert photo info to db
       const insertResult = await insertOneImage({
         ...imageShapeInfo,
         ...metadata,
@@ -133,11 +143,13 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
         size: imgFile.size,
       })
 
-      if (insertResult) {
+      if (insertResult.success) {
         handleImageRemove()
+        // procedure: close dialog
+        onSuccess();
+      } else {
+        throw new Error(insertResult.data)
       }
-      // procedure: close dialog
-      onSuccess();
     } catch (error) {
       console.error("Error uploading image:", error)
     }
