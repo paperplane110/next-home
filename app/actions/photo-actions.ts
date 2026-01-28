@@ -2,7 +2,7 @@
 
 import { ActionReturn } from "@/lib/types";
 import { db } from "@/drizzle/db";
-import { PhotoInsert, photos } from "@/drizzle/schema";
+import { type Photo, type PhotoInsert, photos } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 
 
@@ -61,7 +61,7 @@ export async function insertOneImage(
 export async function getPhotos(
   offset: number,
   limit: number
-): Promise<ActionReturn<PhotoInsert[]>> {
+): Promise<ActionReturn<Photo[]>> {
   try {
     const photoInfos = await db
       .select()

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form"
 import React, { useRef } from "react"
 import { Label } from "@/components/ui/label"
-import { CirclePlusIcon, CircleXIcon, Loader2Icon } from "lucide-react"
+import { CheckCircle2Icon, CirclePlusIcon, CircleXIcon, Loader2Icon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { checkImageDuplicate, insertOneImage } from "@/app/actions/photo-actions"
@@ -33,6 +33,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
 
   const [isUploading, setIsUploading] = useState(false)   // 是否正在上传图片
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [isSuccess, setIsSuccess] = useState(false)       // 是否上传成功
 
   const defaultImageShapeInfo = {
     width: 0,
@@ -102,6 +103,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     setPreview(null)
     setDuplicatePhoto(null)
     setImageShapeInfo(defaultImageShapeInfo)
+    setUploadProgress(0)
     form.reset()
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
@@ -144,9 +146,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
       })
 
       if (insertResult.success) {
-        handleImageRemove()
-        // procedure: close dialog
-        onSuccess();
+        setIsSuccess(true)
       } else {
         throw new Error(insertResult.data)
       }
@@ -156,9 +156,46 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     setIsUploading(false)
   }
 
+  // 4. check if submit is disabled
+  const isSubmitDisabled = isChecking || isParsingImg || !!duplicatePhoto || isUploading
+
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+        <div className="size-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+          <CheckCircle2Icon className="size-10" />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">Upload Successful!</h3>
+        <p className="text-muted-foreground mb-8">
+          Your photo has been added to the gallery.
+        </p>
+        <div className="flex flex-col w-full gap-3">
+          <Button
+            onClick={() => {
+              handleImageRemove()
+              setIsSuccess(false)
+            }}
+            variant="default"
+            className="w-full"
+          >
+            Upload Another
+          </Button>
+          <Button
+            onClick={onSuccess}
+            variant="outline"
+            className="w-full"
+          >
+            Close
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+    <div className="">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center gap-4 px-4">
             <FormField
               control={form.control}
@@ -319,21 +356,22 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
               )}
             />
           </div>
-        <div className="mt-8 px-4">
-          <Button
-            disabled={isChecking || isParsingImg || !!duplicatePhoto || isUploading}
-            type="submit"
-            className="w-full"
-          >
-            Upload
-            {isUploading && (
-              <p>
-                {uploadProgress.toFixed(0)}%
-              </p>
-            )}
-          </Button>
-        </div>
-      </form>
-    </Form>
+          <div className="mt-8 px-4">
+            <Button
+              disabled={isSubmitDisabled}
+              type="submit"
+              className={cn("w-full")}
+            >
+              {!isSubmitDisabled && "Upload"}
+              {isUploading && (
+                <p>
+                  Uploading {uploadProgress.toFixed(0)}%
+                </p>
+              )}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   )
 }

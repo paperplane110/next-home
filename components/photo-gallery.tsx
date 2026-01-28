@@ -5,9 +5,10 @@ import { useInView } from "framer-motion";
 import { getPhotos } from "@/app/actions/photo-actions";
 import { PhotoCard } from "@/components/photo-card";
 import { Photo } from "@/drizzle/schema";
+import { Loader2Icon } from "lucide-react";
 
 export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
-  const [photos, setPhotos] = useState(initialPhotos);
+  const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
   const [offset, setOffset] = useState(initialPhotos.length);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,14 +22,17 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
     if (isInView && hasMore && !isLoading) {
       const loadNextPage = async () => {
         setIsLoading(true);
-        const limit = 12;
-        const { data: photoInfos } = await getPhotos(offset, limit);
+        const limit = 10;
+        const { success, data: photoInfos } = await getPhotos(offset, limit);
 
         if (photoInfos.length < limit) {
           setHasMore(false);
         }
 
-        setPhotos((prev) => [...prev, ...photoInfos]);
+        if (success) {
+          setPhotos((prev) => [...prev, ...photoInfos]);
+        }
+
         setOffset((prev) => prev + photoInfos.length);
         setIsLoading(false);
       };
@@ -39,7 +43,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
 
   return (
     <div className="space-y-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-dense">
         {photos.map((photo, index) => (
           <PhotoCard key={photo.id} photo={photo} index={index} />
         ))}
@@ -48,7 +52,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
       {/* 触发器元素 */}
       <div ref={scrollTriggerRef} className="h-20 w-full flex justify-center items-center">
         {isLoading && (
-           <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+           <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
         )}
         {!hasMore && (
           <span className="text-muted-foreground text-sm italic">

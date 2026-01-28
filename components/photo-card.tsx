@@ -29,11 +29,11 @@ export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
         priority={index < 3}
         placeholder="empty"
       />
-      <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
+      {/* <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
         {photo.location}
         <br />
         {photo.url}
-      </div>
+      </div> */}
     </motion.div>
   );
 }
