@@ -47,12 +47,12 @@ Todo list
       - [x] 更新长宽 title 信息为必须
     - [ ] tags table
   - server actions
-    - [ ] query photos
+    - [x] query photos
     - [ ] update the photo
   - [x] how to use Image to display photo from Vercel Blob
-    - [ ] 无线滚动加载
-    - [ ] Image Loader
-  - [ ] how to display blurhash canvas when image is loading
+    - [x] 无限滚动加载
+    - [x] Image Loader
+  - [x] how to display blurhash canvas when image is loading
   - [x] photo upload form
     - [ ] tags
       - [ ] add tag table, many to many relationship between photos and tags

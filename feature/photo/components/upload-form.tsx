@@ -40,7 +40,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     height: 0,
     aspectRatio: "0",
     isVertical: false,
-    blurhash: "",
+    blurbase64: "",
     md5: "",
   }
   const [imageShapeInfo, setImageShapeInfo] = useState(defaultImageShapeInfo)
@@ -277,7 +277,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
                   <li>Width / Height: {imageShapeInfo.width} / {imageShapeInfo.height}</li>
                   <li>Aspect Ratio: {imageShapeInfo.aspectRatio}</li>
                   <li>Is Vertical: {imageShapeInfo.isVertical ? "Yes" : "No"}</li>
-                  <li>Blurhash: {imageShapeInfo.blurhash}</li>
+                  <li>Blurbase64: {imageShapeInfo.blurbase64}</li>
                   <li>MD5: {imageShapeInfo.md5}</li>
                 </ul>
               </div>

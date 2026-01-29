@@ -26,7 +26,7 @@ export const photos = pgTable("photos", {
   aspectRatio: varchar("aspect_ratio", { length: 20 }).notNull(),
   isVertical: boolean("is_vertical").default(true).notNull(), // 是否为垂直图片
   md5: varchar("md5", { length: 32 }).notNull().unique(), // 图片的 MD5 值，用于去重
-  blurhash: varchar("blurhash", { length: 255 }), // 存储生成的 BlurHash 字符串
+  blurbase64: varchar("blurbase64", { length: 255 }), // 存储生成的 ThumbHash Base64 字符串
 
   // 摄影元数据 (EXIF) - 可选，提升专业感
   //   camera: varchar("camera", { length: 100 }), // 例如: Sony A7IV
@@ -81,7 +81,7 @@ export const photoUploadFormSchema = createInsertSchema(photos, {
   height: true,
   aspectRatio: true,
   isVertical: true,
-  blurhash: true,
+  blurbase64: true,
   md5: true,
 
   url: true,

@@ -1,10 +1,15 @@
 import { motion } from "framer-motion";
 import { Photo } from "@/drizzle/schema";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, base64ToBinary } from "@/lib/utils";
 import { vercelBlobLoader } from "@/feature/photo/vercel-blob-loader";
+import * as thumbhash from "thumbhash"
 
 export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
+  const base64ToDataURL = (base64: string) => {
+    const binary = base64ToBinary(base64);
+    return thumbhash.thumbHashToDataURL(binary);
+  }
 
   return (
     <motion.div
@@ -14,7 +19,7 @@ export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
       viewport={{ once: true }} // 只在第一次滑入时触发动画
       className={cn(
         "group relative overflow-hidden rounded-xl border bg-card",
-        !photo.isVertical && "md:col-span-2"
+        // !photo.isVertical && "md:col-span-2"
       )}
     >
       <Image
@@ -27,7 +32,8 @@ export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         loading={index < 6 ? "eager" : "lazy"}
         priority={index < 3}
-        placeholder="empty"
+        placeholder={photo.blurbase64 ? "blur" : "empty"}
+        blurDataURL={photo.blurbase64 ? base64ToDataURL(photo.blurbase64) : undefined}
       />
       {/* <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
         {photo.location}

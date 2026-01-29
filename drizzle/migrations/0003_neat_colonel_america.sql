@@ -1,0 +1,1 @@
+ALTER TABLE "photos" RENAME COLUMN "blurhash" TO "blurbase64";

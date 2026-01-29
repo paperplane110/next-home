@@ -1,5 +1,6 @@
-import { encode } from "blurhash"
+import * as thumbhash from "thumbhash"
 import SparkMD5 from "spark-md5"
+import { binaryToBase64 } from "@/lib/utils";
 
 const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> =>
   new Promise((resolve, reject) => {
@@ -26,7 +27,6 @@ const loadImage = (url: string): Promise<HTMLImageElement> =>
     img.onerror = (err) => reject(err);
   });
 
-
 export const parseImage = async (file: File) => {
   try {
     // calculate md5
@@ -38,21 +38,35 @@ export const parseImage = async (file: File) => {
     // shape info
     const imgUrl = URL.createObjectURL(file);
     const img = await loadImage(imgUrl);
-    const width = img.width;
-    const height = img.height;
+    let width = img.width;
+    let height = img.height;
     const aspectRatioRaw = width / height;
     const aspectRatio = aspectRatioRaw.toFixed(2);
     const isVertical = aspectRatioRaw < 1;
 
-    // encode by BlurHash
+    // encode by ThumbHash
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = 32;
-    canvas.height = 32;
+    if (!ctx) {
+      throw new Error("Failed to get canvas context");
+    }
 
-    ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-    const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-    const blurhash = imageData ? encode(imageData.data, canvas.width, canvas.height, 4, 4) : "";
+    const maxSize = 100;
+
+    if (width > height) {
+      height = Math.round(height * (maxSize / width));
+      width = maxSize;
+    } else {
+      width = Math.round(width * (maxSize / height));
+      height = maxSize;
+    }
+    canvas.width = width;
+    canvas.height = height;
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const hashBuffer = thumbhash.rgbaToThumbHash(canvas.width, canvas.height, imageData.data);
+    const thumbhashBase64 = binaryToBase64(hashBuffer);
     URL.revokeObjectURL(imgUrl);
 
     return {
@@ -60,7 +74,7 @@ export const parseImage = async (file: File) => {
       height,
       aspectRatio,
       isVertical,
-      blurhash,
+      blurbase64: thumbhashBase64,
       md5
     }
   } catch (error) {
