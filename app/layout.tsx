@@ -18,7 +18,10 @@ export const metadata: Metadata = {
 
 // FONT FAMILY
 // sans-serif
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({ 
+  subsets: ["latin"], 
+  variable: "--font-inter",
+});
 // mono
 const jetbrains_mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 // serif

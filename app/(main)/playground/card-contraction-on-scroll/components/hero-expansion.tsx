@@ -29,7 +29,7 @@ export function HeroExpansion() {
     <div ref={containerRef} className="w-full h-screen mb-[30vh]">
       <div className="relative h-screen w-full flex items-start justify-center">
         <div className="absolute left-[10%] bottom-[10%] text-white z-10">
-          <p className="mt-2 font-medium text-7xl">BMW Welt, <br />München</p>
+          <p className="mt-2 font-medium text-7xl">BMW <i>W</i>elt, <br />Mün<i>c</i>h<i>e</i>n</p>
           <div className="mt-8 grid grid-cols-3 gap-8">
             <div className="flex gap-[0.3rem]">
               <svg className="w-6 h-6 flex-none" viewBox="0 0 24 24">
@@ -90,7 +90,7 @@ export function HeroExpansion() {
       </div>
       <div className="mt-8">
         <div className="flex items-center justify-center"><CircleArrowUpIcon className="size-10 text-muted-foreground" /></div>
-        <div className="mt-6 text-sm font-medium text-muted-foreground text-center">
+        <div className="mt-6 font-medium text-muted-foreground text-center">
           向上滚动，当卡片底部进入视野时，卡片放至最大
         </div>
       </div>

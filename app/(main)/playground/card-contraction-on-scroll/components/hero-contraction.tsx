@@ -32,7 +32,7 @@ export function HeroContraction() {
     <div ref={containerRef} className="w-full h-screen mb-[30vh]">
       <div className="relative h-screen w-full flex items-center justify-center">
         <div className="absolute left-[10%] bottom-[10%] text-white z-10">
-          <p className="mt-2 font-medium text-7xl">Hallstatt, <br />Austria</p>
+          <p className="mt-2 font-medium text-7xl">Hallsta<i>tt</i>, <br /><i>A</i>ustria</p>
           <div className="mt-8 grid grid-cols-4 gap-8">
             <div className="flex gap-[0.3rem]">
               <svg className="w-6 h-6 flex-none" viewBox="0 0 24 24">
@@ -102,8 +102,8 @@ export function HeroContraction() {
       </div>
       <div className="mt-8">
         <div className="flex items-center justify-center"><CircleArrowUpIcon className="size-10 text-muted-foreground" /></div>
-        <div className="mt-6 text-sm font-medium text-muted-foreground text-center">
-          向上滚动，卡片的宽高、圆角同时变化
+        <div className="mt-6 font-medium text-muted-foreground text-center">
+          向上滚动，卡片的宽高缩窄，圆角加大
         </div>
       </div>
     </div>

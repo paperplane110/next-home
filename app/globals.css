@@ -3,7 +3,6 @@
 @plugin "@iconify/tailwind4";
 @import "./mdx.css";
 @import "./other.css";
-@import "@neondatabase/auth/ui/tailwind";
 
 @custom-variant dark (&:is(.dark *));
 
