@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Navigation />
-      <div className="min-h-[calc(100vh-8rem)] pt-16 flex flex-col">
+      <div className="min-h-[calc(100vh-8rem)] pt-18 flex flex-col">
         {children}
       </div>
       <Footer />

@@ -163,7 +163,7 @@ export const ReadingsSection = () => {
                   href={`/reading/${post._meta.path}`}
                   className="flex justify-between group py-1"
                 >
-                  <div className="group-hover:underline decoration-pink-600">
+                  <div className="truncate group-hover:underline decoration-pink-600">
                     {post.title}
                   </div>
                   {/* <div className="flex-1 flex items-center px-4">

@@ -38,6 +38,10 @@ export default function Playground() {
       name: "Access denied card",
       path: "/access-denied",
     },
+    {
+      name: "Card contraction on scroll",
+      path: "/card-contraction-on-scroll",
+    },
   ]
   return (
     <div className="section">

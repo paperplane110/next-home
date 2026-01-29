@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Photo } from "@/drizzle/schema";
 import Image from "next/image";
@@ -6,6 +8,8 @@ import { vercelBlobLoader } from "@/feature/photo/vercel-blob-loader";
 import * as thumbhash from "thumbhash"
 
 export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
   const base64ToDataURL = (base64: string) => {
     const binary = base64ToBinary(base64);
     return thumbhash.thumbHashToDataURL(binary);
@@ -22,6 +26,17 @@ export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
         // !photo.isVertical && "md:col-span-2"
       )}
     >
+      
+      {photo.blurbase64 && <div 
+        className="absolute inset-0 z-0 scale-110 blur-2xl" 
+        style={{
+          backgroundImage: `url(${base64ToDataURL(photo.blurbase64)})`,
+          backgroundSize: 'cover',
+          filter: 'blur(20px)',
+          opacity: isLoaded ? 0 : 1, // 加载完成后隐藏背景
+          transition: 'opacity 0.6s ease-in-out'
+        }}
+      />}
       <Image
         loader={vercelBlobLoader}
         src={photo.url}
@@ -31,6 +46,7 @@ export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
         height={photo.height}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         loading={index < 6 ? "eager" : "lazy"}
+        onLoad={() => setIsLoaded(true)}
         priority={index < 3}
         placeholder={photo.blurbase64 ? "blur" : "empty"}
         blurDataURL={photo.blurbase64 ? base64ToDataURL(photo.blurbase64) : undefined}

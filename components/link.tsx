@@ -14,7 +14,7 @@ export default function OuterLink({
       href={href || "#"}
       target={target}
       rel="noopener noreferrer"
-      className={cn("hover:text-muted-foreground", className)}
+      className={cn("hover:text-muted-foreground hover:underline", className)}
     >
       {children}<ArrowUpRightIcon width={12} className="inline text-primary -mt-3 ml-0.5" />
     </Link>
