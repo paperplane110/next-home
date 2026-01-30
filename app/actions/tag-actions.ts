@@ -1,5 +1,5 @@
 "use server";
-import { db } from "@/drizzle/db";
+import { db } from "@/lib/db";
 import { tags, photoTags, type Tag } from "@/drizzle/schema";
 import { ActionReturn } from "@/lib/types";
 import { eq, inArray } from "drizzle-orm";

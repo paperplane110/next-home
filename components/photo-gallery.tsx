@@ -2,10 +2,11 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useInView } from "framer-motion";
-import { getPhotos } from "@/app/actions/photo-actions";
+import { deletePhotoAction, getPhotosAction } from "@/feature/photo/actions";
 import { PhotoCard } from "@/components/photo-card";
 import { Photo } from "@/drizzle/schema";
 import { Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
@@ -23,7 +24,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
       const loadNextPage = async () => {
         setIsLoading(true);
         const limit = 10;
-        const { success, data: photoInfos } = await getPhotos(offset, limit);
+        const { success, data: photoInfos } = await getPhotosAction(offset, limit);
 
         if (photoInfos.length < limit) {
           setHasMore(false);
@@ -41,11 +42,30 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
     }
   }, [isInView, hasMore, isLoading, offset]);
 
+  const handleDelete = async (id: string) => {
+    const prevPhotos = [...photos]
+    setPhotos(prevPhotos.filter((p) => p.id !== id))
+    try {
+      const response = await deletePhotoAction(id);
+
+      if (response?.success) {
+        // 刷新页面或更新状态以删除照片
+        toast.success("删除照片成功");
+      } else {
+        toast.error("删除照片失败");
+        setPhotos(prevPhotos);
+      }
+    } catch (error) {
+      toast.error("删除照片失败: " + error);
+      setPhotos(prevPhotos);
+    }
+  };
+
   return (
     <div className="space-y-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-dense">
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
         {photos.map((photo, index) => (
-          <PhotoCard key={photo.id} photo={photo} index={index} />
+          <PhotoCard key={photo.id} photo={photo} index={index} handleDelete={handleDelete} />
         ))}
       </div>
 

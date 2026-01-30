@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useScroll, motion, useTransform } from "framer-motion";
-import { vercelBlobLoader } from "@/feature/photo/vercel-blob-loader";
+
 import Image from "next/image";
 import { CircleArrowUpIcon } from "lucide-react";
 import { thumbHashToDataURL } from "thumbhash";
@@ -76,8 +76,7 @@ export function HeroExpansion() {
           }}
         >
           <Image
-            loader={vercelBlobLoader}
-            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-QH8wOBcwcvGvJFn9UNFy6zCOIVFtAa.jpeg"
+            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-vqACR6Z8yYRW0dropKxWI0R7Cg67Vt.webp"
             alt="hallstatt"
             width={640}
             height={480}

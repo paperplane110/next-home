@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { useScroll, motion, useTransform } from "framer-motion";
-import { vercelBlobLoader } from "@/feature/photo/vercel-blob-loader";
 import { thumbHashToDataURL} from "thumbhash"
 import { base64ToBinary } from "@/lib/utils";
 import Image from "next/image";
@@ -88,8 +87,7 @@ export function HeroContraction() {
           }}
         >
           <Image
-            loader={vercelBlobLoader}
-            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/R0001004%20%281%29-eo6nUuWJZ1S2pyhwHjO0zVYkJE2gA4.jpeg"
+            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/R0001004%20%281%29-0cK4lL7qhe6erMmNkHlsF48peeFAfE.webp"
             alt="hallstatt"
             width={640}
             height={480}
