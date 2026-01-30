@@ -77,7 +77,7 @@ export function HeroExpansion() {
         >
           <Image
             loader={vercelBlobLoader}
-            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-FsmPFWpt27uSodKe5JhKM5fkoyulgz.jpeg"
+            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-QH8wOBcwcvGvJFn9UNFy6zCOIVFtAa.jpeg"
             alt="hallstatt"
             width={640}
             height={480}

@@ -6,10 +6,12 @@ import "./globals.css";
 
 import { authClient } from "@/feature/auth/client";
 import { NeonAuthUIProvider } from "@neondatabase/auth/react"
+import { ReactLenis } from "lenis/react"
 import { FrameProvider } from "@/components/frame-context";
 import { Frame } from "@/components/frame";
 import PaperBg from "@/components/paper-bg";
 import { PhotoUploadDialog } from "@/feature/photo/components/upload-dialog";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Tianyu",
@@ -18,8 +20,8 @@ export const metadata: Metadata = {
 
 // FONT FAMILY
 // sans-serif
-const inter = Inter({ 
-  subsets: ["latin"], 
+const inter = Inter({
+  subsets: ["latin"],
   variable: "--font-inter",
 });
 // mono
@@ -63,14 +65,21 @@ export default function RootLayout({
         `}
       >
         <NeonAuthUIProvider authClient={authClient}>
-          <FrameProvider>
-            {/* <ControlPanel /> */}
-            <PhotoUploadDialog />
-            <Frame />
-            {children}
-          </FrameProvider>
-          <PaperBg />
-          <Analytics />
+          <ReactLenis root options={{
+            lerp: 0.1,
+            duration: 1.2,
+            smoothWheel: true,
+          }}>
+            <FrameProvider>
+              {/* <ControlPanel /> */}
+              <PhotoUploadDialog />
+              <Frame />
+              {children}
+            </FrameProvider>
+            <Toaster />
+            <PaperBg />
+            <Analytics />
+          </ReactLenis>
         </NeonAuthUIProvider>
       </body>
     </html>

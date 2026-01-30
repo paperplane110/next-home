@@ -30,7 +30,7 @@ export function PhotoUploadDialog() {
   }, [open, error, refetch]);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent data-lenis-prevent>
         <DialogHeader className="mb-6">
           <DialogTitle className="flex items-center">
             Upload Images

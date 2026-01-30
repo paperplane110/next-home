@@ -74,10 +74,19 @@ Todo list
 - [x] cmdk Helper
   - [x] /auth/sign-in
   - [x] photo upload dialog
+    - [x] preprocess image before uploading image to blob
   - [ ] /basement/update-today
   - [x] frame switch
 - [x] setup vercel pg
 - [x] setup login, with better auth
+
+### 2026-1-29
+
+Feat 
+- playground/card-contraction-on-scroll: 
+  - Framer Motion: Scroll Animation
+  - Lenis: smooth scrolling
+  - Decathon case study
 
 ### 2026-1-27
 

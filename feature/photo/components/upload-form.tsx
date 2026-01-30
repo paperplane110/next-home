@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { parseImage } from "@/feature/photo/image-parser"
+import imageCompression from "browser-image-compression"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -122,8 +123,17 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     setIsUploading(true)
 
     try {
-      // 2. upload image to vercel blob
-      const newBlob = await upload(data.imgFile.name, data.imgFile, {
+      // 2. compress image 1 MB
+      const compressFile = await imageCompression(data.imgFile, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 2560,
+        initialQuality: 0.9,
+        fileType: "image/webp",
+        useWebWorker: true,
+      })
+
+      // 3. upload image to vercel blob
+      const newBlob = await upload(data.imgFile.name, compressFile, {
         access: "public",
         handleUploadUrl: "/api/photo/upload",
         onUploadProgress: (progress) => {
@@ -135,7 +145,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
       // filter out imgFile, because imgFile is MB, too large for Nextjs backend
       const { imgFile, ...metadata } = data;
 
-      // 3. insert photo info to db
+      // 4. insert photo info to db
       const insertResult = await insertOneImage({
         ...imageShapeInfo,
         ...metadata,

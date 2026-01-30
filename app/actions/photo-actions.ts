@@ -4,7 +4,8 @@ import { ActionReturn } from "@/lib/types";
 import { db } from "@/drizzle/db";
 import { type Photo, type PhotoInsert, photos } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
-
+import { del } from "@vercel/blob"
+import { protect } from "@/feature/auth/server";
 
 export async function checkImageDuplicate(
   md5: string
@@ -47,6 +48,7 @@ export async function insertOneImage(
   data: PhotoInsert
 ): Promise<ActionReturn<PhotoInsert>> {
   try {
+    await protect();
     const entry = await db
       .insert(photos)
       .values(data)
@@ -73,5 +75,27 @@ export async function getPhotos(
   } catch (e) {
     console.error(e)
     return { success: false, data: "Failed to get photos" };
+  }
+}
+
+export async function deletePhoto(id: string): Promise<ActionReturn<null>> {
+  try {
+    await protect();
+
+    // delete photo in blob
+    const pList = await db.select().from(photos).where(eq(photos.id, id)).limit(1);
+    if (pList.length > 0) {
+      await del(pList[0].pathname);
+    } else {
+      throw new Error("Photo not found")
+    }
+
+    // delete photo info in neon
+    await db.delete(photos).where(eq(photos.id, id));
+    
+    return { success: true, data: null };
+  } catch (e) {
+    console.error(e)
+    return { success: false, data: "Failed to delete photo" };
   }
 }
