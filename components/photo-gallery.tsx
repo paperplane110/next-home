@@ -26,12 +26,13 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
         const limit = 10;
         const { success, data: photoInfos } = await getPhotosAction(offset, limit);
 
-        if (photoInfos.length < limit) {
-          setHasMore(false);
-        }
-
         if (success) {
+          if (photoInfos.length < limit) {
+            setHasMore(false);
+          }
           setPhotos((prev) => [...prev, ...photoInfos]);
+        } else {
+          toast.error("获取照片失败，请稍后重试。");
         }
 
         setOffset((prev) => prev + photoInfos.length);

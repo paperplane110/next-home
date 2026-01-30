@@ -17,7 +17,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         // Generate a client token for the browser to upload the file
         // Make sure to authenticate and authorize users before generating the token.
         // Otherwise, you're allowing anonymous uploads.
-        protectAdmin()
+        await protectAdmin()
 
         return {
           allowedContentTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
