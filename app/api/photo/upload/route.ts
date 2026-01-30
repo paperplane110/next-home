@@ -1,14 +1,8 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
-import { neonAuth } from "@neondatabase/auth/next/server"
+import { protectAdmin } from '@/feature/auth/server';
 
 export async function POST(request: Request): Promise<NextResponse> {
-  // authentication
-  const auth = await neonAuth()
-  if (!auth || auth.user?.name !== "Tianyu Yuan") {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const body = (await request.json()) as HandleUploadBody;
 
 
@@ -23,6 +17,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         // Generate a client token for the browser to upload the file
         // Make sure to authenticate and authorize users before generating the token.
         // Otherwise, you're allowing anonymous uploads.
+        protectAdmin()
 
         return {
           allowedContentTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
@@ -38,16 +33,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       onUploadCompleted: async ({ blob, tokenPayload }) => {
         // Called by Vercel API on client upload completion
         // Use tools like ngrok if you want this to work locally
-
         console.log('blob upload completed', blob, tokenPayload);
-
-        try {
-          // Run any logic after the file upload completed
-          // const { userId } = JSON.parse(tokenPayload);
-          // await db.update({ avatar: blob.url, userId });
-        } catch (error) {
-          throw new Error('Could not update user');
-        }
       },
     });
 

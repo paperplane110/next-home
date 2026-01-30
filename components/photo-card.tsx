@@ -23,7 +23,7 @@ export function PhotoCard({
 }: { photo: Photo, index: number, handleDelete: (id: string) => void }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const { data } =  authClient.useSession()
-  const isAdmin = data?.user?.name === "Tianyu Yuan";
+  const isAdmin = data?.user?.role === "admin";
 
   const base64ToDataURL = (base64: string) => {
     const binary = base64ToBinary(base64);

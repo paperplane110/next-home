@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { type Photo, type PhotoInsert, photos } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { del } from "@vercel/blob"
-import { protect } from "@/feature/auth/server";
+import { protectAdmin } from "@/feature/auth/server";
 import { getPhotoById, getPhotoByMd5, getPhotosService } from "./services";
 import { revalidateTag, updateTag } from "next/cache";
 
@@ -46,7 +46,7 @@ export async function insertOneImageAction(
   data: PhotoInsert
 ): Promise<ActionReturn<PhotoInsert>> {
   try {
-    await protect();
+    await protectAdmin();
     const entry = await db
       .insert(photos)
       .values(data)
@@ -76,7 +76,7 @@ export async function getPhotosAction(
 
 export async function deletePhotoAction(id: string): Promise<ActionReturn<null>> {
   try {
-    await protect();
+    await protectAdmin();
 
     // delete photo in blob
     const photo = await getPhotoById(id);

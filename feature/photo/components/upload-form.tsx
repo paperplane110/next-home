@@ -144,8 +144,8 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
       })
 
       // filter out imgFile, because imgFile is MB, too large for Nextjs backend
-      const { imgFile: _, ...metadata } = data;
-
+      const { imgFile, ...metadata } = data;
+      void imgFile;
       // 4. insert photo info to db
       const insertResult = await insertOneImageAction({
         ...imageShapeInfo,
