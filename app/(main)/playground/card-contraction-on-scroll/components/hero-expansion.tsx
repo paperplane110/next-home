@@ -77,7 +77,7 @@ export function HeroExpansion() {
         >
           <Image
             src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-LD8i5MSmmz10wfpAtBZ5R0TE3cTrrL.webp"
-            alt="hallstatt"
+            alt="BMW Welt"
             width={6000}
             height={3368}
             priority
