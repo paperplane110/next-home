@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label"
 import { CheckCircle2Icon, CirclePlusIcon, CircleXIcon, Loader2Icon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { checkImageDuplicate, insertOneImage } from "@/app/actions/photo-actions"
+import { checkImageDuplicateAction, insertOneImageAction } from "@/feature/photo/actions"
 import { upload } from "@vercel/blob/client"
 import { photoUploadFormSchema, type PhotoUploadForm, PhotoInsert } from "@/drizzle/schema"
 
@@ -79,7 +79,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
       // checking duplicate image
       setIsChecking(true)
       setImageShapeInfo(imageInfo)
-      const checkResult = await checkImageDuplicate(imageInfo.md5)
+      const checkResult = await checkImageDuplicateAction(imageInfo.md5)
       if (checkResult.success) {
         const { isDuplicate, photo } = checkResult.data
         if (isDuplicate) {
@@ -125,15 +125,16 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     try {
       // 2. compress image 1 MB
       const compressFile = await imageCompression(data.imgFile, {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 2560,
-        initialQuality: 0.9,
+        maxSizeMB: 2,
+        maxWidthOrHeight: 3840,
+        initialQuality: 0.88,
         fileType: "image/webp",
         useWebWorker: true,
       })
+      const webpName = data.imgFile.name.replace(/\.[^/.]+$/, "") + ".webp"
 
       // 3. upload image to vercel blob
-      const newBlob = await upload(data.imgFile.name, compressFile, {
+      const newBlob = await upload(webpName, compressFile, {
         access: "public",
         handleUploadUrl: "/api/photo/upload",
         onUploadProgress: (progress) => {
@@ -144,15 +145,15 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
 
       // filter out imgFile, because imgFile is MB, too large for Nextjs backend
       const { imgFile, ...metadata } = data;
-
+      void imgFile;
       // 4. insert photo info to db
-      const insertResult = await insertOneImage({
+      const insertResult = await insertOneImageAction({
         ...imageShapeInfo,
         ...metadata,
         url: newBlob.url,
         pathname: newBlob.pathname,
         contentType: newBlob.contentType,
-        size: imgFile.size,
+        size: compressFile.size,
       })
 
       if (insertResult.success) {

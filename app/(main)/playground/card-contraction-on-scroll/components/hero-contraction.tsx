@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { useScroll, motion, useTransform } from "framer-motion";
-import { vercelBlobLoader } from "@/feature/photo/vercel-blob-loader";
 import { thumbHashToDataURL} from "thumbhash"
 import { base64ToBinary } from "@/lib/utils";
 import Image from "next/image";
@@ -33,7 +32,7 @@ export function HeroContraction() {
       <div className="relative h-screen w-full flex items-center justify-center">
         <div className="absolute left-[10%] bottom-[10%] text-white z-10">
           <p className="mt-2 font-medium text-7xl">Hallsta<i>tt</i>, <br /><i>A</i>ustria</p>
-          <div className="mt-8 grid grid-cols-4 gap-8">
+          <div className="hidden sm:grid mt-8 grid-cols-4 gap-8">
             <div className="flex gap-[0.3rem]">
               <svg className="w-6 h-6 flex-none" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="8" fill="transparent" stroke="white" strokeWidth="0.8" />
@@ -88,11 +87,10 @@ export function HeroContraction() {
           }}
         >
           <Image
-            loader={vercelBlobLoader}
-            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/R0001004%20%281%29-eo6nUuWJZ1S2pyhwHjO0zVYkJE2gA4.jpeg"
+            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/R0001004%20%281%29-S3QVEF9v1qpHUG9ygkkFwY23rQiCPP.webp"
             alt="hallstatt"
-            width={640}
-            height={480}
+            width={6000}
+            height={3375}
             priority
             className="w-screen h-screen object-cover"
             placeholder="blur"

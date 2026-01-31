@@ -4,58 +4,85 @@ import { motion } from "framer-motion";
 import { Photo } from "@/drizzle/schema";
 import Image from "next/image";
 import { cn, base64ToBinary } from "@/lib/utils";
-import { vercelBlobLoader } from "@/feature/photo/vercel-blob-loader";
-import * as thumbhash from "thumbhash"
 
-export function PhotoCard({ photo, index }: { photo: Photo, index: number }) {
+import { authClient } from "@/feature/auth/client";
+import * as thumbhash from "thumbhash"
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+} from "./ui/context-menu";
+import { TrashIcon } from "lucide-react";
+
+export function PhotoCard({ 
+  photo, 
+  index,
+  handleDelete
+}: { photo: Photo, index: number, handleDelete: (id: string) => void }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  
+  const { data } =  authClient.useSession()
+  const isAdmin = data?.user?.role === "admin";
+
   const base64ToDataURL = (base64: string) => {
     const binary = base64ToBinary(base64);
     return thumbhash.thumbHashToDataURL(binary);
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: (index % 3) * 0.1 }} // 错开每一列的出现时间
-      viewport={{ once: true }} // 只在第一次滑入时触发动画
-      className={cn(
-        "group relative overflow-hidden rounded-xl border bg-card",
-        // !photo.isVertical && "md:col-span-2"
-      )}
-    >
-      
-      {photo.blurbase64 && <div 
-        className="absolute inset-0 z-0 scale-110 blur-2xl" 
-        style={{
-          backgroundImage: `url(${base64ToDataURL(photo.blurbase64)})`,
-          backgroundSize: 'cover',
-          filter: 'blur(20px)',
-          opacity: isLoaded ? 0 : 1, // 加载完成后隐藏背景
-          transition: 'opacity 0.6s ease-in-out'
-        }}
-      />}
-      <Image
-        loader={vercelBlobLoader}
-        src={photo.url}
-        alt={photo.title || "image"}
-        className="w-full h-full object-cover"
-        width={photo.width}
-        height={photo.height}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        loading={index < 6 ? "eager" : "lazy"}
-        onLoad={() => setIsLoaded(true)}
-        priority={index < 3}
-        placeholder={photo.blurbase64 ? "blur" : "empty"}
-        blurDataURL={photo.blurbase64 ? base64ToDataURL(photo.blurbase64) : undefined}
-      />
-      {/* <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
+    <ContextMenu>
+      <ContextMenuTrigger>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: (index % 3) * 0.1 }} // 错开每一列的出现时间
+          viewport={{ once: true }} // 只在第一次滑入时触发动画
+          className={cn(
+            "group relative overflow-hidden rounded-xl border bg-card",
+            // photo.isVertical ? "md:row-span-2" : "md:col-span-2"
+          )}
+        >
+
+          {photo.blurbase64 && <div
+            className="absolute inset-0 z-0 scale-110 blur-2xl"
+            style={{
+              backgroundImage: `url(${base64ToDataURL(photo.blurbase64)})`,
+              backgroundSize: 'cover',
+              filter: 'blur(20px)',
+              opacity: isLoaded ? 0 : 1, // 加载完成后隐藏背景
+              transition: 'opacity 0.6s ease-in-out'
+            }}
+          />}
+
+          <Image
+            src={photo.url}
+            alt={photo.title || "image"}
+            className="w-full h-full object-cover"
+            width={photo.width}
+            height={photo.height}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            loading={index < 6 ? "eager" : "lazy"}
+            onLoad={() => setIsLoaded(true)}
+            priority={index < 3}
+            placeholder={photo.blurbase64 ? "blur" : "empty"}
+            blurDataURL={photo.blurbase64 ? base64ToDataURL(photo.blurbase64) : undefined}
+          />
+          {/* <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
         {photo.location}
         <br />
         {photo.url}
       </div> */}
-    </motion.div>
+        </motion.div>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuGroup>
+          <ContextMenuItem disabled={!isAdmin} variant="destructive" onClick={() => handleDelete(photo.id)}>
+            <TrashIcon />
+            Delete
+          </ContextMenuItem>
+        </ContextMenuGroup>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }

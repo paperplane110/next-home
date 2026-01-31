@@ -1,31 +1,29 @@
 "use server";
 
 import { ActionReturn } from "@/lib/types";
-import { db } from "@/drizzle/db";
+import { db } from "@/lib/db";
 import { type Photo, type PhotoInsert, photos } from "@/drizzle/schema";
-import { desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { del } from "@vercel/blob"
-import { protect } from "@/feature/auth/server";
+import { protectAdmin } from "@/feature/auth/server";
+import { getPhotoById, getPhotoByMd5, getPhotosService } from "./services";
+import { updateTag } from "next/cache";
 
-export async function checkImageDuplicate(
+export async function checkImageDuplicateAction(
   md5: string
 ): Promise<ActionReturn<{
   isDuplicate: boolean;
   photo: PhotoInsert | null;
 }>> {
   try {
-    const existingPhoto = await db
-      .select()
-      .from(photos)
-      .where(eq(photos.md5, md5))
-      .limit(1)
+    const existingPhoto = await getPhotoByMd5(md5);
 
-    if (existingPhoto.length > 0) {
+    if (existingPhoto) {
       return {
         success: true,
         data: {
           isDuplicate: true,
-          photo: existingPhoto[0],
+          photo: existingPhoto,
         }
       }
     }
@@ -44,15 +42,18 @@ export async function checkImageDuplicate(
   }
 }
 
-export async function insertOneImage(
+export async function insertOneImageAction(
   data: PhotoInsert
 ): Promise<ActionReturn<PhotoInsert>> {
   try {
-    await protect();
+    await protectAdmin();
     const entry = await db
       .insert(photos)
       .values(data)
       .returning()
+
+    updateTag("photos");
+
     return { success: true, data: entry[0] };
   } catch (e) {
     console.error(e)
@@ -60,17 +61,12 @@ export async function insertOneImage(
   }
 }
 
-export async function getPhotos(
+export async function getPhotosAction(
   offset: number,
   limit: number
 ): Promise<ActionReturn<Photo[]>> {
   try {
-    const photoInfos = await db
-      .select()
-      .from(photos)
-      .offset(offset)
-      .orderBy(desc(photos.createdAt))
-      .limit(limit)
+    const photoInfos = await getPhotosService(offset, limit);
     return { success: true, data: photoInfos };
   } catch (e) {
     console.error(e)
@@ -78,21 +74,25 @@ export async function getPhotos(
   }
 }
 
-export async function deletePhoto(id: string): Promise<ActionReturn<null>> {
+export async function deletePhotoAction(id: string): Promise<ActionReturn<null>> {
   try {
-    await protect();
+    await protectAdmin();
 
-    // delete photo in blob
-    const pList = await db.select().from(photos).where(eq(photos.id, id)).limit(1);
-    if (pList.length > 0) {
-      await del(pList[0].pathname);
-    } else {
-      throw new Error("Photo not found")
+    // does photo exist
+    const photo = await getPhotoById(id);
+    if (!photo) {
+      throw new Error(`Photo not found, id: ${id}`)
     }
 
     // delete photo info in neon
     await db.delete(photos).where(eq(photos.id, id));
-    
+
+    // delete blob after successful DB deletion
+    await del(photo.pathname);
+
+    // revalidate cache
+    updateTag("photos");
+
     return { success: true, data: null };
   } catch (e) {
     console.error(e)

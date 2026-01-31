@@ -8,7 +8,7 @@ export default function CardContractionOnScroll() {
   return (
     <div className="page-top-margin sm:pb-8 section relative">
       <header className="subsection">
-        <h1 className="headline font-serif font-light soft-70">Hero Card Expansion/Contraction on Scroll</h1>
+        <h1 className="headline font-serif font-light soft-70">Hero Card with Scroll Effect</h1>
         <p className="mt-8 text-sm font-medium text-muted-foreground">
           卡片组件在滚动时收缩的效果，多用于页面开始时的大图展示
         </p>
