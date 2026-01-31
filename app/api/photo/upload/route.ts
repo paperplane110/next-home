@@ -39,6 +39,12 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(jsonResponse);
   } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 403 },
+      );
+    }
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 }, // The webhook will retry 5 times waiting for a 200

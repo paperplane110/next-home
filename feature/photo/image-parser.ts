@@ -38,8 +38,8 @@ export const parseImage = async (file: File) => {
     // shape info
     const imgUrl = URL.createObjectURL(file);
     const img = await loadImage(imgUrl);
-    let width = img.width;
-    let height = img.height;
+    const width = img.width;
+    const height = img.height;
     const aspectRatioRaw = width / height;
     const aspectRatio = aspectRatioRaw.toFixed(2);
     const isVertical = aspectRatioRaw < 1;
@@ -53,15 +53,17 @@ export const parseImage = async (file: File) => {
 
     const maxSize = 100;
 
+    let regulatedWidth = width;
+    let regulatedHeight = height;
     if (width > height) {
-      height = Math.round(height * (maxSize / width));
-      width = maxSize;
+      regulatedHeight = Math.round(height * (maxSize / width));
+      regulatedWidth = maxSize;
     } else {
-      width = Math.round(width * (maxSize / height));
-      height = maxSize;
+      regulatedWidth = Math.round(width * (maxSize / height));
+      regulatedHeight = maxSize;
     }
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = regulatedWidth;
+    canvas.height = regulatedHeight;
 
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

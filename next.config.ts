@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048], // 移除 3840，避免处理过大的图片
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    qualities: [50, 75, 90],
     remotePatterns: [
       {
         protocol: "https",

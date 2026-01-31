@@ -174,9 +174,8 @@ export default function FolderComponent() {
             >
               <Image 
                 loader={vercelBlobLoader}
-                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/DSCF6478-nBWFy1mBRDdgvXJeqFyFeXDJAwVfAt.jpeg"
+                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/DSCF6995-isuP6e7z5g9yGQLQ3SycWOoOtDZI1G.webp"
                 width={640} height={480}
-                quality={50}
                 loading="eager"
                 placeholder="empty"
                 className="w-full h-full object-cover rounded-md" alt="DSCF6105"
@@ -201,9 +200,8 @@ export default function FolderComponent() {
             >
               <Image 
                 loader={vercelBlobLoader}
-                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-FsmPFWpt27uSodKe5JhKM5fkoyulgz.jpeg"
+                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/R0001004%20%281%29-S3QVEF9v1qpHUG9ygkkFwY23rQiCPP.webp"
                 width={640} height={480}
-                quality={50}
                 loading="eager"
                 placeholder="empty"
                 className="w-full h-full object-cover rounded-md" alt="DSCF6470"
@@ -228,12 +226,12 @@ export default function FolderComponent() {
               data-state={imgDataState}
             >
               <Image 
-                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/hallstatt-RXF9shaQSC1ZCSHQagwgEsKcMKE3oG.jpeg"
+                loader={vercelBlobLoader}
+                src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-LD8i5MSmmz10wfpAtBZ5R0TE3cTrrL.webp"
                 width={640} height={480}
-                quality={50}
                 loading="eager"
                 placeholder="empty"
-                className="w-full h-full object-cover rounded-md" alt="hallstatt"
+                className="w-full h-full object-cover rounded-md" alt="IMG_2267"
               />
             </div>
 

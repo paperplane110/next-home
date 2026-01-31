@@ -31,11 +31,11 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
             setHasMore(false);
           }
           setPhotos((prev) => [...prev, ...photoInfos]);
+          setOffset((prev) => prev + photoInfos.length);
         } else {
           toast.error("获取照片失败，请稍后重试。");
         }
 
-        setOffset((prev) => prev + photoInfos.length);
         setIsLoading(false);
       };
 

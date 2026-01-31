@@ -30,7 +30,7 @@ export function HeroExpansion() {
       <div className="relative h-screen w-full flex items-start justify-center">
         <div className="absolute left-[10%] bottom-[10%] text-white z-10">
           <p className="mt-2 font-medium text-7xl">BMW <i>W</i>elt, <br />Mün<i>c</i>h<i>e</i>n</p>
-          <div className="mt-8 grid grid-cols-3 gap-8">
+          <div className="hidden mt-8 sm:grid grid-cols-3 gap-8">
             <div className="flex gap-[0.3rem]">
               <svg className="w-6 h-6 flex-none" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="8" fill="transparent" stroke="white" strokeWidth="0.8" />
@@ -76,10 +76,10 @@ export function HeroExpansion() {
           }}
         >
           <Image
-            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-vqACR6Z8yYRW0dropKxWI0R7Cg67Vt.webp"
+            src="https://neul1shzddwvm3wd.public.blob.vercel-storage.com/IMG_2267-LD8i5MSmmz10wfpAtBZ5R0TE3cTrrL.webp"
             alt="hallstatt"
-            width={640}
-            height={480}
+            width={6000}
+            height={3368}
             priority
             className="w-screen h-screen object-cover"
             placeholder="blur"

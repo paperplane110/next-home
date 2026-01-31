@@ -125,9 +125,9 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     try {
       // 2. compress image 1 MB
       const compressFile = await imageCompression(data.imgFile, {
-        maxSizeMB: 1.2,
-        maxWidthOrHeight: 2048,
-        initialQuality: 1,
+        maxSizeMB: 2,
+        maxWidthOrHeight: 3840,
+        initialQuality: 0.88,
         fileType: "image/webp",
         useWebWorker: true,
       })

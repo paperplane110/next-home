@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { del } from "@vercel/blob"
 import { protectAdmin } from "@/feature/auth/server";
 import { getPhotoById, getPhotoByMd5, getPhotosService } from "./services";
-import { revalidateTag, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 export async function checkImageDuplicateAction(
   md5: string
@@ -52,7 +52,7 @@ export async function insertOneImageAction(
       .values(data)
       .returning()
 
-    revalidateTag("photos", "max");
+    updateTag("photos");
 
     return { success: true, data: entry[0] };
   } catch (e) {
@@ -78,16 +78,17 @@ export async function deletePhotoAction(id: string): Promise<ActionReturn<null>>
   try {
     await protectAdmin();
 
-    // delete photo in blob
+    // does photo exist
     const photo = await getPhotoById(id);
-    if (photo) {
-      await del(photo.pathname);
-    } else {
+    if (!photo) {
       throw new Error(`Photo not found, id: ${id}`)
     }
 
     // delete photo info in neon
     await db.delete(photos).where(eq(photos.id, id));
+
+    // delete blob after successful DB deletion
+    await del(photo.pathname);
 
     // revalidate cache
     updateTag("photos");
