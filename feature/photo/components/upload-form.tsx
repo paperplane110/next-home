@@ -70,6 +70,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
 
         } catch (error) {
           console.error("Error parsing image:", error)
+          toast.error("解析图片失败: 请稍后重试。")
         } finally {
           setIsParsingImg(false);
           setIsChecking(false)
@@ -350,7 +351,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
                   <FormLabel>Tags<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
                   <FormControl>
                     <MultiSelect
-                      defaultValue={field.value}
+                      value={field.value}
                       disabled={field.disabled}
                       name={field.name}
                       ref={field.ref}
