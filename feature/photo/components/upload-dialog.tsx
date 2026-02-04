@@ -30,7 +30,7 @@ export function PhotoUploadDialog() {
   }, [open, error, refetch]);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent data-lenis-prevent>
+      <DialogContent>
         <DialogHeader className="mb-6">
           <DialogTitle className="flex items-center">
             Upload Images
@@ -42,7 +42,7 @@ export function PhotoUploadDialog() {
             Upload an image to gallery.
           </DialogDescription>
         </DialogHeader>
-        <div className="no-scrollbar max-h-[60vh] overflow-y-auto">
+        <div className="no-scrollbar max-h-[60vh] overflow-y-auto" data-lenis-prevent>
           {
             isPending ? (
               <div className="flex flex-col items-center justify-center gap-4 px-4">

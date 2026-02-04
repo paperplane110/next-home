@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { parseImage } from "@/feature/photo/image-parser"
-import { cn } from "@/lib/utils"
+import { base64ToDataURL, cn } from "@/lib/utils"
 import imageCompression from "browser-image-compression"
 import { upload } from "@vercel/blob/client"
 import { checkImageDuplicateAction, insertOneImageAction } from "@/feature/photo/actions"
@@ -21,11 +21,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
-import { CheckCircle2Icon, CirclePlusIcon, CircleXIcon, Loader2Icon } from "lucide-react"
+import { CircleXIcon, Loader2Icon, UploadIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { MultiSelect } from "@/components/ui/multi-select"
 import { getTagsAction } from "@/feature/tag/actions"
 import { toast } from "sonner"
+import { useFileUpload } from "@/hooks/use-file-upload"
+import UploadSuccess from "./upload-success"
 
 
 export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }) {
@@ -33,7 +35,48 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
   const [isParsingImg, setIsParsingImg] = useState(false) // 是否正在解析图片信息
   const [duplicatePhoto, setDuplicatePhoto] = useState<PhotoInsert | null>(null)
   const [isChecking, setIsChecking] = useState(false)     // 是否在检查图片是否重复
-  const [preview, setPreview] = useState<string | null>(null)
+
+  const [fileUploadState, fileUploadActions] = useFileUpload({
+    maxFiles: 1,
+    accept: "image/*",
+    multiple: false,
+    onFilesAdded: async (files) => {
+      const fileWithPreview = files[0]
+      const file = fileWithPreview.file;
+
+      if (file instanceof File) {
+        form.setValue("imgFile", file, { shouldValidate: true })
+        setIsParsingImg(true)
+        try {
+          // parse image info
+          const imageInfo = await parseImage(file)
+          setIsParsingImg(false)
+
+          // checking duplicate image
+          setIsChecking(true)
+          setImageShapeInfo(imageInfo)
+          const checkResult = await checkImageDuplicateAction(imageInfo.md5)
+          if (checkResult.success) {
+            const { isDuplicate, photo } = checkResult.data
+            if (isDuplicate) {
+              setDuplicatePhoto(photo)
+            } else {
+              setDuplicatePhoto(null)
+            }
+          } else {
+            throw new Error(checkResult.data)
+          }
+          setIsChecking(false)
+
+        } catch (error) {
+          console.error("Error parsing image:", error)
+        } finally {
+          setIsParsingImg(false);
+          setIsChecking(false)
+        }
+      }
+    }
+  })
 
   const [tagOptions, setTagOptions] = useState<{ value: string, label: string }[]>([])
   useEffect(() => {
@@ -72,49 +115,8 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     }
   })
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) {
-      return;
-    }
-
-    form.setValue("imgFile", file, { shouldValidate: true })
-    const objectURL = URL.createObjectURL(file)
-
-    setPreview(objectURL)
-    setIsParsingImg(true)
-
-    try {
-      // parse image info
-      const imageInfo = await parseImage(file)
-      setIsParsingImg(false)
-
-      // checking duplicate image
-      setIsChecking(true)
-      setImageShapeInfo(imageInfo)
-      const checkResult = await checkImageDuplicateAction(imageInfo.md5)
-      if (checkResult.success) {
-        const { isDuplicate, photo } = checkResult.data
-        if (isDuplicate) {
-          setDuplicatePhoto(photo)
-        } else {
-          setDuplicatePhoto(null)
-        }
-      } else {
-        throw new Error(checkResult.data)
-      }
-      setIsChecking(false)
-
-    } catch (error) {
-      console.error("Error parsing image:", error)
-    } finally {
-      setIsParsingImg(false);
-      setIsChecking(false)
-    }
-  }
-
   const handleImageRemove = () => {
-    setPreview(null)
+    fileUploadActions.clearFiles()
     setDuplicatePhoto(null)
     setImageShapeInfo(defaultImageShapeInfo)
     setUploadProgress(0)
@@ -123,13 +125,6 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
       fileInputRef.current.value = ""
     }
   }
-
-  useEffect(() => {
-    return () => {
-      // 当组件卸载时，撤销 objectUrl, save mem
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
 
   const onSubmit = async (data: PhotoUploadForm) => {
     // 1. set isUploading to true
@@ -187,34 +182,13 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
 
   if (isSuccess) {
     return (
-      <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-        <div className="size-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
-          <CheckCircle2Icon className="size-10" />
-        </div>
-        <h3 className="text-xl font-semibold mb-2">Upload Successful!</h3>
-        <p className="text-muted-foreground mb-8">
-          Your photo has been added to the gallery.
-        </p>
-        <div className="flex flex-col w-full gap-3">
-          <Button
-            onClick={() => {
-              handleImageRemove()
-              setIsSuccess(false)
-            }}
-            variant="default"
-            className="w-full"
-          >
-            Upload Another
-          </Button>
-          <Button
-            onClick={onSuccess}
-            variant="outline"
-            className="w-full"
-          >
-            Close
-          </Button>
-        </div>
-      </div>
+      <UploadSuccess
+        onUploadAnother={() => {
+          handleImageRemove()
+          setIsSuccess(false)
+        }}
+        onClose={onSuccess}
+      />
     )
   }
 
@@ -226,34 +200,37 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
             <FormField
               control={form.control}
               name="imgFile"
-              render={({ field, fieldState }) => (
+              render={({ fieldState }) => (
                 <FormItem className="w-full">
                   <FormControl>
-                    <div className="flex flex-col items-center gap-4">
-                      <Input
-                        id="picture-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className="hidden"
-                        ref={(e) => {
-                          field.ref(e);
-                          fileInputRef.current = e;
-                        }}
-                        onBlur={field.onBlur}
-                        name={field.name}
+                    <div className="flex flex-col items-center gap-4"
+                      onDragEnter={fileUploadActions.handleDragEnter}
+                      onDragOver={fileUploadActions.handleDragOver}
+                      onDragLeave={fileUploadActions.handleDragLeave}
+                      onDrop={fileUploadActions.handleDrop}
+                    >
+                      <input
+                        {...fileUploadActions.getInputProps({
+                          id: "picture-upload",
+                          className: "hidden",
+                        })}
                       />
-                      {!preview ? (
+                      {!fileUploadState.files[0]?.preview ? (
                         <Label
                           htmlFor="picture-upload"
                           className={cn(
-                            "p-4 w-full flex flex-col items-center justify-center border border-dashed rounded-md cursor-pointer text-muted-foreground transition-colors",
-                            fieldState.error ? "border-destructive bg-destructive/5 text-destructive" : "hover:bg-muted"
+                            "group p-4 w-full flex flex-col items-center justify-center border border-dashed rounded-md cursor-pointer text-muted-foreground transition-colors",
+                            fieldState.error ? "border-destructive bg-destructive/5 text-destructive" : "hover:border-primary",
+                            fileUploadState.isDragging && "border-primary"
                           )}
                         >
-                          <div className="flex items-center gap-1">
-                            <CirclePlusIcon className="size-4" />
-                            Upload Image
+                          <div className="flex flex-col items-center gap-1">
+                            <div className="flex items-center justify-center size-10 bg-muted rounded-full">
+                              <UploadIcon className={cn("size-5 group-hover:text-primary", 
+                                fileUploadState.isDragging && "text-primary")} />
+                            </div>
+                            <div className="text-lg text-black">Upload Image</div>
+                            <div className="text-sm">Drag and drop files here or click to browse</div>
                           </div>
                         </Label>
                       ) : (
@@ -269,17 +246,21 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
                           )}
 
                           <div id="image-preview-mask" className={cn(
-                            "absolute top-0 right-0 bottom-0 left-0 bg-black/50 rounded-md text-white px-1 rounded-bl-md flex flex-col items-center justify-center gap-2",
+                            "absolute top-0 right-0 bottom-0 left-0 rounded-md text-white px-1 rounded-bl-md flex flex-col items-center justify-center gap-2",
                             "transition-opacity duration-200 opacity-0 group-hover:opacity-100",
                             duplicatePhoto && "opacity-100"
                           )}
+                            style={{
+                              backgroundImage: `url(${base64ToDataURL(imageShapeInfo.blurbase64)})`,
+                              backgroundSize: 'cover',
+                            }}
                           >
                             <Button size="sm" variant="destructive" className="cursor-pointer" onClick={handleImageRemove}>
                               <CircleXIcon className="size-4" />
                               {duplicatePhoto ? "Duplicated Image" : "Remove"}
                             </Button>
                           </div>
-                          <img src={preview} alt="Preview" className="max-h-64 rounded-lg object-contain" />
+                          <img src={fileUploadState.files[0].preview} alt="Preview" className="max-h-64 rounded-lg object-contain" />
                         </div>
                       )}
                     </div>
@@ -291,11 +272,11 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
 
             {duplicatePhoto && (
               <div id="duplicate-info" className="w-full bg-destructive/5 p-4 rounded-md">
-                <h3 className="text-sm font-medium text-destructive">Alert</h3>
-                <p className="mt-2 text-xs text-destructive">This image is a duplicate of {duplicatePhoto.url}</p>
+                <h3 className="text-sm font-medium text-destructive">Find Duplicate Image</h3>
+                <p className="mt-2 text-xs text-destructive wrap-anywhere">This image is a duplicate of {duplicatePhoto.url}</p>
               </div>
             )}
-            {preview && (
+            {fileUploadState.files[0]?.preview && (
               <div id="image-info" className="w-full bg-muted p-4 rounded-md">
                 <h3 className="text-sm font-medium">Image Information</h3>
                 <ul className="mt-2 list-disc marker:text-muted-foreground text-xs text-muted-foreground">

@@ -3,10 +3,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Photo } from "@/drizzle/schema";
 import Image from "next/image";
-import { cn, base64ToBinary } from "@/lib/utils";
+import { base64ToDataURL, cn } from "@/lib/utils";
 
 import { authClient } from "@/feature/auth/client";
-import * as thumbhash from "thumbhash"
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -24,11 +23,6 @@ export function PhotoCard({
   const [isLoaded, setIsLoaded] = useState(false);
   const { data } =  authClient.useSession()
   const isAdmin = data?.user?.role === "admin";
-
-  const base64ToDataURL = (base64: string) => {
-    const binary = base64ToBinary(base64);
-    return thumbhash.thumbHashToDataURL(binary);
-  }
 
   return (
     <ContextMenu>

@@ -2,7 +2,7 @@
 
 import { ActionReturn } from "@/lib/types";
 import { db } from "@/lib/db";
-import { type Photo, PhotoRegisterInput, photos, photoTags } from "@/drizzle/schema";
+import { type Photo, type PhotoRegisterInput, photos, photoTags } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { del } from "@vercel/blob"
 import { protectAdmin } from "@/feature/auth/server";
@@ -50,15 +50,16 @@ export async function insertOneImageAction(
     const entry = await db.transaction(
       async (tx) => {
         // insert photos table
+        const { tags, ...photoData } = data;
         const entries = await tx
           .insert(photos)
-          .values(data)
+          .values(photoData)
           .returning()
         const photoId = entries[0].id;
 
         // insert photo_tags table
-        if (data.tags && data.tags.length > 0) {
-          const photoTagsEntries = data.tags.map((tagId) => {
+        if (tags && tags.length > 0) {
+          const photoTagsEntries = tags.map((tagId) => {
             return {
               photoId,
               tagId,
