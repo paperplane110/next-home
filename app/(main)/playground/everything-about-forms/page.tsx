@@ -17,7 +17,7 @@ export default function EverythingAboutFormsPage() {
       <div className="subsection mt-16">
         <h2 className="font-bold">Upload Image Form</h2>
         <p className="mt-4 text-sm font-medium text-muted-foreground">
-          A image upload form, which allows users to upload images to the server.
+          An image upload form, which allows users to upload images to the server.
         </p>
         <ul className="mt-4 list-disc list-inside text-sm text-muted-foreground">
           <li>Image upload: referenced the ReUI&apos;s <OuterLink href="https://reui.io/docs/file-upload">File upload</OuterLink> component</li>

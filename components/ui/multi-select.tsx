@@ -485,7 +485,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 
     const getBadgeAnimationClass = () => {
       if (animationConfig?.badgeAnimation) {
-        console.log(animationConfig.badgeAnimation)
         switch (animationConfig.badgeAnimation) {
           case "bounce":
             return isAnimating
@@ -924,12 +923,12 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     {selectedValues.length > responsiveSettings.maxCount && (
                       <Badge
                         className={cn(
-                          "bg-transparent text-foreground border-foreground/1 hover:bg-transparent",
+                          "bg-transparent text-foreground border-foreground/10 hover:bg-transparent",
                           getBadgeAnimationClass(),
                           multiSelectVariants({ variant }),
                           responsiveSettings.compactMode &&
                           "text-xs px-1.5 py-0.5",
-                          singleLine && "flex-shrink-0 whitespace-nowrap",
+                          singleLine && "shrink-0 whitespace-nowrap",
                           "[&>svg]:pointer-events-auto"
                         )}
                         style={{
@@ -941,7 +940,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           } more`}
                         <XIcon
                           className={cn(
-                            "ml-2 size-1 cursor-pointer",
+                            "ml-2 size-4 cursor-pointer",
                             responsiveSettings.compactMode && "ml-1 size-3"
                           )}
                           onClick={(event) => {
@@ -1033,7 +1032,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 className={cn(
                   "max-h-[40vh] overflow-y-auto multiselect-scrollbar",
                   screenSize === "mobile" && "max-h-[50vh]",
-                  "overscroll-behavior-y-contain"
+                  "overscroll-y-contain"
                 )}>
                 <CommandEmpty>
                   {emptyIndicator || "No results found."}

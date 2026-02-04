@@ -39,6 +39,9 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
   useEffect(() => {
     getTagsAction().then(tags => {
       setTagOptions(tags.map(tag => ({ value: tag.id, label: tag.name })))
+    }).catch(error => {
+      console.error("Error fetching tags:", error)
+      toast.error("加载标签失败: 请稍后重试。")
     })
   }, [])
 
@@ -62,7 +65,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
       title: "",
       capturedAt: "",
       description: "",
-      creator: "Tianyu Yuan",
+      creator: "Tianyu",
       tags: [],
       location: "",
       imgFile: undefined,
@@ -366,6 +369,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
                   <FormLabel>Tags<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
                   <FormControl>
                     <MultiSelect
+                      defaultValue={field.value}
                       disabled={field.disabled}
                       name={field.name}
                       ref={field.ref}

@@ -16,7 +16,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
 
   // 1. 创建触发器的引用
   const scrollTriggerRef = useRef(null);
-  // 2. 预加载策略：当触发器进入视口 100px (margin) 时就开始加载，减少用户等待感
+  // 2. 预加载策略：当触发器进入视口 400px (margin) 时就开始加载，减少用户等待感
   const isInView = useInView(scrollTriggerRef, { margin: "0px 0px 400px 0px" });
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
         setPhotos(prevPhotos);
       }
     } catch (error) {
-      toast.error("删除照片失败: " + error);
+      toast.error("删除照片失败: 请稍后重试。");
       setPhotos(prevPhotos);
     }
   };
