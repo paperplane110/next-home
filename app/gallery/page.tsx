@@ -1,11 +1,11 @@
 import { HelperCommand } from "@/components/helper-command";
 import { PhotoGallery } from "@/feature/photo/components/photo-gallery";
-import { Photo } from "@/drizzle/schema";
+import { PhotoQuery } from "@/drizzle/schema";
 import { getPhotosService } from "@/feature/photo/services";
 
 export default async function GalleryPage() {
   // 首屏 6 张数据，由服务器直接生成 HTML，SEO 友好
-  let initialPhotos: Photo[] = [];
+  let initialPhotos: PhotoQuery[] = [];
   let error = null;
   try {
     initialPhotos = await getPhotosService(0, 6);

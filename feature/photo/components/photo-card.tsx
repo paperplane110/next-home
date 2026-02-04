@@ -23,7 +23,6 @@ export function PhotoCard({
   const [isLoaded, setIsLoaded] = useState(false);
   const { data } =  authClient.useSession()
   const isAdmin = data?.user?.role === "admin";
-  console.log(JSON.stringify(photo))
   return (
     <ContextMenu>
       <ContextMenuTrigger>
