@@ -2,7 +2,7 @@
 
 import { ActionReturn } from "@/lib/types";
 import { db } from "@/lib/db";
-import { type Photo, type PhotoRegisterInput, photos, photoTags } from "@/drizzle/schema";
+import { type Photo, PhotoEditForm, type PhotoQuery, type PhotoRegisterInput, photos, photoTags } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { del } from "@vercel/blob"
 import { protectAdmin } from "@/feature/auth/server";
@@ -84,7 +84,7 @@ export async function insertOneImageAction(
 export async function getPhotosAction(
   offset: number,
   limit: number
-): Promise<ActionReturn<Photo[]>> {
+): Promise<ActionReturn<PhotoQuery[]>> {
   try {
     const photoInfos = await getPhotosService(offset, limit);
     return { success: true, data: photoInfos };
@@ -117,5 +117,39 @@ export async function deletePhotoAction(id: string): Promise<ActionReturn<null>>
   } catch (e) {
     console.error(e)
     return { success: false, data: "Failed to delete photo" };
+  }
+}
+
+export async function updatePhotoAction(
+  id: string,
+  data: PhotoEditForm
+): Promise<ActionReturn<PhotoQuery>> {
+  try {
+    await protectAdmin();
+
+    // does photo exist
+    const photo = await getPhotoById(id);
+    if (!photo) {
+      throw new Error(`Photo not found, id: ${id}`)
+    }
+
+    // update photo info in neon
+    const entry = await db.update(photos)
+      .set(data)
+      .where(eq(photos.id, id))
+      .returning()
+
+    const tags = await db.select({
+      value: photoTags.tagId,
+    }).from(photoTags).where(eq(photoTags.photoId, id))
+    const result = {...entry[0], tags: tags.map((t) => t.value)};
+
+    // revalidate cache
+    updateTag("photos");
+
+    return { success: true, data: result };
+  } catch (e) {
+    console.error(e)
+    return { success: false, data: "Failed to update photo" };
   }
 }

@@ -1,9 +1,27 @@
 "use client"
 import OuterLink from "@/components/link";
 import { Card } from "@/components/ui/card";
+import { EditImageForm } from "@/feature/photo/components/edit-form";
 import PhotoUploadForm from "@/feature/photo/components/upload-form";
 
 export default function EverythingAboutFormsPage() {
+  const editPhoto = {
+    "id": "85aa2d1c-b77f-4732-890d-38b143b94c32",
+    "title": "Haori",
+    "creator": "Shimura Tatsumi",
+    "description": null,
+    "location": null,
+    "capturedAt": "2011.04.29",
+    "url": "https://neul1shzddwvm3wd.public.blob.vercel-storage.com/Shimura_Tatsumi-Two_Subjects_of_Japanese_Women-Haori-011135-04-29-2011-11135-x2000-7toa0KMqXWCtKuyjarbanBgb365kOt.webp",
+    "pathname": "Shimura_Tatsumi-Two_Subjects_of_Japanese_Women-Haori-011135-04-29-2011-11135-x2000-7toa0KMqXWCtKuyjarbanBgb365kOt.webp",
+    "contentType": "image/webp",
+    "size": 342508, "width": 2000, "height": 1691, "aspectRatio": "1.18", "isVertical": false,
+    "md5": "4835a592c0f245e9d04e7260d3874ef2",
+    "blurbase64": "JxkGDoLbCHV1aWVXiFeXmGeZ/Iz6ntc=",
+    "priority": 0,
+    "createdAt": "2026-02-03T08:07:02.204Z", "updatedAt": "2026-02-03T08:07:02.204Z",
+    "tags":["b85f5c5f-5426-4987-89f4-d034b66e0530"]
+  }
   return (
     <div className="page-top-margin sm:pb-8 section">
       <header className="subsection">
@@ -27,6 +45,15 @@ export default function EverythingAboutFormsPage() {
         </ul>
         <Card className="mt-8">
           <PhotoUploadForm onSuccess={() => { }} />
+        </Card>
+      </div>
+      <div className="subsection mt-16">
+        <h2 className="font-bold">Edit Image Form</h2>
+        <p className="mt-4 text-sm font-medium text-muted-foreground">
+          An image edit form, which allows users to edit the image&apos;s title, description, tags, etc.
+        </p>
+        <Card className="mt-8">
+          <EditImageForm photo={editPhoto} />
         </Card>
       </div>
     </div>

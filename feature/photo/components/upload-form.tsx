@@ -1,5 +1,6 @@
 "use client"
-import React from "react"
+
+
 import { useEffect, useState, useRef } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -9,6 +10,8 @@ import imageCompression from "browser-image-compression"
 import { upload } from "@vercel/blob/client"
 import { checkImageDuplicateAction, insertOneImageAction } from "@/feature/photo/actions"
 import { photoUploadFormSchema, type PhotoUploadForm, PhotoInsert } from "@/drizzle/schema"
+import { getTagsAction } from "@/feature/tag/actions"
+import { useFileUpload } from "@/hooks/use-file-upload"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -24,9 +27,8 @@ import { Label } from "@/components/ui/label"
 import { CircleXIcon, Loader2Icon, UploadIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { MultiSelect } from "@/components/ui/multi-select"
-import { getTagsAction } from "@/feature/tag/actions"
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner"
-import { useFileUpload } from "@/hooks/use-file-upload"
 import UploadSuccess from "./upload-success"
 
 
@@ -80,12 +82,15 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
   })
 
   const [tagOptions, setTagOptions] = useState<{ value: string, label: string }[]>([])
+  const [isLoadingTag, setIsLoadingTag] = useState(true)
   useEffect(() => {
     getTagsAction().then(tags => {
       setTagOptions(tags.map(tag => ({ value: tag.id, label: tag.name })))
+      setIsLoadingTag(false)
     }).catch(error => {
       console.error("Error fetching tags:", error)
       toast.error("加载标签失败: 请稍后重试。")
+      setIsLoadingTag(false)
     })
   }, [])
 
@@ -350,15 +355,19 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
                 <FormItem>
                   <FormLabel>Tags<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      value={field.value}
-                      disabled={field.disabled}
-                      name={field.name}
-                      ref={field.ref}
-                      options={tagOptions}
-                      onValueChange={field.onChange}
-                      placeholder="e.g. nature, sunset"
-                    />
+                    {isLoadingTag ? (
+                      <Skeleton className="w-full h-10" />
+                    ) : (
+                      <MultiSelect
+                        value={field.value}
+                        disabled={field.disabled}
+                        name={field.name}
+                        ref={field.ref}
+                        options={tagOptions}
+                        onValueChange={field.onChange}
+                        placeholder="e.g. nature, sunset"
+                      />
+                    )}
                   </FormControl>
                 </FormItem>
               )}

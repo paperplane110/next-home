@@ -3,20 +3,30 @@
  */
 
 import { db } from "@/lib/db";
-import { photos } from "@/drizzle/schema";
-import { desc, eq } from "drizzle-orm";
+import { PhotoQuery, photos } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 // 获取照片列表（带分页和缓存）
 export const getPhotosService = (offset: number, limit: number) => 
   unstable_cache(
-    async () => {
-      return await db
-        .select()
-        .from(photos)
-        .offset(offset)
-        .limit(limit)
-        .orderBy(desc(photos.createdAt));
+    async (): Promise<PhotoQuery[]> => {
+      const photosWithRawTags = await db.query.photos.findMany({
+        offset,
+        limit,
+        with: {
+          photoTags: {
+            with: {
+              tag: true
+            }
+          }
+        },
+        orderBy: (photos, { desc }) => [desc(photos.createdAt)],
+      })
+      return photosWithRawTags.map((photo) => ({
+        ...photo,
+        tags: photo.photoTags.map((tag) => tag.tagId),
+      }))
     },
     ["photos-list", `offset-${offset}`, `limit-${limit}`],
     { tags: ["photos"] }

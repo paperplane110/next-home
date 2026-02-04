@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Photo } from "@/drizzle/schema";
+import { PhotoQuery } from "@/drizzle/schema";
 import Image from "next/image";
 import { base64ToDataURL, cn } from "@/lib/utils";
 
@@ -19,11 +19,11 @@ export function PhotoCard({
   photo, 
   index,
   handleDelete
-}: { photo: Photo, index: number, handleDelete: (id: string) => void }) {
+}: { photo: PhotoQuery, index: number, handleDelete: (id: string) => void }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const { data } =  authClient.useSession()
   const isAdmin = data?.user?.role === "admin";
-
+  console.log(JSON.stringify(photo))
   return (
     <ContextMenu>
       <ContextMenuTrigger>

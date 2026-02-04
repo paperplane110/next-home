@@ -4,12 +4,12 @@ import { useEffect, useState, useRef } from "react";
 import { useInView } from "framer-motion";
 import { deletePhotoAction, getPhotosAction } from "@/feature/photo/actions";
 import { PhotoCard } from "@/feature/photo/components/photo-card";
-import { Photo } from "@/drizzle/schema";
+import { PhotoQuery } from "@/drizzle/schema";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
-  const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
+export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] }) {
+  const [photos, setPhotos] = useState<PhotoQuery[]>(initialPhotos);
   const [offset, setOffset] = useState(initialPhotos.length);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
