@@ -1,5 +1,5 @@
 import { HelperCommand } from "@/components/helper-command";
-import { PhotoGallery } from "@/components/photo-gallery";
+import { PhotoGallery } from "@/feature/photo/components/photo-gallery";
 import { Photo } from "@/drizzle/schema";
 import { getPhotosService } from "@/feature/photo/services";
 

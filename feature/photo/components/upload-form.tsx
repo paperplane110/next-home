@@ -1,9 +1,14 @@
 "use client"
-import { useEffect, useState } from "react"
+import React from "react"
+import { useEffect, useState, useRef } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { parseImage } from "@/feature/photo/image-parser"
+import { cn } from "@/lib/utils"
 import imageCompression from "browser-image-compression"
+import { upload } from "@vercel/blob/client"
+import { checkImageDuplicateAction, insertOneImageAction } from "@/feature/photo/actions"
+import { photoUploadFormSchema, type PhotoUploadForm, PhotoInsert } from "@/drizzle/schema"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -15,14 +20,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import React, { useRef } from "react"
 import { Label } from "@/components/ui/label"
 import { CheckCircle2Icon, CirclePlusIcon, CircleXIcon, Loader2Icon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { checkImageDuplicateAction, insertOneImageAction } from "@/feature/photo/actions"
-import { upload } from "@vercel/blob/client"
-import { photoUploadFormSchema, type PhotoUploadForm, PhotoInsert } from "@/drizzle/schema"
+import { MultiSelect } from "@/components/ui/multi-select"
+import { getTagsAction } from "@/feature/tag/actions"
+import { toast } from "sonner"
 
 
 export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }) {
@@ -31,6 +34,13 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
   const [duplicatePhoto, setDuplicatePhoto] = useState<PhotoInsert | null>(null)
   const [isChecking, setIsChecking] = useState(false)     // 是否在检查图片是否重复
   const [preview, setPreview] = useState<string | null>(null)
+
+  const [tagOptions, setTagOptions] = useState<{ value: string, label: string }[]>([])
+  useEffect(() => {
+    getTagsAction().then(tags => {
+      setTagOptions(tags.map(tag => ({ value: tag.id, label: tag.name })))
+    })
+  }, [])
 
   const [isUploading, setIsUploading] = useState(false)   // 是否正在上传图片
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -162,9 +172,11 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
         throw new Error(insertResult.data)
       }
     } catch (error) {
+      toast.error("Failed to upload image, please try again.")
       console.error("Error uploading image:", error)
     }
     setIsUploading(false)
+    setUploadProgress(0)
   }
 
   // 4. check if submit is disabled
@@ -327,6 +339,41 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
                     <Input placeholder="e.g. 2026.01" {...field} />
                   </FormControl>
                   <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="creator"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Creator<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value ?? ''}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tags<Badge variant="outline" className="text-xs bg-gray-100 border-none">Optional</Badge></FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      disabled={field.disabled}
+                      name={field.name}
+                      ref={field.ref}
+                      options={tagOptions}
+                      onValueChange={field.onChange}
+                      placeholder="e.g. nature, sunset"
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />

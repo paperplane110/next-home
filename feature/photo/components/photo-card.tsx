@@ -13,8 +13,8 @@ import {
   ContextMenuContent,
   ContextMenuGroup,
   ContextMenuItem,
-} from "./ui/context-menu";
-import { TrashIcon } from "lucide-react";
+} from "@/components/ui/context-menu";
+import { SquarePenIcon, TrashIcon } from "lucide-react";
 
 export function PhotoCard({ 
   photo, 
@@ -77,6 +77,10 @@ export function PhotoCard({
       </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
+          <ContextMenuItem disabled={!isAdmin} variant="default" onClick={() => {}}>
+            <SquarePenIcon />
+            Edit
+          </ContextMenuItem>
           <ContextMenuItem disabled={!isAdmin} variant="destructive" onClick={() => handleDelete(photo.id)}>
             <TrashIcon />
             Delete

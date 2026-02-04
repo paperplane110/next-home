@@ -12,7 +12,6 @@ export const photos = pgTable("photos", {
   description: text("description"),
   location: varchar("location", { length: 255 }), // 存储图片的地理位置
   capturedAt: varchar("captured_at", { length: 20 }), // 创作时间
-  tags: text("tags").array(), // 标签，逗号分隔
 
   // Vercel Blob 提供的核心字段
   url: text("url").notNull(),          // 图片的访问地址
@@ -90,6 +89,7 @@ export const photoUploadFormSchema = createInsertSchema(photos, {
   size: true,
 }).extend({
   imgFile: z.instanceof(File, { message: "Image is required" }),
+  tags: z.array(z.uuid()).optional(),
 })
 
 export const tagInsertSchema = createInsertSchema(tags).omit({
@@ -98,8 +98,10 @@ export const tagInsertSchema = createInsertSchema(tags).omit({
   updatedAt: true,
 });
 
-export type Photo = InferSelectModel<typeof photos>
-export type PhotoInsert = z.infer<typeof photoInsertSchema>
-export type PhotoUploadForm = z.infer<typeof photoUploadFormSchema>
-export type Tag = InferSelectModel<typeof tags>
-export type TagInsert = z.infer<typeof tagInsertSchema>
+export type Photo = InferSelectModel<typeof photos>                 // 数据库返回的图片类型
+export type PhotoInsert = z.infer<typeof photoInsertSchema>         // 插入数据库，关于 photo 部分所需信息的类型
+export type PhotoRegisterInput = PhotoInsert & { tags?: string[] }  // 注册图片时所需的输入类型，包含 tags 数组（实际使用的）
+export type PhotoUploadForm = z.infer<typeof photoUploadFormSchema> // 上传图片时的表单类型，包含 imgFile 字段
+
+export type Tag = InferSelectModel<typeof tags> // 数据库返回的标签类型
+export type TagInsert = z.infer<typeof tagInsertSchema> // 插入数据库，关于 tag 部分所需信息的类型

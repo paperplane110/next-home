@@ -42,6 +42,10 @@ export default function Playground() {
       name: "Card contraction on scroll",
       path: "/card-contraction-on-scroll",
     },
+    {
+      name: "Everything about forms",
+      path: "/everything-about-forms",
+    }
   ]
   return (
     <div className="section">

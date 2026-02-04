@@ -2,7 +2,7 @@
 
 import { ActionReturn } from "@/lib/types";
 import { db } from "@/lib/db";
-import { type Photo, type PhotoInsert, photos } from "@/drizzle/schema";
+import { type Photo, PhotoRegisterInput, photos, photoTags } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { del } from "@vercel/blob"
 import { protectAdmin } from "@/feature/auth/server";
@@ -13,7 +13,7 @@ export async function checkImageDuplicateAction(
   md5: string
 ): Promise<ActionReturn<{
   isDuplicate: boolean;
-  photo: PhotoInsert | null;
+  photo: Photo | null;
 }>> {
   try {
     const existingPhoto = await getPhotoByMd5(md5);
@@ -43,18 +43,37 @@ export async function checkImageDuplicateAction(
 }
 
 export async function insertOneImageAction(
-  data: PhotoInsert
-): Promise<ActionReturn<PhotoInsert>> {
+  data: PhotoRegisterInput
+): Promise<ActionReturn<Photo>> {
   try {
     await protectAdmin();
-    const entry = await db
-      .insert(photos)
-      .values(data)
-      .returning()
+    const entry = await db.transaction(
+      async (tx) => {
+        // insert photos table
+        const entries = await tx
+          .insert(photos)
+          .values(data)
+          .returning()
+        const photoId = entries[0].id;
+
+        // insert photo_tags table
+        if (data.tags && data.tags.length > 0) {
+          const photoTagsEntries = data.tags.map((tagId) => {
+            return {
+              photoId,
+              tagId,
+            }
+          })
+          await tx.insert(photoTags).values(photoTagsEntries)
+        }
+
+        return entries[0]
+      }
+    )
 
     updateTag("photos");
 
-    return { success: true, data: entry[0] };
+    return { success: true, data: entry };
   } catch (e) {
     console.error(e)
     return { success: false, data: "Failed to insert photo" };

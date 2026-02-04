@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useInView } from "framer-motion";
 import { deletePhotoAction, getPhotosAction } from "@/feature/photo/actions";
-import { PhotoCard } from "@/components/photo-card";
+import { PhotoCard } from "@/feature/photo/components/photo-card";
 import { Photo } from "@/drizzle/schema";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
@@ -64,7 +64,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
 
   return (
     <div className="space-y-12">
-      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
         {photos.map((photo, index) => (
           <PhotoCard key={photo.id} photo={photo} index={index} handleDelete={handleDelete} />
         ))}

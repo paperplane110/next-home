@@ -1,5 +1,5 @@
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-serverless"
+import { neon, neonConfig, Pool } from "@neondatabase/serverless";
 import { config } from "dotenv";
 import ws from "ws"
 
@@ -9,5 +9,8 @@ if (process.env.NODE_ENV === "development") {
     neonConfig.webSocketConstructor = ws;
 }
 
-const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle({ client: sql });
+// const sql = neon(process.env.DATABASE_URL!);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+})
+export const db = drizzle(pool);
