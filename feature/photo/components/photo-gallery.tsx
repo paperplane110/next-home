@@ -3,20 +3,20 @@
 import { useEffect, useState, useRef } from "react";
 import { useInView } from "framer-motion";
 import { deletePhotoAction, getPhotosAction } from "@/feature/photo/actions";
-import { PhotoCard } from "@/components/photo-card";
-import { Photo } from "@/drizzle/schema";
+import { PhotoCard } from "@/feature/photo/components/photo-card";
+import { PhotoQuery } from "@/drizzle/schema";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
-  const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
+export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] }) {
+  const [photos, setPhotos] = useState<PhotoQuery[]>(initialPhotos);
   const [offset, setOffset] = useState(initialPhotos.length);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   // 1. 创建触发器的引用
   const scrollTriggerRef = useRef(null);
-  // 2. 预加载策略：当触发器进入视口 100px (margin) 时就开始加载，减少用户等待感
+  // 2. 预加载策略：当触发器进入视口 400px (margin) 时就开始加载，减少用户等待感
   const isInView = useInView(scrollTriggerRef, { margin: "0px 0px 400px 0px" });
 
   useEffect(() => {
@@ -57,14 +57,14 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: Photo[] }) {
         setPhotos(prevPhotos);
       }
     } catch (error) {
-      toast.error("删除照片失败: " + error);
+      toast.error("删除照片失败: 请稍后重试。");
       setPhotos(prevPhotos);
     }
   };
 
   return (
     <div className="space-y-12">
-      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
         {photos.map((photo, index) => (
           <PhotoCard key={photo.id} photo={photo} index={index} handleDelete={handleDelete} />
         ))}

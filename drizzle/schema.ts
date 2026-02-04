@@ -1,6 +1,6 @@
-import { pgTable, uuid, varchar, text, integer, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, integer, timestamp, boolean, index, primaryKey } from "drizzle-orm/pg-core";
 import { z } from "zod";
-import { InferSelectModel } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const photos = pgTable("photos", {
@@ -12,7 +12,6 @@ export const photos = pgTable("photos", {
   description: text("description"),
   location: varchar("location", { length: 255 }), // 存储图片的地理位置
   capturedAt: varchar("captured_at", { length: 20 }), // 创作时间
-  tags: text("tags").array(), // 标签，逗号分隔
 
   // Vercel Blob 提供的核心字段
   url: text("url").notNull(),          // 图片的访问地址
@@ -39,8 +38,8 @@ export const photos = pgTable("photos", {
   // --- 排序与逻辑控制 ---
   priority: integer("priority").default(0), // 数值越大越靠前
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 }, (table) => [
   index('md5_idx').on(table.md5)
 ]);
@@ -50,18 +49,38 @@ export const tags = pgTable("tags", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 64 }).notNull().unique(), // 人类可读的标签名称
   slug: varchar("slug", { length: 64 }).unique(), // 用于 URL  slug，例如: "beach-sunset"
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
 
 export const photoTags = pgTable("photo_tags", {
   photoId: uuid("photo_id").notNull().references(() => photos.id, { onDelete: "cascade", onUpdate: "cascade" }),
   tagId: uuid("tag_id").notNull().references(() => tags.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
 }, (table) => [
-  index("photo_tags_photo_idx").on(table.photoId),
+  primaryKey({ columns: [table.photoId, table.tagId] }),
   index("photo_tags_tag_idx").on(table.tagId),
 ]);
+
+export const photoRelations = relations(photos, ({ many }) => ({
+  photoTags: many(photoTags),
+}))
+
+export const tagRelations = relations(tags, ({ many }) => ({
+  photoTags: many(photoTags),
+}))
+
+export const photoTagRelations = relations(photoTags, ({ one }) => ({
+  photo: one(photos, {
+    fields: [photoTags.photoId],
+    references: [photos.id],
+  }),
+  tag: one(tags, {
+    fields: [photoTags.tagId],
+    references: [tags.id],
+  }),
+}))
+
 
 export const photoInsertSchema = createInsertSchema(photos).omit({
   id: true,
@@ -72,24 +91,27 @@ export const photoInsertSchema = createInsertSchema(photos).omit({
 export const photoUploadFormSchema = createInsertSchema(photos, {
   title: z.string().min(1, "Title is required"),
   capturedAt: z.string().min(1, "Captured At is required"),
-}).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-
-  width: true,
-  height: true,
-  aspectRatio: true,
-  isVertical: true,
-  blurbase64: true,
-  md5: true,
-
-  url: true,
-  pathname: true,
-  contentType: true,
-  size: true,
+}).pick({
+  title: true,
+  description: true,
+  capturedAt: true,
+  location: true,
+  creator: true,
 }).extend({
   imgFile: z.instanceof(File, { message: "Image is required" }),
+  tags: z.array(z.uuid()).optional(),
+})
+
+export const PhotoEditFormSchema = createInsertSchema(photos, {
+  title: z.string().min(1, "Title is required"),
+}).pick({
+  title: true,
+  description: true,
+  capturedAt: true,
+  location: true,
+  creator: true,
+}).extend({
+  tags: z.array(z.uuid()).optional(),
 })
 
 export const tagInsertSchema = createInsertSchema(tags).omit({
@@ -98,8 +120,14 @@ export const tagInsertSchema = createInsertSchema(tags).omit({
   updatedAt: true,
 });
 
-export type Photo = InferSelectModel<typeof photos>
-export type PhotoInsert = z.infer<typeof photoInsertSchema>
-export type PhotoUploadForm = z.infer<typeof photoUploadFormSchema>
-export type Tag = InferSelectModel<typeof tags>
-export type TagInsert = z.infer<typeof tagInsertSchema>
+export type Photo = InferSelectModel<typeof photos>                 // 数据库返回的图片类型
+export type PhotoQuery = Photo & { tags: string[] }                   // 数据库返回的图片类型，包含关联的标签
+export type PhotoInsert = z.infer<typeof photoInsertSchema>         // 插入数据库，关于 photo 部分所需信息的类型
+export type PhotoRegisterInput = PhotoInsert & { tags?: string[] }  // 注册图片时所需的输入类型，包含 tags 数组（实际使用的）
+export type PhotoUploadForm = z.infer<typeof photoUploadFormSchema> // 上传图片时的表单类型，包含 imgFile 字段
+export type PhotoEditForm = z.infer<typeof PhotoEditFormSchema> // 编辑图片时的表单类型，不包含 imgFile 字段
+
+export type Tag = InferSelectModel<typeof tags> // 数据库返回的标签类型
+export type TagInsert = z.infer<typeof tagInsertSchema> // 插入数据库，关于 tag 部分所需信息的类型
+
+export type PhotoTag = InferSelectModel<typeof photoTags> // 数据库返回的图片标签类型

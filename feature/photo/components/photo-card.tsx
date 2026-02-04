@@ -1,35 +1,28 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Photo } from "@/drizzle/schema";
+import { PhotoQuery } from "@/drizzle/schema";
 import Image from "next/image";
-import { cn, base64ToBinary } from "@/lib/utils";
+import { base64ToDataURL, cn } from "@/lib/utils";
 
 import { authClient } from "@/feature/auth/client";
-import * as thumbhash from "thumbhash"
 import {
   ContextMenu,
   ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuGroup,
   ContextMenuItem,
-} from "./ui/context-menu";
-import { TrashIcon } from "lucide-react";
+} from "@/components/ui/context-menu";
+import { SquarePenIcon, TrashIcon } from "lucide-react";
 
 export function PhotoCard({ 
   photo, 
   index,
   handleDelete
-}: { photo: Photo, index: number, handleDelete: (id: string) => void }) {
+}: { photo: PhotoQuery, index: number, handleDelete: (id: string) => void }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const { data } =  authClient.useSession()
   const isAdmin = data?.user?.role === "admin";
-
-  const base64ToDataURL = (base64: string) => {
-    const binary = base64ToBinary(base64);
-    return thumbhash.thumbHashToDataURL(binary);
-  }
-
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -77,6 +70,10 @@ export function PhotoCard({
       </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
+          <ContextMenuItem disabled={!isAdmin} variant="default" onClick={() => {}}>
+            <SquarePenIcon />
+            Edit
+          </ContextMenuItem>
           <ContextMenuItem disabled={!isAdmin} variant="destructive" onClick={() => handleDelete(photo.id)}>
             <TrashIcon />
             Delete
