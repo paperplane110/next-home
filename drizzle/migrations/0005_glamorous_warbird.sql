@@ -1,0 +1,1 @@
+ALTER TABLE "photo_tags" ADD CONSTRAINT "photo_tags_photo_id_tag_id_pk" PRIMARY KEY("photo_id","tag_id");

@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, integer, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, integer, timestamp, boolean, index, primaryKey } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -58,7 +58,7 @@ export const photoTags = pgTable("photo_tags", {
   tagId: uuid("tag_id").notNull().references(() => tags.id, { onDelete: "cascade", onUpdate: "cascade" }),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
 }, (table) => [
-  index("photo_tags_photo_idx").on(table.photoId),
+  primaryKey({ columns: [table.photoId, table.tagId] }),
   index("photo_tags_tag_idx").on(table.tagId),
 ]);
 

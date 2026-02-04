@@ -1,0 +1,1 @@
+DROP INDEX "photo_tags_photo_idx";

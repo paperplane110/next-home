@@ -73,6 +73,9 @@ export function EditImageForm({
       getTagsAction().then((res) => {
         setTagOptions(res.map((tag) => ({ value: tag.id, label: tag.name })))
         setIsTagLoading(false)
+      }).catch(() => {
+        setIsTagLoading(false)
+        toast.error("Failed to fetch tag options. Please try again.")
       })
     } else {
       setTagOptions(initialTagOptions)
