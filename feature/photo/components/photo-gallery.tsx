@@ -18,7 +18,7 @@ import { PhotoEditDialog } from "@/feature/photo/components/edit-dialog";
 
 export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] }) {
   useHydrateAtoms([[photoAtom, initialPhotos]]);
-  const [photos, setPhotos] = useAtom(photoAtom); 
+  const [photos, setPhotos] = useAtom(photoAtom);
   const [offset, setOffset] = useState(initialPhotos.length);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,8 +130,9 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
           >
             <motion.div
               layoutId={selectedPhoto.id}
-              transition={{ layout: { duration: 0.25, ease: "easeInOut" } }}
-              className="relative flex max-h-[90vh] max-w-[90vw] items-center justify-center overflow-hidden rounded-lg bg-card z-50"
+              transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
+              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center bg-card z-50"
+              style={{ willChange: "transform" }}
               onClick={(e) => e.stopPropagation()}
             >
               <Image
@@ -139,8 +140,9 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
                 alt={selectedPhoto.title}
                 width={selectedPhoto.width}
                 height={selectedPhoto.height}
-                className="max-h-[90vh] w-auto object-contain"
+                className="max-h-[90vh] w-auto object-contain rounded-lg"
                 priority
+                sizes="90vw"
               />
             </motion.div>
           </motion.div>

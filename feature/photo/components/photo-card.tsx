@@ -29,7 +29,6 @@ export function PhotoCard({
 }) {
   const [, setEditPhotoId] = useEditPhotoId();
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
   const { data } = authClient.useSession()
   const isAdmin = data?.user?.role === "admin";
   return (
@@ -51,19 +50,19 @@ export function PhotoCard({
           className={cn(
             "group relative overflow-hidden rounded-xl border bg-card mb-4 break-inside-avoid"
           )}
-          style={{ zIndex: isAnimating ? 50 : 0 }} // 动画进行时 zIndex 提升
+          style={{ zIndex: isAnimating ? 50 : 0, willChange: "transform" }} // 动画进行时 zIndex 提升
           whileHover={{ zIndex: 1 }} // hover 时 zIndex 提升 (可选)
         >
 
-          {photo.blurbase64 && <div
-            className="absolute inset-0 z-0 scale-110 blur-xl"
+          {/* {photo.blurbase64 && <div
+            className="absolute inset-0 z-0 scale-110"
             style={{
               backgroundImage: `url(${base64ToDataURL(photo.blurbase64)})`,
               backgroundSize: 'cover',
               opacity: isLoaded ? 0 : 1, // 加载完成后隐藏背景
               transition: 'opacity 0.6s ease-in-out'
             }}
-          />}
+          />} */}
 
           <Image
             src={photo.url}
@@ -71,18 +70,12 @@ export function PhotoCard({
             className="w-full h-auto object-cover"
             width={photo.width}
             height={photo.height}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading={index < 6 ? "eager" : "lazy"}
-            onLoad={() => setIsLoaded(true)}
             priority={index < 3}
             placeholder={photo.blurbase64 ? "blur" : "empty"}
             blurDataURL={photo.blurbase64 ? base64ToDataURL(photo.blurbase64) : undefined}
           />
-          {/* <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
-        {photo.location}
-        <br />
-        {photo.url}
-      </div> */}
         </motion.div>
       </ContextMenuTrigger>
       <ContextMenuContent>
