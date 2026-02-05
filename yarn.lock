@@ -2727,6 +2727,11 @@
   resolved "https://registry.npmmirror.com/@speed-highlight/core/-/core-1.2.12.tgz"
   integrity sha512-uilwrK0Ygyri5dToHYdZSjcvpS2ZwX0w5aSt3GCEN9hrjxWCoeV4Z2DTXuxjwbntaLQIEEAlCeNQss5SoHvAEA==
 
+"@standard-schema/spec@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/@standard-schema/spec/-/spec-1.0.0.tgz#f193b73dc316c4170f2e82a881da0f550d551b9c"
+  integrity sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==
+
 "@standard-schema/spec@^1.0.0":
   version "1.1.0"
   resolved "https://registry.npmmirror.com/@standard-schema/spec/-/spec-1.1.0.tgz"
@@ -3267,6 +3272,11 @@ agent-base@^7.1.2:
   version "7.1.4"
   resolved "https://registry.npmmirror.com/agent-base/-/agent-base-7.1.4.tgz"
   integrity sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==
+
+agentation@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.npmmirror.com/agentation/-/agentation-1.3.2.tgz#ded24e91cda414b32d08e2b279279100bfdab396"
+  integrity sha512-9yZ/3hTcNePr1asnMyipxAZU8nFdBibNfw7wTdLUd3ULTTQCp9QZX7Y5PTMzkYWX4fhqEI2LOjMCb3vkmZga9w==
 
 ajv-formats@^3.0.1:
   version "3.0.1"
@@ -7107,6 +7117,13 @@ nth-check@^2.0.1:
   integrity sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==
   dependencies:
     boolbase "^1.0.0"
+
+nuqs@^2.8.8:
+  version "2.8.8"
+  resolved "https://registry.npmmirror.com/nuqs/-/nuqs-2.8.8.tgz#375be35455b1d7e1104a15ff4d840533d6c55f76"
+  integrity sha512-LF5sw9nWpHyPWzMMu9oho3r9C5DvkpmBIg4LQN78sexIzGaeRx8DWr0uy3YiFx5i2QGZN1Qqcb+OAtEVRa2bnA==
+  dependencies:
+    "@standard-schema/spec" "1.0.0"
 
 object-assign@^4, object-assign@^4.1.1:
   version "4.1.1"

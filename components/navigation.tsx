@@ -5,6 +5,7 @@ import { useMedia } from "react-use";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -98,20 +99,25 @@ export const Navigation = () => {
           </>
         ) : (
           <>
-            <div className="flex gap-4">{
-              pageList.map((route) => (
-                (!route.hidden && <Link
-                  key={route.href}
-                  href={route.href}
-                  className={cn(
-                    "py-2 text-sm font-serif hover:text-primary",
-                    isActive(route.href) ? "text-primary" : ""
-                  )}
-                >
-                  {route.label}
-                </Link>)
-              ))
-            }</div>
+            <div className="flex items-center gap-4">
+              {/* <div>
+                <Image src="/fan.svg" width={18} height={18} alt="fan" />
+              </div> */}
+              {
+                pageList.map((route) => (
+                  (!route.hidden && <Link
+                    key={route.href}
+                    href={route.href}
+                    className={cn(
+                      "py-2 text-sm font-serif hover:text-primary",
+                      isActive(route.href) ? "text-primary" : ""
+                    )}
+                  >
+                    {route.label}
+                  </Link>)
+                ))
+              }
+            </div>
             <div className="flex items-center gap-2 h-4">
               <HelperCommand />
               <Separator orientation="vertical" />

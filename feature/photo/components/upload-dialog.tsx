@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton";
 import PhotoUploadForm from "@/feature/photo/components/upload-form";
-import { photoUploadDialogOpenAtom } from "@/lib/modal-store";
+import { photoUploadDialogOpenAtom } from "@/lib/atoms";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 export function PhotoUploadDialog() {
@@ -63,7 +63,6 @@ export function PhotoUploadDialog() {
               </div>
             )
           }
-
         </div>
       </DialogContent>
     </Dialog>

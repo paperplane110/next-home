@@ -14,9 +14,9 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { pageList } from "@/lib/page-list";
-import { useFrame } from "./frame-context";
+import { useFrame } from "@/components/providers/frame-context";
 import { useSetAtom } from "jotai";
-import { photoUploadDialogOpenAtom } from "@/lib/modal-store";
+import { photoUploadDialogOpenAtom } from "@/lib/atoms";
 
 export const HelperCommand = () => {
   const [isOpen, setIsOpen] = useState(false);

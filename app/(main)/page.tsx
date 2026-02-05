@@ -18,10 +18,10 @@ export default function Home() {
       </div>
       <div className="subsection mb-12 text-muted-foreground leading-6">
         <section id="about">
-          <p>
-            Hi, I&apos;m <span className="text-black font-semibold">Tianyu</span>, a software engineer with a passion for building things.
-            I&apos;m currently based in Beijing and moved on from my role at <span className="text-black font-semibold">DiDi&apos;s Robotaxi</span> team.
-            Learn more about <OuterLink className="hover:underline" href="/about">me</OuterLink>, if you are interested.
+          <p className="font-serif">
+            Hi, I&apos;m <span className="text-black font-medium">Tianyu</span>, a software engineer with a passion for building things.
+            I&apos;m currently based in Beijing and moved on from my role at <span className="text-black font-medium">DiDi&apos;s Robotaxi</span> team.
+            Learn more about <OuterLink className="hover:underline text-black font-medium" href="/about">me</OuterLink>, if you are interested.
           </p>
           {/* <br />
           <p>

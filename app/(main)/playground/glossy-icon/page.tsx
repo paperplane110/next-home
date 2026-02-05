@@ -31,7 +31,7 @@ export default function GlossyIcon() {
         <h2 className="font-bold">iTerm2 Icon</h2>
         <div id="container" className="relative mt-8 h-100 w-full rounded-4xl flex items-center justify-center gap-x-4"
           style={{
-            backgroundImage: "url('/img/gallery/tyler-casey-4uCdG0scCJ0-unsplash.jpg')",
+            backgroundImage: "url('/img/playground/hallstatt.jpeg')",
             backgroundSize: "cover",
           }}
         >
