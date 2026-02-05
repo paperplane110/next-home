@@ -15,11 +15,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const tags = await getTagsAction();
-  const tagOptions = tags.map(tag => ({
-    label: tag.name,
-    value: tag.id,
-  }))
+  let tagOptions: { label: string; value: string }[] = [];
+  try {
+    const tags = await getTagsAction();
+    tagOptions = tags.map(tag => ({
+      label: tag.name,
+      value: tag.id,
+    }));
+  } catch (error) {
+    console.error("Failed to fetch tags:", error);
+  }
   return (
     <html lang="en" suppressHydrationWarning>
       <body

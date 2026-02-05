@@ -133,7 +133,7 @@ export function EditImageForm({
                 <FormLabel>Tags</FormLabel>
                 <FormControl>
                   <MultiSelect
-                    defaultValue={field.value}
+                    defaultValue={field.value ?? []}
                     value={field.value ?? []}
                     disabled={field.disabled}
                     name={field.name}

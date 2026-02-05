@@ -28,7 +28,7 @@ export const pingXianZhenSong = localFont({
 // pixel
 export const departure_mono = localFont({
   src: "../app/fonts/DepartureMono/DepartureMono-Regular.woff2",
-  variable: "--font-departrue-mono",
+  variable: "--font-departure-mono",
 });
 
 export const zpix = localFont({

@@ -150,7 +150,9 @@ export async function updatePhotoAction(
         const tagToCreate = newTags.filter((tagId) => !oldTags.includes(tagId));
         const tagToDelete = oldTags.filter((tagId) => !newTags.includes(tagId));
         // delete photo_tags
-        await tx.delete(photoTags).where(and(eq(photoTags.photoId, id), inArray(photoTags.tagId, tagToDelete)));
+        if (tagToDelete.length > 0) {
+          await tx.delete(photoTags).where(and(eq(photoTags.photoId, id), inArray(photoTags.tagId, tagToDelete)));
+        }
         // create photo_tags
         if (tagToCreate.length > 0) {
           const photoTagsEntries = tagToCreate.map((tagId) => {
@@ -163,7 +165,7 @@ export async function updatePhotoAction(
         }
       }
 
-      return {...entry[0], tags: newTags ?? []};
+      return {...entry[0], tags: newTags ?? photo.tags};
     })
 
     // revalidate cache

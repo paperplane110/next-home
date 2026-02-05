@@ -20,7 +20,7 @@ export function PhotoEditDialog() {
   const photo = useMemo(() => photos.find((p) => p.id === editPhotoId), [photos, editPhotoId]);
 
   const onSuccess = (updatedPhoto: PhotoQuery) => {
-    setPhotos(photos.map((p) => p.id === updatedPhoto.id ? updatedPhoto : p))
+    setPhotos((prev) => prev.map((p) => p.id === updatedPhoto.id ? updatedPhoto : p))
   }
 
   return (
@@ -33,7 +33,6 @@ export function PhotoEditDialog() {
           <DialogTitle>Edit Photo</DialogTitle>
           <DialogDescription>
             Edit the details of the photo.
-            {photo?.tags}
           </DialogDescription>
         </DialogHeader>
         <div className="no-scrollbar max-h-[60vh] overflow-y-auto">
