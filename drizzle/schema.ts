@@ -3,6 +3,10 @@ import { z } from "zod";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
+
+/**
+ * PgTable: photos
+ */
 export const photos = pgTable("photos", {
   id: uuid("id").primaryKey().defaultRandom(),
 
@@ -44,7 +48,9 @@ export const photos = pgTable("photos", {
   index('md5_idx').on(table.md5)
 ]);
 
-// --- Tags: 多对多 ---
+/**
+ * PgTable: tags
+ */
 export const tags = pgTable("tags", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 64 }).notNull().unique(), // 人类可读的标签名称
@@ -53,6 +59,9 @@ export const tags = pgTable("tags", {
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
 
+/**
+ * PgTable: photo_tags, many-to-many relationship between photos and tags
+ */
 export const photoTags = pgTable("photo_tags", {
   photoId: uuid("photo_id").notNull().references(() => photos.id, { onDelete: "cascade", onUpdate: "cascade" }),
   tagId: uuid("tag_id").notNull().references(() => tags.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -81,6 +90,10 @@ export const photoTagRelations = relations(photoTags, ({ one }) => ({
   }),
 }))
 
+
+// ########################### //
+// --- Schemas (ZodObject) --- //
+// ########################### //
 
 export const photoInsertSchema = createInsertSchema(photos).omit({
   id: true,
@@ -121,7 +134,7 @@ export const tagInsertSchema = createInsertSchema(tags).omit({
 });
 
 export type Photo = InferSelectModel<typeof photos>                 // 数据库返回的图片类型
-export type PhotoQuery = Photo & { tags: string[] }                   // 数据库返回的图片类型，包含关联的标签
+export type PhotoQuery = Photo & { tags: string[] }                 // 数据库返回的图片类型，包含关联的标签
 export type PhotoInsert = z.infer<typeof photoInsertSchema>         // 插入数据库，关于 photo 部分所需信息的类型
 export type PhotoRegisterInput = PhotoInsert & { tags?: string[] }  // 注册图片时所需的输入类型，包含 tags 数组（实际使用的）
 export type PhotoUploadForm = z.infer<typeof photoUploadFormSchema> // 上传图片时的表单类型，包含 imgFile 字段
