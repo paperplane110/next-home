@@ -1,18 +1,48 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react";
-import { useInView } from "framer-motion";
+import { useAtom } from "jotai";
+import { useHydrateAtoms } from "jotai/utils";
+import { photoAtom } from "@/lib/atoms";
+import { useInView, motion, AnimatePresence } from "framer-motion";
+import { useLenis } from "lenis/react";
 import { deletePhotoAction, getPhotosAction } from "@/feature/photo/actions";
+
 import { PhotoCard } from "@/feature/photo/components/photo-card";
 import { PhotoQuery } from "@/drizzle/schema";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
+import { PhotoEditDialog } from "@/feature/photo/components/edit-dialog";
+
 
 export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] }) {
-  const [photos, setPhotos] = useState<PhotoQuery[]>(initialPhotos);
+  useHydrateAtoms([[photoAtom, initialPhotos]]);
+  const [photos, setPhotos] = useAtom(photoAtom);
   const [offset, setOffset] = useState(initialPhotos.length);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoQuery | null>(null);
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (selectedPhoto) {
+      lenis?.stop();
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setSelectedPhoto(null);
+        }
+      }
+      addEventListener("keydown", handleKeyDown);
+      return () => {
+        lenis?.start();
+        document.body.style.overflow = "";
+        removeEventListener("keydown", handleKeyDown);
+      }
+    }
+  }, [selectedPhoto, lenis])
 
   // 1. 创建触发器的引用
   const scrollTriggerRef = useRef(null);
@@ -56,7 +86,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
         toast.error("删除照片失败");
         setPhotos(prevPhotos);
       }
-    } catch (error) {
+    } catch {
       toast.error("删除照片失败: 请稍后重试。");
       setPhotos(prevPhotos);
     }
@@ -66,14 +96,20 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
     <div className="space-y-12">
       <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
         {photos.map((photo, index) => (
-          <PhotoCard key={photo.id} photo={photo} index={index} handleDelete={handleDelete} />
+          <PhotoCard
+            key={photo.id}
+            photo={photo}
+            index={index}
+            handleDelete={handleDelete}
+            onClick={() => setSelectedPhoto(photo)}
+          />
         ))}
       </div>
 
       {/* 触发器元素 */}
       <div ref={scrollTriggerRef} className="h-20 w-full flex justify-center items-center">
         {isLoading && (
-           <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
         )}
         {!hasMore && (
           <span className="text-muted-foreground text-sm italic">
@@ -81,6 +117,38 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
           </span>
         )}
       </div>
+
+      <AnimatePresence>
+        {selectedPhoto && (
+          <motion.div
+            initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+            animate={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
+            transition={{ backgroundColor: { duration: 0.25 } }}
+            exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+            onClick={() => setSelectedPhoto(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+          >
+            <motion.div
+              layoutId={selectedPhoto.id}
+              transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
+              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center bg-card z-50"
+              style={{ willChange: "transform" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={selectedPhoto.url}
+                alt={selectedPhoto.title}
+                width={selectedPhoto.width}
+                height={selectedPhoto.height}
+                className="max-h-[90vh] w-auto object-contain rounded-lg"
+                priority
+                sizes="90vw"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <PhotoEditDialog />
     </div>
   );
 }

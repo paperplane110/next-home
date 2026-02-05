@@ -1,10 +1,10 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PhotoEditForm, PhotoEditFormSchema, PhotoQuery } from "@/drizzle/schema"
-import { getTagsAction } from "@/feature/tag/actions";
 import { updatePhotoAction } from "@/feature/photo/actions";
+import { tagOptionsAtom } from "@/lib/atoms";
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -18,21 +18,18 @@ import {
 } from "@/components/ui/form"
 import { MultiSelect } from "@/components/ui/multi-select"
 import Image from "next/image"
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner"
+import { useAtom } from "jotai";
 
 
 export function EditImageForm({
   photo,
-  initialTagOptions,
   onSuccess,
 }: {
   photo: PhotoQuery
-  initialTagOptions?: { value: string, label: string }[]
   onSuccess?: (photo: PhotoQuery) => void
 }) {
-  const [tagOptions, setTagOptions] = useState<{ value: string, label: string }[]>([])
-  const [isTagLoading, setIsTagLoading] = useState(true)
+  const [tagOptions] = useAtom(tagOptionsAtom)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<PhotoEditForm>({
@@ -68,34 +65,20 @@ export function EditImageForm({
     })
   }
 
-  useEffect(() => {
-    if (!initialTagOptions) {
-      getTagsAction().then((res) => {
-        setTagOptions(res.map((tag) => ({ value: tag.id, label: tag.name })))
-        setIsTagLoading(false)
-      }).catch(() => {
-        setIsTagLoading(false)
-        toast.error("Failed to fetch tag options. Please try again.")
-      })
-    } else {
-      setTagOptions(initialTagOptions)
-      setIsTagLoading(false)
-    }
-  }, [initialTagOptions])
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-4 px-4">
-          <div id="image-preview" className="relative group flex items-center justify-center">
-            <Image
-              width={640 * Number(photo.aspectRatio)}
-              height={640}
-              src={photo.url}
-              alt={photo.title}
-              className="max-h-64 rounded-lg object-contain"
-            />
-          </div>
+        <div id="image-preview" className="flex items-center justify-center">
+          <Image
+            width={640 * Number(photo.aspectRatio)}
+            height={640}
+            src={photo.url}
+            alt={photo.title}
+            className="w-auto max-h-64 max-w-96 rounded-lg object-contain"
+            placeholder="empty"
+          />
+        </div>
+        <div className="mt-4 flex flex-col gap-4 px-4">
           <FormField
             control={form.control}
             name="title"
@@ -116,7 +99,7 @@ export function EditImageForm({
               <FormItem>
                 <FormLabel>Captured At</FormLabel>
                 <FormControl>
-                  <Input 
+                  <Input
                     {...field}
                     value={field.value ?? ''}
                   />
@@ -149,20 +132,16 @@ export function EditImageForm({
               <FormItem>
                 <FormLabel>Tags</FormLabel>
                 <FormControl>
-                  {isTagLoading ? (
-                    <Skeleton className="w-full h-10" />
-                  ) : (
-                    <MultiSelect
-                      defaultValue={field.value}
-                      value={field.value ?? []}
-                      disabled={field.disabled}
-                      name={field.name}
-                      ref={field.ref}
-                      options={tagOptions}
-                      onValueChange={field.onChange}
-                      placeholder="e.g. nature, sunset"
-                    />
-                  )}
+                  <MultiSelect
+                    defaultValue={field.value ?? []}
+                    value={field.value ?? []}
+                    disabled={field.disabled}
+                    name={field.name}
+                    ref={field.ref}
+                    options={tagOptions}
+                    onValueChange={field.onChange}
+                    placeholder="e.g. nature, sunset"
+                  />
                 </FormControl>
               </FormItem>
             )}

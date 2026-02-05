@@ -14,63 +14,75 @@ import {
   ContextMenuItem,
 } from "@/components/ui/context-menu";
 import { SquarePenIcon, TrashIcon } from "lucide-react";
+import { useEditPhotoId } from "@/hooks/use-query-state";
 
-export function PhotoCard({ 
-  photo, 
+export function PhotoCard({
+  photo,
   index,
-  handleDelete
-}: { photo: PhotoQuery, index: number, handleDelete: (id: string) => void }) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const { data } =  authClient.useSession()
+  handleDelete,
+  onClick
+}: {
+  photo: PhotoQuery,
+  index: number,
+  handleDelete: (id: string) => void,
+  onClick?: () => void
+}) {
+  const [, setEditPhotoId] = useEditPhotoId();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const { data } = authClient.useSession()
   const isAdmin = data?.user?.role === "admin";
   return (
     <ContextMenu>
       <ContextMenuTrigger>
         <motion.div
+          layoutId={photo.id}
+          onClick={onClick}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: (index % 3) * 0.1 }} // 错开每一列的出现时间
+          transition={{
+            opacity: { duration: 0.4, delay: (index % 3) * 0.1 },
+            y: { duration: 0.4, delay: (index % 3) * 0.1 },
+            layout: { duration: 0.2, ease: "easeInOut" }, // layout 动画不需要 delay
+          }}
           viewport={{ once: true }} // 只在第一次滑入时触发动画
+          onLayoutAnimationStart={() => setIsAnimating(true)}
+          onLayoutAnimationComplete={() => setIsAnimating(false)}
           className={cn(
-            "group relative overflow-hidden rounded-xl border bg-card",
-            // photo.isVertical ? "md:row-span-2" : "md:col-span-2"
+            "group relative overflow-hidden rounded-xl border bg-card mb-4 break-inside-avoid"
           )}
+          style={{ zIndex: isAnimating ? 50 : 0, willChange: "transform" }} // 动画进行时 zIndex 提升
+          whileHover={{ zIndex: 1 }} // hover 时 zIndex 提升 (可选)
         >
 
-          {photo.blurbase64 && <div
-            className="absolute inset-0 z-0 scale-110 blur-2xl"
+          {/* {photo.blurbase64 && <div
+            className="absolute inset-0 z-0 scale-110"
             style={{
               backgroundImage: `url(${base64ToDataURL(photo.blurbase64)})`,
               backgroundSize: 'cover',
-              filter: 'blur(20px)',
               opacity: isLoaded ? 0 : 1, // 加载完成后隐藏背景
               transition: 'opacity 0.6s ease-in-out'
             }}
-          />}
+          />} */}
 
           <Image
             src={photo.url}
             alt={photo.title || "image"}
-            className="w-full h-full object-cover"
+            className="w-full h-auto object-cover"
             width={photo.width}
             height={photo.height}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading={index < 6 ? "eager" : "lazy"}
-            onLoad={() => setIsLoaded(true)}
             priority={index < 3}
             placeholder={photo.blurbase64 ? "blur" : "empty"}
             blurDataURL={photo.blurbase64 ? base64ToDataURL(photo.blurbase64) : undefined}
           />
-          {/* <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
-        {photo.location}
-        <br />
-        {photo.url}
-      </div> */}
         </motion.div>
       </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
-          <ContextMenuItem disabled={!isAdmin} variant="default" onClick={() => {}}>
+          <ContextMenuItem disabled={!isAdmin} variant="default" onClick={() => {
+            setEditPhotoId(photo.id)
+          }}>
             <SquarePenIcon />
             Edit
           </ContextMenuItem>

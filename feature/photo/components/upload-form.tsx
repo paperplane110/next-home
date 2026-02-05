@@ -9,7 +9,7 @@ import { base64ToDataURL, cn } from "@/lib/utils"
 import imageCompression from "browser-image-compression"
 import { upload } from "@vercel/blob/client"
 import { checkImageDuplicateAction, insertOneImageAction } from "@/feature/photo/actions"
-import { photoUploadFormSchema, type PhotoUploadForm, PhotoInsert } from "@/drizzle/schema"
+import { photoUploadFormSchema, type PhotoUploadForm as PhotoUploadFormType, PhotoInsert } from "@/drizzle/schema"
 import { getTagsAction } from "@/feature/tag/actions"
 import { useFileUpload } from "@/hooks/use-file-upload"
 
@@ -108,7 +108,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
   }
   const [imageShapeInfo, setImageShapeInfo] = useState(defaultImageShapeInfo)
 
-  const form = useForm<PhotoUploadForm>({
+  const form = useForm<PhotoUploadFormType>({
     resolver: zodResolver(photoUploadFormSchema),
     defaultValues: {
       title: "",
@@ -132,7 +132,7 @@ export default function PhotoUploadForm({ onSuccess }: { onSuccess: () => void }
     }
   }
 
-  const onSubmit = async (data: PhotoUploadForm) => {
+  const onSubmit = async (data: PhotoUploadFormType) => {
     // 1. set isUploading to true
     setIsUploading(true)
 

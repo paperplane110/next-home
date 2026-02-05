@@ -13,17 +13,14 @@ export const MusicPlayerCard = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const isMobile = useMedia("(max-width: 768px)", true)
   const songList = [
-    "Guess Who I Saw Today",
-    "The Risk",
-    "May Ninth",
+    "Mark's Theme",
     "Manchild",
   ]
   const genreList = [
     "Blues",
-    "Pyschedelia",
     "Pop",
   ]
-  const lastUpdateDate = format(new Date("2025-10-25"), "MMMM d, yyyy")
+  const lastUpdateDate = format(new Date("2026-02-05"), "MMMM d, yyyy")
 
   const handleIframeLoad = () => {
     // 模拟加载延迟，确保加载完成后显示 iframe

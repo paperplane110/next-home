@@ -2,11 +2,11 @@
 
 import { ActionReturn } from "@/lib/types";
 import { db } from "@/lib/db";
-import { type Photo, PhotoEditForm, type PhotoQuery, type PhotoRegisterInput, photos, photoTags } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { type Photo, PhotoEditForm, type PhotoRegisterInput, photos, photoTags } from "@/drizzle/schema";
+import { and, eq, inArray } from "drizzle-orm";
 import { del } from "@vercel/blob"
 import { protectAdmin } from "@/feature/auth/server";
-import { getPhotoById, getPhotoByMd5, getPhotosService } from "./services";
+import { type PhotoQuery, getPhotoById, getPhotoByMd5, getPhotosService } from "./services";
 import { updateTag } from "next/cache";
 
 export async function checkImageDuplicateAction(
@@ -44,7 +44,7 @@ export async function checkImageDuplicateAction(
 
 export async function insertOneImageAction(
   data: PhotoRegisterInput
-): Promise<ActionReturn<Photo>> {
+): Promise<ActionReturn<PhotoQuery>> {
   try {
     await protectAdmin();
     const entry = await db.transaction(
@@ -68,7 +68,10 @@ export async function insertOneImageAction(
           await tx.insert(photoTags).values(photoTagsEntries)
         }
 
-        return entries[0]
+        return {
+          ...entries[0],
+          tags: tags ?? [],
+        }
       }
     )
 
@@ -94,7 +97,7 @@ export async function getPhotosAction(
   }
 }
 
-export async function deletePhotoAction(id: string): Promise<ActionReturn<null>> {
+export async function deletePhotoAction(id: string): Promise<ActionReturn<PhotoQuery>> {
   try {
     await protectAdmin();
 
@@ -113,7 +116,7 @@ export async function deletePhotoAction(id: string): Promise<ActionReturn<null>>
     // revalidate cache
     updateTag("photos");
 
-    return { success: true, data: null };
+    return { success: true, data: photo };
   } catch (e) {
     console.error(e)
     return { success: false, data: "Failed to delete photo" };
@@ -133,16 +136,37 @@ export async function updatePhotoAction(
       throw new Error(`Photo not found, id: ${id}`)
     }
 
-    // update photo info in neon
-    const entry = await db.update(photos)
-      .set(data)
-      .where(eq(photos.id, id))
-      .returning()
+    const result = await db.transaction(async (tx) => {
+      // update photo info in neon
+      const {tags: newTags, ...photoData} = data;
+      const entry = await tx.update(photos)
+        .set(photoData)
+        .where(eq(photos.id, id))
+        .returning()
+      
+      // update photoTags
+      if (newTags) {
+        const oldTags = photo.tags;
+        const tagToCreate = newTags.filter((tagId) => !oldTags.includes(tagId));
+        const tagToDelete = oldTags.filter((tagId) => !newTags.includes(tagId));
+        // delete photo_tags
+        if (tagToDelete.length > 0) {
+          await tx.delete(photoTags).where(and(eq(photoTags.photoId, id), inArray(photoTags.tagId, tagToDelete)));
+        }
+        // create photo_tags
+        if (tagToCreate.length > 0) {
+          const photoTagsEntries = tagToCreate.map((tagId) => {
+            return {
+              photoId: id,
+              tagId,
+            }
+          })
+          await tx.insert(photoTags).values(photoTagsEntries)
+        }
+      }
 
-    const tags = await db.select({
-      value: photoTags.tagId,
-    }).from(photoTags).where(eq(photoTags.photoId, id))
-    const result = {...entry[0], tags: tags.map((t) => t.value)};
+      return {...entry[0], tags: newTags ?? photo.tags};
+    })
 
     // revalidate cache
     updateTag("photos");
