@@ -135,3 +135,7 @@
 ul {
   list-style: disc inside;
 }
+
+strong {
+  @apply font-semibold text-accent-foreground;
+}

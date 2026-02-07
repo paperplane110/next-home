@@ -5,7 +5,6 @@ import { useMedia } from "react-use";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,

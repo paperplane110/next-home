@@ -31,6 +31,7 @@ export function PhotoCard({
   const [isAnimating, setIsAnimating] = useState(false);
   const { data } = authClient.useSession()
   const isAdmin = data?.user?.role === "admin";
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>

@@ -14,6 +14,7 @@ import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { PhotoEditDialog } from "@/feature/photo/components/edit-dialog";
+import { base64ToDataURL } from "@/lib/utils";
 
 
 export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] }) {
@@ -126,13 +127,18 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
             transition={{ backgroundColor: { duration: 0.25 } }}
             exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
             onClick={() => setSelectedPhoto(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 cursor-zoom-out"
           >
             <motion.div
               layoutId={selectedPhoto.id}
               transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
-              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center bg-card z-50"
-              style={{ willChange: "transform" }}
+              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center bg-card z-50 cursor-default"
+              style={{
+                willChange: "transform",
+                backgroundImage: selectedPhoto.blurbase64 ? `url(${base64ToDataURL(selectedPhoto.blurbase64)})` : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <Image
@@ -143,6 +149,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
                 className="max-h-[90vh] w-auto object-contain rounded-lg"
                 priority
                 sizes="90vw"
+                blurDataURL={selectedPhoto.blurbase64 ? base64ToDataURL(selectedPhoto.blurbase64) : undefined}
               />
             </motion.div>
           </motion.div>
