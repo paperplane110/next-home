@@ -94,7 +94,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 mx-2">
       <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
         {photos.map((photo, index) => (
           <PhotoCard
@@ -122,17 +122,18 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
-            initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-            animate={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
-            transition={{ backgroundColor: { duration: 0.25 } }}
-            exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+            key="backdrop"
+            initial={{ backgroundColor: "rgba(0, 0, 0, 0)", backdropFilter: "blur(0px)" }}
+            animate={{ backgroundColor: "rgba(0, 0, 0, 0.8)", backdropFilter: "blur(10px)" }}
+            exit={{ backgroundColor: "rgba(0, 0, 0, 0)", backdropFilter: "blur(0px)" }}
+            transition={{ duration: 0.25 }}
             onClick={() => setSelectedPhoto(null)}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 cursor-zoom-out"
           >
             <motion.div
               layoutId={selectedPhoto.id}
               transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
-              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center bg-card z-50 cursor-default"
+              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center z-50 cursor-default"
               style={{
                 willChange: "transform",
                 backgroundImage: selectedPhoto.blurbase64 ? `url(${base64ToDataURL(selectedPhoto.blurbase64)})` : 'none',

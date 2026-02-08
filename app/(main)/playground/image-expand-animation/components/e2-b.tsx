@@ -1,8 +1,9 @@
 "use client"
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { base64ToDataURL, cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "motion/react";
 import { PhotoQuery } from "@/drizzle/schema";
+import Image from "next/image";
 
 const photos = [
   { "id": "51ad9e09-3f2a-4d41-b45d-078e7fa52424", "title": "Daybreak", "creator": "Parrish", "description": "", "location": "", "capturedAt": "1922", "url": "https://neul1shzddwvm3wd.public.blob.vercel-storage.com/Daybreak_by_Parrish_%281922%29_%E9%BA%A6%E7%94%B0%E8%89%BA%E6%9C%AF%2Bnbfox.com-yNSWs5iepAhSNVBopevIHGdtOO5NXo.webp", "pathname": "Daybreak_by_Parrish_(1922)_麦田艺术+nbfox.com-yNSWs5iepAhSNVBopevIHGdtOO5NXo.webp", "contentType": "image/webp", "size": 1285162, "width": 3463, "height": 1999, "aspectRatio": "1.73", "isVertical": false, "md5": "44eda67c7fd313f6e3648cb888b7d11e", "blurbase64": "EwgKDIJCiHeGd5eweXegknYOtg==", "priority": 0, "createdAt": "2026-02-04 12:12:24.742052", "updatedAt": "2026-02-04 12:12:24.742052", "tags": ["b85f5c5f-5426-4987-89f4-d034b66e0530"] },
@@ -13,11 +14,14 @@ const photos = [
 
 export function Experiment2B() {
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoQuery | null>(null)
+  const maxWidthConstraint = "70vw"
+  const maxHeightConstraint = "90vh"
 
   useEffect(() => {
     if (selectedPhoto) {
       const listener = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
+          e.preventDefault()  // to prevent exit fullscreen mode for FireFox
           setSelectedPhoto(null);
         }
       }
@@ -28,92 +32,104 @@ export function Experiment2B() {
     }
   }, [selectedPhoto])
 
-
-  // useEffect(() => {
-  //   const {width, height} = useWindowSize();
-
-  // })
-
   return (
     <>
-      <h3 className="font-bold mt-8">§ E2-B Remote URL</h3>
+      <h3 className="font-bold mt-8">§ E2-B: Remote URL</h3>
       <div className="mt-8 text-sm text-muted-foreground space-y-4">
+        <p>In this experiment, we use <code>motion.div</code> as a wrapper for <code>Image</code>
+          to achieve the expand animation and automatic image optimization from next/image simultaneously.
+        </p>
+        <p>Note that to prevent flickering or distortion during layout animation.
+          <strong>Do not use styles like <code>w-auto</code> or <code>h-auto</code> for the <code>Image</code> component.</strong></p>
 
+        <p>So, I first calculate the <strong>exact values</strong> of the image&apos;s <code>width</code> and <code>height</code>,
+          and then set them directly on the <code>Image</code> component&apos;s style property.</p>
       </div>
-      <div className="relative columns-1 sm:columns-2 gap-4 mt-8 border border-dashed border-gray-300 rounded-2xl p-4">
+      <div className="relative columns-1 sm:columns-2 gap-4 mt-8 border border-dashed border-gray-300 rounded-xl p-4">
         {photos.map((photo) => (
           <div key={photo.id} className="w-full h-full">
-            <motion.img
+            <motion.div
               layoutId={photo.id}
-              src={photo.url}
-              alt={photo.id}
-              transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
+              transition={{ layout: { type: "spring", stiffness: 380, damping: 40 } }}
               className={cn(
-                "flex items-center justify-center text-2xl",
+                "flex items-center justify-center",
                 "w-full h-full mb-4",
-                "rounded-2xl select-none",
+                "rounded-xl select-none",
               )}
               onClick={() => setSelectedPhoto(photo)}
-            ></motion.img>
+            >
+              <Image
+                src={photo.url}
+                alt={photo.title}
+                width={photo.width}
+                height={photo.height}
+                className="w-full h-full object-cover rounded-xl"
+                priority
+                sizes="70vw"
+                blurDataURL={photo.blurbase64 ? base64ToDataURL(photo.blurbase64) : undefined}
+              />
+            </motion.div>
           </div>
         ))}
         <AnimatePresence>
           {selectedPhoto && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              key="backdrop"
+              initial={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
+              }}
+              animate={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(10px)"
+              }}
+              exit={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               onClick={() => setSelectedPhoto(null)}
               className="fixed inset-0 z-50 flex items-center justify-start bg-black/50 backdrop-blur-sm select-none"
             >
-              <motion.img
-                layoutId={selectedPhoto.id}
-                transition={{ layout: { type: "spring", stiffness: 380, damping: 30 } }}
-                src={selectedPhoto.url}
-                alt={selectedPhoto.id}
-                width={selectedPhoto.width}
-                height={selectedPhoto.height}
-                className={cn(
-                  "object-cover ml-[10vw]",
-                  "max-w-[60%] max-h-[90%] w-auto h-auto rounded-2xl select-none"
-                )}
-              />
               <motion.div
+                layoutId={selectedPhoto.id}
+                transition={{ layout: { type: "spring", stiffness: 380, damping: 40 } }}
+                className="relative flex items-center justify-center z-50 cursor-default"
+              >
+                <Image
+                  src={selectedPhoto.url}
+                  alt={selectedPhoto.title}
+                  width={selectedPhoto.width}
+                  height={selectedPhoto.height}
+                  className={cn(
+                    "ml-10 object-contain rounded-xl"
+                  )}
+                  style={{
+                    // 宽度 = 取 (宽度上限) 和 (基于高度上限算出的宽度) 中的最小值
+                    width: `min(${maxWidthConstraint}, calc(${maxHeightConstraint} * ${selectedPhoto.aspectRatio}))`,
+                    // 高度 = 取 (高度上限) 和 (基于宽度上限算出的高度) 中的最小值
+                    height: `min(${maxHeightConstraint}, calc(${maxWidthConstraint} / ${selectedPhoto.aspectRatio}))`,
+                  }}
+                  priority
+                  sizes="70vw"
+                  blurDataURL={selectedPhoto.blurbase64 ? base64ToDataURL(selectedPhoto.blurbase64) : undefined}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, translateX: "50%" }}
+                animate={{ opacity: 1, translateX: "0" }}
+                exit={{ opacity: 0, translateX: "50%" }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="text-white ml-16 border-l border-white pl-8"
               >
                 <div className="text-2xl font-medium"><b>{selectedPhoto.title}</b></div>
                 <div className="mt-4">
                   <i>{!selectedPhoto.creator?.includes("Tianyu") && selectedPhoto.creator}</i>
                   {selectedPhoto.location && <div>{selectedPhoto.location}</div>}
-                {selectedPhoto.description && <div className="mt-4">{selectedPhoto.description}</div>}
-                <div>{selectedPhoto.capturedAt}</div>
+                  {selectedPhoto.description && <div className="mt-4">{selectedPhoto.description}</div>}
+                  <div>{selectedPhoto.capturedAt}</div>
                 </div>
               </motion.div>
-              {/* <div className="text-white ml-16 border-l border-white pl-8">
-                <div className="text-2xl font-semibold"><b>{selectedPhoto.title}</b></div>
-                <div className="mt-4">
-                  <span className="font-bold text-sm">ARTIST</span><br/><i>{selectedPhoto.creator}</i>
-                </div>
-                {selectedPhoto.description && <div className="mt-4">{selectedPhoto.description}</div>}
-                <div className="mt-4"><span className="font-bold text-sm">DATE</span><br/>{selectedPhoto.capturedAt}</div>
-              </div> */}
-              {/* <motion.div
-                layoutId={selectedBox}
-                // transition={{ layout: { type: "spring", stiffness: 380, damping: 30}}}
-                className={cn("flex items-center justify-center",
-                  "text-2xl max-w-[80%] max-h-[80%] rounded-2xl"
-                )}
-              >
-                <Image
-                  src={photos.find((photo) => photo.id === selectedBox)!.url}
-                  alt={selectedBox}
-                  width={photos.find((photo) => photo.id === selectedBox)!.width}
-                  height={photos.find((photo) => photo.id === selectedBox)!.height}
-                  className={cn(
-                    "object-cover rounded-2xl"
-                  )}
-                />
-              </motion.div> */}
             </motion.div>
           )}
         </AnimatePresence>

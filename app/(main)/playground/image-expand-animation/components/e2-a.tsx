@@ -83,11 +83,22 @@ export function Experiment2A() {
         <AnimatePresence>
           {selectedBox && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              key="backdrop"
+              initial={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
+              }}
+              animate={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(10px)"
+              }}
+              exit={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               onClick={() => setSelectedBox(null)}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center"
             >
               <motion.img
                 layoutId={selectedBox}
@@ -96,8 +107,7 @@ export function Experiment2A() {
                 transition={{ layout: { type: "spring", stiffness: 380, damping: 30 } }}
                 className={cn(
                   "flex items-center justify-center object-cover",
-                  "text-2xl max-w-[90%] max-h-[90%] rounded-2xl",
-                  boxesInfo.find((box) => box.id === selectedBox)!.color
+                  "text-2xl max-w-[90%] max-h-[90%] rounded-2xl"
                 )}
               >
                 {/* {selectedBox} */}

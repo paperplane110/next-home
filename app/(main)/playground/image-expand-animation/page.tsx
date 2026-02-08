@@ -2,7 +2,7 @@
 import { Experiment1 } from "./components/e1";
 import { Experiment2A } from "./components/e2-a";
 import { Experiment2B } from "./components/e2-b";
-import { Experiment4 } from "./components/e4";
+import { Experiment2C } from "./components/e2-c";
 
 export default function ImageExpandAnimationPage() {
   return (
@@ -21,10 +21,8 @@ export default function ImageExpandAnimationPage() {
         <Experiment2A />
         <hr className="w-full my-8" />
         <Experiment2B />
-      </div>
-      <div className="subsection mt-16">
-        <h2 className="font-bold">Experiment 4: Multi elements layout animation</h2>
-        <Experiment4 />
+        <hr className="w-full my-8" />
+        <Experiment2C />
       </div>
     </div>
   )
