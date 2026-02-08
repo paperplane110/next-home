@@ -112,6 +112,7 @@ export function Experiment2B() {
                   }}
                   priority
                   sizes="70vw"
+                  placeholder="blur"
                   blurDataURL={selectedPhoto.blurbase64 ? base64ToDataURL(selectedPhoto.blurbase64) : undefined}
                 />
               </motion.div>
