@@ -45,7 +45,15 @@ export default function Playground() {
     {
       name: "Everything about forms",
       path: "/everything-about-forms",
-    }
+    },
+    {
+      name: "Experiment with Layout Animation",
+      path: "/image-expand-animation",
+    },
+    // {
+    //   name: "Animations.Dev",
+    //   path: "/animations-dev",
+    // },
   ]
   return (
     <div className="section">

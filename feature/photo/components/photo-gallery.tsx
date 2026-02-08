@@ -14,6 +14,7 @@ import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { PhotoEditDialog } from "@/feature/photo/components/edit-dialog";
+import { base64ToDataURL } from "@/lib/utils";
 
 
 export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] }) {
@@ -25,6 +26,9 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
 
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoQuery | null>(null);
   const lenis = useLenis();
+
+  const maxWidthConstraint = "70vw"
+  const maxHeightConstraint = "90vh"
 
   useEffect(() => {
     if (selectedPhoto) {
@@ -92,8 +96,10 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
     }
   };
 
+  const isOwnPhoto = (selectedPhoto: PhotoQuery) => !selectedPhoto.creator?.includes("Tianyu")
+
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 mx-2">
       <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
         {photos.map((photo, index) => (
           <PhotoCard
@@ -119,35 +125,65 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
       </div>
 
       <AnimatePresence>
-        {selectedPhoto && (
-          <motion.div
-            initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-            animate={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
-            transition={{ backgroundColor: { duration: 0.25 } }}
-            exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-            onClick={() => setSelectedPhoto(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
-          >
+          {selectedPhoto && (
             <motion.div
-              layoutId={selectedPhoto.id}
-              transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
-              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center bg-card z-50"
-              style={{ willChange: "transform" }}
-              onClick={(e) => e.stopPropagation()}
+              key="backdrop"
+              initial={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
+              }}
+              animate={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(10px)"
+              }}
+              exit={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              onClick={() => setSelectedPhoto(null)}
+              className="fixed inset-0 z-50 flex items-center justify-start select-none"
             >
-              <Image
-                src={selectedPhoto.url}
-                alt={selectedPhoto.title}
-                width={selectedPhoto.width}
-                height={selectedPhoto.height}
-                className="max-h-[90vh] w-auto object-contain rounded-lg"
-                priority
-                sizes="90vw"
-              />
+              <motion.div
+                layoutId={selectedPhoto.id}
+                transition={{ layout: { type: "spring", stiffness: 380, damping: 40 } }}
+                className="relative flex items-center justify-center z-50 cursor-default"
+              >
+                <Image
+                  src={selectedPhoto.url}
+                  alt={selectedPhoto.title}
+                  width={selectedPhoto.width}
+                  height={selectedPhoto.height}
+                  className="ml-10 object-contain rounded-xl"
+                  style={{
+                    // 宽度 = 取 (宽度上限) 和 (基于高度上限算出的宽度) 中的最小值
+                    width: `min(${maxWidthConstraint}, calc(${maxHeightConstraint} * ${selectedPhoto.aspectRatio}))`,
+                    // 高度 = 取 (高度上限) 和 (基于宽度上限算出的高度) 中的最小值
+                    height: `min(${maxHeightConstraint}, calc(${maxWidthConstraint} / ${selectedPhoto.aspectRatio}))`,
+                  }}
+                  priority
+                  sizes="70vw"
+                  placeholder="blur"
+                  blurDataURL={selectedPhoto.blurbase64 ? base64ToDataURL(selectedPhoto.blurbase64) : undefined}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, translateX: "50%" }}
+                animate={{ opacity: 1, translateX: "0", transition: { duration: 0.3, ease: "easeInOut" } }}
+                exit={{ opacity: 0, translateX: "30%", transition: { duration: 0.1, ease: "easeInOut" } }}
+                className="text-white ml-16 border-l border-white pl-8"
+              >
+                <div className="text-2xl font-medium"><b>{selectedPhoto.title}</b></div>
+                <div className="mt-4">
+                  <i>{isOwnPhoto(selectedPhoto) && selectedPhoto.creator}</i>
+                  {selectedPhoto.location && <div>{selectedPhoto.location}</div>}
+                  {selectedPhoto.description && <div className="mt-4">{selectedPhoto.description}</div>}
+                  <div>{selectedPhoto.capturedAt}</div>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
       <PhotoEditDialog />
     </div>
   );

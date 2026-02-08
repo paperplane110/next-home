@@ -132,6 +132,16 @@
   }
 }
 
+ol {
+  list-style: decimal;
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
 ul {
   list-style: disc inside;
+}
+
+strong {
+  @apply font-semibold text-accent-foreground;
 }
