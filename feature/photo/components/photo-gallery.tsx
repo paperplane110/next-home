@@ -96,6 +96,8 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
     }
   };
 
+  const isOwnPhoto = (selectedPhoto: PhotoQuery) => !selectedPhoto.creator?.includes("Tianyu")
+
   return (
     <div className="space-y-12 mx-2">
       <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
@@ -140,7 +142,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
               }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
               onClick={() => setSelectedPhoto(null)}
-              className="fixed inset-0 z-50 flex items-center justify-start bg-black/50 backdrop-blur-sm select-none"
+              className="fixed inset-0 z-50 flex items-center justify-start select-none"
             >
               <motion.div
                 layoutId={selectedPhoto.id}
@@ -173,7 +175,7 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
               >
                 <div className="text-2xl font-medium"><b>{selectedPhoto.title}</b></div>
                 <div className="mt-4">
-                  <i>{!selectedPhoto.creator?.includes("Tianyu") && selectedPhoto.creator}</i>
+                  <i>{isOwnPhoto(selectedPhoto) && selectedPhoto.creator}</i>
                   {selectedPhoto.location && <div>{selectedPhoto.location}</div>}
                   {selectedPhoto.description && <div className="mt-4">{selectedPhoto.description}</div>}
                   <div>{selectedPhoto.capturedAt}</div>
