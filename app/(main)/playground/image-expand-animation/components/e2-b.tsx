@@ -34,16 +34,16 @@ export function Experiment2B() {
 
   return (
     <>
-      <h3 className="font-bold mt-8">§ E2-B: Remote URL</h3>
-      <div className="mt-8 text-sm text-muted-foreground space-y-4">
-        <p>In this experiment, we use <code>motion.div</code> as a wrapper for <code>Image</code>
+      <h3 className="font-bold mt-8">§ E2-B: More Pratical - Image with Remote URL</h3>
+      <div className="mt-8 space-y-6 [&>p+ol]:-mt-4 text-base text-muted-foreground">
+        <p>In this experiment, I used <code>motion.div</code> as a wrapper for <code>Image</code>
           to achieve the expand animation and automatic image optimization from next/image simultaneously.
         </p>
-        <p>Note that to prevent flickering or distortion during layout animation.
-          <strong>Do not use styles like <code>w-auto</code> or <code>h-auto</code> for the <code>Image</code> component.</strong></p>
+        <p>Note that to prevent flickering or distortion during layout animation,
+          <strong>you should avoid using styles like <code>w-auto</code> or <code>h-auto</code> for the <code>Image</code> component.</strong></p>
 
-        <p>So, I first calculate the <strong>exact values</strong> of the image&apos;s <code>width</code> and <code>height</code>,
-          and then set them directly on the <code>Image</code> component&apos;s style property.</p>
+        <p>Therefore, I first calculated the <strong>exact values</strong> of the image&apos;s <code>width</code> and <code>height</code>,
+          and then applied them directly on the <code>Image</code> component&apos;s <code>style</code> property.</p>
       </div>
       <div className="relative columns-1 sm:columns-2 gap-4 mt-8 border border-dashed border-gray-300 rounded-xl p-4">
         {photos.map((photo) => (
@@ -119,7 +119,7 @@ export function Experiment2B() {
                 initial={{ opacity: 0, translateX: "50%" }}
                 animate={{ opacity: 1, translateX: "0" }}
                 exit={{ opacity: 0, translateX: "50%" }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="text-white ml-16 border-l border-white pl-8"
               >
                 <div className="text-2xl font-medium"><b>{selectedPhoto.title}</b></div>

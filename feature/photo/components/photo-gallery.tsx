@@ -27,6 +27,9 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoQuery | null>(null);
   const lenis = useLenis();
 
+  const maxWidthConstraint = "70vw"
+  const maxHeightConstraint = "90vh"
+
   useEffect(() => {
     if (selectedPhoto) {
       lenis?.stop();
@@ -120,42 +123,64 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
       </div>
 
       <AnimatePresence>
-        {selectedPhoto && (
-          <motion.div
-            key="backdrop"
-            initial={{ backgroundColor: "rgba(0, 0, 0, 0)", backdropFilter: "blur(0px)" }}
-            animate={{ backgroundColor: "rgba(0, 0, 0, 0.8)", backdropFilter: "blur(10px)" }}
-            exit={{ backgroundColor: "rgba(0, 0, 0, 0)", backdropFilter: "blur(0px)" }}
-            transition={{ duration: 0.25 }}
-            onClick={() => setSelectedPhoto(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 cursor-zoom-out"
-          >
+          {selectedPhoto && (
             <motion.div
-              layoutId={selectedPhoto.id}
-              transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
-              className="relative flex max-h-[90vh] max-w-[90vw] rounded-lg items-center justify-center z-50 cursor-default"
-              style={{
-                willChange: "transform",
-                backgroundImage: selectedPhoto.blurbase64 ? `url(${base64ToDataURL(selectedPhoto.blurbase64)})` : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+              key="backdrop"
+              initial={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
               }}
-              onClick={(e) => e.stopPropagation()}
+              animate={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(10px)"
+              }}
+              exit={{
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                backdropFilter: "blur(0px)"
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              onClick={() => setSelectedPhoto(null)}
+              className="fixed inset-0 z-50 flex items-center justify-start bg-black/50 backdrop-blur-sm select-none"
             >
-              <Image
-                src={selectedPhoto.url}
-                alt={selectedPhoto.title}
-                width={selectedPhoto.width}
-                height={selectedPhoto.height}
-                className="max-h-[90vh] w-auto object-contain rounded-lg"
-                priority
-                sizes="90vw"
-                blurDataURL={selectedPhoto.blurbase64 ? base64ToDataURL(selectedPhoto.blurbase64) : undefined}
-              />
+              <motion.div
+                layoutId={selectedPhoto.id}
+                transition={{ layout: { type: "spring", stiffness: 380, damping: 40 } }}
+                className="relative flex items-center justify-center z-50 cursor-default"
+              >
+                <Image
+                  src={selectedPhoto.url}
+                  alt={selectedPhoto.title}
+                  width={selectedPhoto.width}
+                  height={selectedPhoto.height}
+                  className="ml-10 object-contain rounded-xl"
+                  style={{
+                    // 宽度 = 取 (宽度上限) 和 (基于高度上限算出的宽度) 中的最小值
+                    width: `min(${maxWidthConstraint}, calc(${maxHeightConstraint} * ${selectedPhoto.aspectRatio}))`,
+                    // 高度 = 取 (高度上限) 和 (基于宽度上限算出的高度) 中的最小值
+                    height: `min(${maxHeightConstraint}, calc(${maxWidthConstraint} / ${selectedPhoto.aspectRatio}))`,
+                  }}
+                  priority
+                  sizes="70vw"
+                  blurDataURL={selectedPhoto.blurbase64 ? base64ToDataURL(selectedPhoto.blurbase64) : undefined}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, translateX: "50%" }}
+                animate={{ opacity: 1, translateX: "0", transition: { duration: 0.3, ease: "easeInOut" } }}
+                exit={{ opacity: 0, translateX: "30%", transition: { duration: 0.1, ease: "easeInOut" } }}
+                className="text-white ml-16 border-l border-white pl-8"
+              >
+                <div className="text-2xl font-medium"><b>{selectedPhoto.title}</b></div>
+                <div className="mt-4">
+                  <i>{!selectedPhoto.creator?.includes("Tianyu") && selectedPhoto.creator}</i>
+                  {selectedPhoto.location && <div>{selectedPhoto.location}</div>}
+                  {selectedPhoto.description && <div className="mt-4">{selectedPhoto.description}</div>}
+                  <div>{selectedPhoto.capturedAt}</div>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
       <PhotoEditDialog />
     </div>
   );

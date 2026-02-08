@@ -45,18 +45,18 @@ export function Experiment2A() {
   return (
     <>
       <h3 className="font-bold mt-8">§ E2-A</h3>
-      <div className="mt-8 text-sm text-muted-foreground space-y-4">
+      <div className="mt-8 space-y-6 [&>p+ol]:-mt-4 text-base text-muted-foreground">
         <p>
-          In this experiment, I use <code>AnimatePresence</code> and <code>layoutId</code>.
+          In this experiment, I implemented an image expansion animation using <code>AnimatePresence</code> and <code>layoutId</code>.
         </p>
         <p>
           Inside <code>AnimatePresence</code>, there is a semi-transparent black mask containing a box
-          that shares the same <code>layoutId</code> as the selected box.
+          that shares the same <code>layoutId</code> as the selected picture.
         </p>
         <p>
           I use a <strong>multi-column layout</strong> to display pictures while preserving their original aspect ratios.
           For the image component, I used <code>motion.img</code> instead of <code>Image</code> from <code>next/image</code>.
-          Additionally, the image URL is a local file path, <strong>not a remote URL</strong>.
+          Additionally, <strong>the image URL is a local file path, not a remote URL</strong>.
         </p>
         <p>
           This seems to have solved the bugs in E1-C.

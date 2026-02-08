@@ -33,23 +33,25 @@ export function Experiment1() {
 
 
       <h3 className="font-bold mt-8">§ E1-A</h3>
-      <p className="mt-4 text-sm text-muted-foreground">
-        In this experiment, I only used <code>layout</code> animation. When you click on a box,
-        the new layout css will be applied to the box: from grid position to absolute position.
-      </p>
-      <p className="mt-4 text-sm text-muted-foreground">
-        But there are some problems:
-        Also, the text in the box will jump from a small size to a large size when the box is expanding.
-        That is because of <code>motion</code> use scale to animate the layout change.
-      </p>
-      <ul className="mt-2 text-sm text-muted-foreground">
-        <li>
-          The other boxed will fill the empty position in the grid, which is not expected.
-        </li>
-        <li>
-          The text in the box will jump from a small size to a large size when the box is expanding.
-        </li>
-      </ul>
+      <div className="mt-4 space-y-6 [&>p+ul]:-mt-4 text-base text-muted-foreground">
+        <p>
+          In this experiment, I only used <code>layout</code> animation. When you click on a box,
+          the new layout css will be applied to the box: from grid position to absolute position.
+        </p>
+        <p>
+          But there are some problems:
+          Also, the text in the box will jump from a small size to a large size when the box is expanding.
+          That is because of <code>motion</code> use scale to animate the layout change.
+        </p>
+        <ul className="mt-2">
+          <li>
+            The other boxed will fill the empty position in the grid, which is not expected.
+          </li>
+          <li>
+            The text in the box will jump from a small size to a large size when the box is expanding.
+          </li>
+        </ul>
+      </div>
       <div className="relative grid grid-cols-2 mt-8 h-96 border-2 border-dashed border-blue-400 rounded-2xl p-2 gap-4">
         {boxesInfo.map((box) => (
           <motion.div
@@ -77,14 +79,16 @@ export function Experiment1() {
 
 
       <h3 className="font-bold mt-8">§ E1-B</h3>
-      <p className="mt-8 text-sm text-muted-foreground">
-        To fix the first problem, I wrapped the <code>motion.div</code> in a <code>div</code> as a grid cell slot.
-        So the <code>div</code> will fill the empty position when the box is selected.
-      </p>
-      <p className="mt-4 text-sm text-muted-foreground">
-        To keep the size of the text in the box, I wrapped the text with <code>motion.span</code>
-        , defined the <code>layout</code> attribute and same transition on it.
-      </p>
+      <div className="mt-4 space-y-6 [&>p+ul]:-mt-4 text-base text-muted-foreground">
+        <p>
+          To fix the first problem, I wrapped the <code>motion.div</code> in a <code>div</code> as a grid cell slot.
+          So the <code>div</code> will fill the empty position when the box is selected.
+        </p>
+        <p>
+          To keep the size of the text in the box, I wrapped the text with <code>motion.span</code>
+          , defined the <code>layout</code> attribute and same transition on it.
+        </p>
+      </div>
       <div className="relative grid grid-cols-2 mt-8 h-96 border-2 border-dashed border-blue-400 rounded-2xl p-2 gap-4">
         {boxesInfo.map((box) => (
           <div
@@ -118,35 +122,37 @@ export function Experiment1() {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-sm text-muted-foreground">
+      <p className="mt-4 text-base text-muted-foreground">
         Now the layout animation is smooth and the text size is kept.
       </p>
       <hr className="w-full my-8" />
 
 
       <h3 className="font-bold mt-8">§ E1-C</h3>
-      <p className="mt-4 text-sm text-muted-foreground">
-        Try to apply the layout animation to the image in the box.
-      </p>
-      <ul className="mt-2 text-sm text-muted-foreground">
-        <li>
-          Use <code>motion.img</code> with local image url.
-        </li>
-        <li>
-          Add a black blur mask as background when the box is selected.
-        </li>
-      </ul>
-      <p className="mt-4 text-sm text-muted-foreground">
-        Some bugs:
-      </p>
-      <ul className="mt-2 text-sm text-muted-foreground">
-        <li>
-          While image is exiting, the <code>zIndex</code> will jump to the default value, so the later picture will be on top.
-        </li>
-        <li>
-          The background blur mask&apos;s exit animation is ignored, because it&apos;s DOM has been removed immediately.
-        </li>
-      </ul>
+      <div className="mt-4 space-y-6 [&>p+ul]:-mt-4 text-base text-muted-foreground">
+        <p>
+          Try to apply the layout animation to the image in the box.
+        </p>
+        <ul className="mt-2">
+          <li>
+            Use <code>motion.img</code> with local image url.
+          </li>
+          <li>
+            Add a black blur mask as background when the box is selected.
+          </li>
+        </ul>
+        <p>
+          Some bugs:
+        </p>
+        <ul className="mt-2">
+          <li>
+            While image is exiting, the <code>zIndex</code> will jump to the default value, so the later picture will be on top.
+          </li>
+          <li>
+            The background blur mask&apos;s exit animation is ignored, because it&apos;s DOM has been removed immediately.
+          </li>
+        </ul>
+      </div>
       <div className="relative grid grid-cols-2 mt-8 h-96 p-2 gap-4">
         {boxesInfo.map((box) => (
           <div
@@ -201,10 +207,10 @@ export function Experiment1() {
 
 
       <h3 className="font-bold mt-8">§ E1-Summary</h3>
-      <p className="mt-4 text-sm text-muted-foreground">
+      <p className="mt-4 text-base text-muted-foreground">
         Layout Animation is suitable for the case:
       </p>
-      <ul className="mt-2 text-sm text-muted-foreground">
+      <ul className="mt-2 text-base text-muted-foreground">
         <li>
           You need to animate <strong>one or a simple</strong> element.
         </li>
