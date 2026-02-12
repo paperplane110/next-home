@@ -3,6 +3,23 @@ import OuterLink from "@/components/link";
 import { type WorkExperienceProps, WorkExperience } from "@/components/work-experience";
 
 
+export const metadata = {
+  title: "About",
+  description: "Learn about Tianyu, a software engineer passionate about building things.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    type: "profile",
+    title: "About | Tianyu",
+    url: "https://tyyuan.me/about",
+    description: "Learn about Tianyu, a software engineer passionate about building things.",
+  },
+  twitter: {
+    card: "summary",
+    title: "About | Tianyu",
+    description: "Learn about Tianyu, a software engineer passionate about building things.",
+  },
+};
+
 export default function AboutPage() {
   const career: WorkExperienceProps[] = [
     {

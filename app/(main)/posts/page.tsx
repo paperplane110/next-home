@@ -1,6 +1,23 @@
 import { Suspense } from "react";
 import { PostsSection, PostsSectionSkeleton } from "./posts-section";
 
+export const metadata = {
+  title: "Posts",
+  description: "All articles and technical writing by Tianyu.",
+  alternates: { canonical: "/posts" },
+  openGraph: {
+    type: "website",
+    title: "Posts | Tianyu",
+    url: "https://tyyuan.me/posts",
+    description: "All articles and technical writing by Tianyu.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Posts | Tianyu",
+    description: "All articles and technical writing by Tianyu.",
+  },
+};
+
 export default function Posts() {
   return (
     <div className="section font-serif">

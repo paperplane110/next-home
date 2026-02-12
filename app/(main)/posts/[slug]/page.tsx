@@ -2,11 +2,40 @@ import Link from "next/link";
 import { allPosts } from "content-collections";
 import { MDXContent } from "@content-collections/mdx/react"
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { BlockQuote } from "@/components/mdx/block-quote";
 import { A } from "@/components/mdx/a";
 import { Tips } from "@/components/mdx/tips";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = allPosts.find((p) => p._meta.path === slug);
+  if (!post) {
+    return {};
+  }
+  const url = `https://tyyuan.me/posts/${slug}`;
+  return {
+    title: post.title,
+    description: post.summary,
+    alternates: { canonical: `/posts/${slug}` },
+    robots: { index: true, follow: true },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.summary,
+      url,
+      publishedTime: new Date(post.date).toISOString(),
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary,
+    },
+  };
+}
 
 function PostContent({ slug }: { slug: string }) {
   const post = allPosts.find((post) => post._meta.path === slug);
@@ -50,6 +79,21 @@ function PostContent({ slug }: { slug: string }) {
           </div>
         </div>
       </header>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: post.title,
+            description: post.summary,
+            datePublished: new Date(post.date).toISOString(),
+            author: { "@type": "Person", name: "Tianyu" },
+            mainEntityOfPage: { "@type": "WebPage", "@id": `https://tyyuan.me/posts/${slug}` },
+            keywords: post.tags.join(", "),
+          }),
+        }}
+      />
       <div className="mdx-content">
         <MDXContent 
           code={post.mdx}

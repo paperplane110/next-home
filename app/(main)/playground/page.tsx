@@ -1,54 +1,72 @@
 import Link from "next/link"
 
 export default function Playground() {
-  const routeList = [
+  const themeList = [
     {
-      name: "Node tree",
-      path: "/tree",
+      theme: "Fundamentals",
+      routeList: [
+        {
+          name: "Node Tree (Dynamic Routes)",
+          path: "/tree",
+          tags: ["framework"]
+        },
+        {
+          name: "Everything About Forms",
+          path: "/everything-about-forms",
+          tags: ["form"]
+        },
+      ]
     },
     {
-      name: "fonts",
-      path: "/fonts",
-    },
-    {
-      name: "typography",
-      path: "/typography",
-    },
-    {
-      name: "book component",
-      path: "/book-component",
-    },
-    {
-      name: "Colorful drop shadow effect on text",
-      path: "/colorful-drop-shadow-effect-on-text",
-    },
-    {
-      name: "album",
-      path: "/album",
-    },
-    {
-      name: "Folder component",
-      path: "/folder-component",
-    },
-    {
-      name: "Glossy icon",
-      path: "/glossy-icon",
-    },
-    {
-      name: "Access denied card",
-      path: "/access-denied",
-    },
-    {
-      name: "Card contraction on scroll",
-      path: "/card-contraction-on-scroll",
-    },
-    {
-      name: "Everything about forms",
-      path: "/everything-about-forms",
-    },
-    {
-      name: "Experiment with Layout Animation",
-      path: "/image-expand-animation",
+      theme: "Design & Reverse Engineering",
+      routeList: [
+        {
+          name: "Book Component",
+          path: "/book-component",
+          tags: ["css-3d"]
+        },
+        {
+          name: "Colorful Drop Shadow Effect on Text",
+          path: "/colorful-drop-shadow-effect-on-text",
+          tags: ["css-scroll"]
+        },
+        {
+          name: "Album",
+          path: "/album",
+          tags: ["layout"]
+        },
+        {
+          name: "Folder Component",
+          path: "/folder-component",
+          tags: ["css-transition"]
+        },
+        {
+          name: "Glossy Icon",
+          path: "/glossy-icon",
+          tags: ["css"]
+        },
+        {
+          name: "Access Denied Card",
+          path: "/access-denied",
+        },
+        {
+          name: "Card Contraction/Expansion on Scroll",
+          path: "/card-contraction-on-scroll",
+        },
+        {
+          name: "Experiment with Layout Animation",
+          path: "/image-expand-animation",
+        },
+        {
+          name: "Animations.Dev",
+          path: "/animations-dev",
+        },
+        {
+          name: "Artwork Label",
+          path: "/artwork-label",
+          tags: ["design"]
+        },
+      ]
     },
     // {
     //   name: "Animations.Dev",
@@ -61,16 +79,25 @@ export default function Playground() {
         <h1 className="headline font-serif font-light soft-70">Playground</h1>
       </header>
       <div className="subsection mt-16">
-        {routeList.map((route) => (
-          <div key={route.path} className="flex items-center">
-            <Link
-              href={`/playground${route.path}`}
-              className="text-sm font-medium text-gray-500 hover:text-gray-700"
-            >
-              {route.name}
-            </Link>
-          </div>
-        ))}
+        {
+          themeList.map((group) => (
+            <div key={group.theme} className="mt-8">
+              <h2 className="font-semibold text-xl">{group.theme}</h2>
+              <div className="mt-4">
+                {group.routeList.map((route) => (
+                  <div key={route.path} className="flex items-center">
+                    <Link
+                      href={`/playground${route.path}`}
+                      className="text-sm font-medium text-gray-500 hover:text-gray-700"
+                    >
+                      {route.name}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   )
