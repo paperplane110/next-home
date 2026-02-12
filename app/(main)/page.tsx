@@ -6,6 +6,23 @@ import { MusicPlayerCard } from "@/components/music-player-card";
 import { Badge } from "@/components/ui/badge";
 import { PostItem } from "@/components/post-item";
 
+export const metadata = {
+  title: "Home",
+  description: "Tianyu's blog homepage featuring writing and reading highlights.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    title: "Home | Tianyu",
+    url: "https://tyyuan.me/",
+    description: "Tianyu's blog homepage featuring writing and reading highlights.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Home | Tianyu",
+    description: "Tianyu's blog homepage featuring writing and reading highlights.",
+  },
+};
+
 export default function Home() {
   const nowYear = new Date().getFullYear();
 

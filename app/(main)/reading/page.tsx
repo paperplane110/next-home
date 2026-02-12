@@ -1,6 +1,23 @@
 import { Suspense } from "react";
 import { ReadingsSection, ReadingsSectionSkeleton } from "./readings-section";
 
+export const metadata = {
+  title: "Reading",
+  description: "Book reviews and reading notes by Tianyu.",
+  alternates: { canonical: "/reading" },
+  openGraph: {
+    type: "website",
+    title: "Reading | Tianyu",
+    url: "https://tyyuan.me/reading",
+    description: "Book reviews and reading notes by Tianyu.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Reading | Tianyu",
+    description: "Book reviews and reading notes by Tianyu.",
+  },
+};
+
 export default function Reading() {
   return (
     <div className="section font-serif">
