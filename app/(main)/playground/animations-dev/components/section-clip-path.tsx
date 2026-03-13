@@ -13,9 +13,9 @@ export function SectionClipPath() {
       <h2 className="font-bold text-2xl">
         Clip Path
       </h2>
-      <p className="cp">
+      <div className="cp">
         <code>clip-path</code> 是用剪裁的方式元素形状的变化，比如图片、Tab、背景的遮罩和展示
-      </p>
+      </div>
       <h3 className="font-bold mt-16">
         Drag to reveal
       </h3>
@@ -23,36 +23,48 @@ export function SectionClipPath() {
       <h3 className="font-bold mt-16">
         Image reveal animation
       </h3>
-      <p className="cp">
+      <div className="cp">
         <code>clip-path</code> 可以用于图片初次展示的动画，点击按钮触发图片的展示动画
-      </p>
+      </div>
       <ImageRevealAnimation />
-      <p className="cp">
-        对于只执行一次的动画，可以使用 <code>animation-fill-mode: forwards</code>，并且能够保持动画结束时的状态（即全部展现）。
-      </p>
-      <p className="cp">
-        动画刷新的实现方法是，当点击刷新按钮时，改变动画元素的 <code>key</code>，从而触发该元素的重新渲染。
-      </p>
-      <p className="cp">
-        还有一个细节，为了增添交互的感觉，为刷新按钮添加了一个旋转动画，使用相同的 cubic-bezier 曲线，实现慢-快-慢的旋转效果。
-      </p>
+      <div className="cp">
+        <p>
+          对于只执行一次的动画，可以使用 <code>animation-fill-mode: forwards</code>，并且能够保持动画结束时的状态（即全部展现）。
+        </p>
+        <p>
+          动画刷新的实现方法是，当点击刷新按钮时，改变动画元素的 <code>key</code>，从而触发该元素的重新渲染。
+        </p>
+        <p>
+          还有一个细节，为了增添交互的感觉，为刷新按钮添加了一个旋转动画，使用相同的 cubic-bezier 曲线，实现慢-快-慢的旋转效果。
+        </p>
+      </div>
       <h3 className="font-bold mt-16">
         Tabs transition
       </h3>
-      <p className="cp">
+      <div className="cp">
         <code>clip-path</code> 可以用于实现丝滑的 Tab 切换的动画。
-      </p>
+      </div>
       <TabsTransition />
-      <p className="cp">
-        主要思路是将一层绿色背景的相同 tab 区域覆盖在未激活的 tabs 上，我们称之为 <code>clip-path-container</code>，
-        并且为其设置 <code>transition: clip-path 0.3s cubic-bezier(0.77, 0, 0.175, 1)</code>
-      </p>
-      <p className="cp">当点击 Tab 时，获取激活 Tab 的左右需要截取的范围，然后将截取的参数给到 <code>clip-path-container</code>。</p>
+      <div className="cp">
+        <p>
+          主要思路是将一层绿色背景的相同 tab 区域覆盖在未激活的 tabs 上，我们称之为 <code>clip-path-container</code>，
+          并且为其设置 <code>transition: clip-path 0.3s cubic-bezier(0.77, 0, 0.175, 1)</code>
+        </p>
+        <p>当点击 Tab 时，获取激活 Tab 的左右需要截取的范围，然后将截取的参数给到 <code>clip-path-container</code>。</p>
+      </div>
       <h3 className="font-bold mt-16">Homework: Hold to delete</h3>
-      <p className="cp">
-        实现一个删除按钮，当用户点击并按住按钮时，按钮逐渐变红，松开后按钮恢复正常。
-      </p>
+      <div className="cp">
+        <p>实现一个删除按钮，当用户点击并按住按钮时，按钮逐渐变红，松开后按钮恢复正常。</p>
+      </div>
       <HoldToDelete />
+      <div className="cp">
+        <p>一些实现细节：</p>
+        <ol>
+          <li>计时使用的是 <code>setInterval()</code> 每 100ms 更新一次时间进度</li>
+          <li>按住和松开的动画 duration 不同，使用条件选择器来进行区分</li>
+          <li>为了增强交互感，为 active 状态添加一个缩放动画</li>
+        </ol>
+      </div>
     </div>
   )
 }

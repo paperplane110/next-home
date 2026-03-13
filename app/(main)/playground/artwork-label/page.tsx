@@ -1,4 +1,5 @@
 "use client"
+import { AnimatePresence, motion } from "framer-motion"
 import { useState } from "react"
 
 export default function ArtworkLabel() {
@@ -27,9 +28,9 @@ export default function ArtworkLabel() {
         <h2 className="font-bold text-2xl">Painting Label</h2>
         <p className="mt-8 space-y-6 [&>p+ol]:-mt-4 text-base text-muted-foreground">
           Label for painting, in English, one column, short version&nbsp;
-          <span 
-            className="font-medium underline cursor-pointer" 
-            onClick={() => setWithDescription(!withDescription)}>{withDescription ? "with" : "without"} description</span>.
+          <button
+            className="font-medium underline cursor-pointer"
+            onClick={() => setWithDescription(!withDescription)}>{withDescription ? "with" : "without"} description</button>.
         </p>
         <div className="mt-8 border p-8">
           <div className="font-medium text-xl">{paintingInfo.artist}</div>
@@ -50,10 +51,20 @@ export default function ArtworkLabel() {
           >{paintingInfo.title}</div>
           <div className="text-sm">{paintingInfo.createdTime}</div>
 
-          <div className="mt-4 text-sm">{paintingInfo.material}</div>
-          {withDescription && <div className="mt-4 w-[75%] text-lg leading-snug"
-            style={{ fontFamily: "var(--font-crimson-pro)" }}
-          >{paintingInfo.description}</div>}
+          <div className="my-4 text-sm">{paintingInfo.material}</div>
+          <AnimatePresence>
+            {withDescription && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="w-[75%] text-lg leading-snug"
+                style={{
+                  fontFamily: "var(--font-crimson-pro)",
+                }}
+              >{paintingInfo.description}</motion.div>
+            )}
+          </AnimatePresence>
         </div>
         <hr className="my-16" />
       </div>
