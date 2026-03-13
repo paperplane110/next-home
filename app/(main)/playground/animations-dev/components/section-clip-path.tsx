@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export function SectionClipPath() {
   return (
-    <div className="subsection mt-32">
+    <div className="subsection mt-24">
       <ClipPathIcon />
       <h2 className="font-bold text-2xl">
         Clip Path
@@ -245,8 +245,8 @@ function TabsTransition() {
     { name: "Home", icon: <HomeIcon className="w-4 h-4 " /> },
     { name: "Writing", icon: <PenLineIcon className="w-4 h-4" /> },
     { name: "Reading", icon: <BookOpenIcon className="w-4 h-4" /> },
-    { name: "About", icon: <CircleUserIcon className="w-4 h-4" /> },
-    { name: "Playground", icon: <ComponentIcon className="w-4 h-4" /> },
+    // { name: "About", icon: <CircleUserIcon className="w-4 h-4" /> },
+    // { name: "Playground", icon: <ComponentIcon className="w-4 h-4" /> },
   ]
   const [activeTab, setActiveTab] = useState(tabs[0].name)
   const [insetPercent, setInsetPercent] = useState([0, 0])
@@ -325,7 +325,7 @@ function HoldToDelete() {
     }
   }, [isHold])
   return (
-    <div className="mt-8 py-16 w-full bg-white border border-dashed border-gray-300 rounded-4xl flex flex-col items-center justify-center gap-8">
+    <div className="mt-8 content-showcase gap-8">
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 items-center">
           <p className="text-muted-foreground text-xs">Layer 1: Not Activated</p>
