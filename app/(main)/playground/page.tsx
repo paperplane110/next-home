@@ -58,20 +58,21 @@ export default function Playground() {
           path: "/image-expand-animation",
         },
         {
-          name: "Animations.Dev",
-          path: "/animations-dev",
-        },
-        {
           name: "Artwork Label",
           path: "/artwork-label",
           tags: ["design"]
         },
       ]
     },
-    // {
-    //   name: "Animations.Dev",
-    //   path: "/animations-dev",
-    // },
+    {
+      theme: "Learning",
+      routeList: [
+        {
+          name: "Animations.dev",
+          path: "/animations-dev",
+        },
+      ]
+    }
   ]
   return (
     <div className="section">

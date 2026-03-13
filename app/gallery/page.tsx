@@ -9,6 +9,7 @@ export default async function GalleryPage() {
   let error = null;
   try {
     initialPhotos = await getPhotosService(0, 6);
+    console.log(JSON.stringify(initialPhotos));
   } catch (e) {
     error = e;
   }

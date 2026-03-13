@@ -137,6 +137,14 @@ export const HelperCommand = () => {
               <span className="icon-[logos--neon-icon] size-4" />
               <span>Neon DB</span>
             </CommandItem>
+            <CommandItem
+              key="gsc"
+              onSelect={() => goToURL("https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Atyyuan.me")}
+              className="font-medium"
+            >
+              <span className="icon-[logos--google-icon] size-4" />
+              <span>Google Search Console (SEO)</span>
+            </CommandItem>
           </CommandGroup>
         </CommandList>
       </CommandDialog>
