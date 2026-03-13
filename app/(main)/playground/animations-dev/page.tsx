@@ -1,3 +1,6 @@
+import { SectionClipPath } from "./components/section-clip-path";
+import SectionKeyframeAnimation from "./components/section-keyframe-animation";
+
 export default function AnimationsDev() {
   return (
     <div className="section">
@@ -7,6 +10,8 @@ export default function AnimationsDev() {
           This page is used to experiment with layout animation.
         </p>
       </header>
+      <SectionKeyframeAnimation />
+      <SectionClipPath />
     </div>
   )
 }

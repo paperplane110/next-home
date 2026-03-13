@@ -31,7 +31,14 @@
     }
   }
 
+  .cp,
+  .content-p {
+    @apply mt-8 space-y-6 text-base text-muted-foreground;
 
+    &>p+ol {
+      margin-top: -1rem;
+    }
+  }
 
 
   /* div */

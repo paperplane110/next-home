@@ -168,9 +168,9 @@ export function PhotoGallery({ initialPhotos }: { initialPhotos: PhotoQuery[] })
                 />
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, translateX: "50%" }}
-                animate={{ opacity: 1, translateX: "0", transition: { duration: 0.3, ease: "easeInOut" } }}
-                exit={{ opacity: 0, translateX: "30%", transition: { duration: 0.1, ease: "easeInOut" } }}
+                initial={{ opacity: 0, translateX: "50%", filter: "blur(10px)" }}
+                animate={{ opacity: 1, translateX: "0", filter: "blur(0px)", transition: { duration: 0.3, ease: "easeInOut" } }}
+                exit={{ opacity: 0, translateX: "30%", filter: "blur(10px)", transition: { duration: 0.1, ease: "easeInOut" } }}
                 className="text-white ml-16 border-l border-white pl-8"
               >
                 <div className="text-2xl font-medium"><b>{selectedPhoto.title}</b></div>

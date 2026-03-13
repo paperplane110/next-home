@@ -1,4 +1,4 @@
-import { Inter, JetBrains_Mono, Fraunces } from "next/font/google";
+import { Inter, JetBrains_Mono, Fraunces, Crimson_Pro } from "next/font/google";
 import localFont from "next/font/local";
 
 // sans-serif
@@ -20,6 +20,11 @@ export const fraunces = Fraunces({
   axes: ["opsz", "SOFT"],
 });
 
+export const crimsonPro = Crimson_Pro({
+  subsets: ["latin"],
+  variable: "--font-crimson-pro",
+})
+
 export const pingXianZhenSong = localFont({
   src: "../app/fonts/pxzs/pingxianzhensong.ttf",
   variable: "--font-ping-xian-zhen-song",
@@ -40,6 +45,7 @@ export const fontVariables = `
   ${inter.variable} 
   ${jetbrains_mono.variable} 
   ${fraunces.variable} 
+  ${crimsonPro.variable}
   ${pingXianZhenSong.variable}
   ${departure_mono.variable}
   ${zpix.variable}
