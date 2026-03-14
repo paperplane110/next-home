@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function Experiment1() {
   const [selectedBox, setSelectedBox] = useState<string | null>(null)
@@ -148,9 +148,6 @@ export function Experiment1() {
           <li>
             While image is exiting, the <code>zIndex</code> will jump to the default value, so the later picture will be on top.
           </li>
-          <li>
-            The background blur mask&apos;s exit animation is ignored, because it&apos;s DOM has been removed immediately.
-          </li>
         </ul>
       </div>
       <div className="relative grid grid-cols-2 mt-8 h-96 p-2 gap-4">
@@ -164,14 +161,12 @@ export function Experiment1() {
               layout
               transition={{
                 layout: { type: "spring", stiffness: 390, damping: 30 },
-                zIndex: { delay: selectedBox === box.id ? 0 : 0.5 }
               }}
-              style={{ zIndex: selectedBox === box.id ? 5 : 0 }}
               className={cn(
                 "w-full h-full flex items-center justify-center text-2xl",
                 box.color,
                 "rounded-2xl",
-                selectedBox === box.id && "absolute inset-0 m-auto w-[80%] h-[80%]"
+                selectedBox === box.id && "absolute inset-0 z-5 m-auto w-[80%] h-[80%]"
               )}
               onClick={() => {
                 if (selectedBox === box.id) {
@@ -186,22 +181,24 @@ export function Experiment1() {
                   layout
                   transition={{ layout: { type: "spring", stiffness: 390, damping: 30 } }}
                   src={box.image}
-                  className={cn("absolute inset-0 m-auto object-cover")}
+                  className="absolute inset-0 m-auto object-cover"
                 ></motion.img>
               </div>
             </motion.div>
           </div>
         ))}
-        {selectedBox && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedBox(null)}
-            className="absolute inset-0 z-3 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm rounded-2xl"
-          >
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {selectedBox && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedBox(null)}
+              className="absolute inset-0 z-3 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm rounded-2xl"
+            >
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <hr className="w-full my-8" />
 

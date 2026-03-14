@@ -122,8 +122,9 @@ function MagicLinkButton() {
       <Button
         size="sm"
         variant="outline"
-        className="w-40 bg-linear-to-b from-blue-400 to-blue-500 text-white hover:text-white"
+        className="w-40 bg-linear-to-b from-blue-400 to-blue-500 text-white hover:text-white cursor-pointer"
         onClick={() => {
+          if (buttonState !== "idle") return;
           setButtonState("loading")
           setTimeout(() => {
             setButtonState("success")
@@ -166,10 +167,20 @@ function ToggleHeightComponent() {
         <Button
           size="sm"
           variant="outline"
-          className="absolute top-[30%] left-[calc(50%-80px)] w-40"
+          className="absolute top-[30%] left-[calc(50%-80px)] w-40 overflow-hidden"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? "Close" : "Open"}
+          <AnimatePresence mode="popLayout">
+            <motion.span
+              key={isOpen ? "close" : "open"}
+              initial={{ y: isOpen ? 25 : -25, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: isOpen ? 25 : -25, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+            >
+              {isOpen ? "Close" : "Open"}
+            </motion.span>
+          </AnimatePresence>
         </Button>
         <motion.div
           className="absolute bottom-[10%] text-sm mx-4 mt-8 border rounded-2xl overflow-hidden bg-white"
