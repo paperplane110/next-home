@@ -63,7 +63,7 @@ export default function Home() {
           {/* <div className="flex-0 sm:flex-2"/> */}
         </div>
         <p className="mt-2 font-serif">
-          今天是北京的冬日，周围都是顶着寒风、脚步匆匆为生活奔波的人们
+          夏日炎炎，在大楼里看着蓝天，吹着冷气。
         </p>
       </div>
 

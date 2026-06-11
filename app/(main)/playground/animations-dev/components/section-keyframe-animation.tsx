@@ -14,12 +14,12 @@ export default function SectionKeyframeAnimation() {
   });
 
   return (
-    <div className="subsection mt-32">
+    <div className="subsection mt-16">
       <h2 className="font-bold text-2xl">
         <div className="flex items-center">
-          <div className="size-4 rounded-full border-amber-400 border-dashed border-3 ring-background ring-3"/>
-          <div className="-ml-0.5 size-4 rounded-full border-amber-400 border-dashed border-3 ring-background ring-3"/>
-          <div className="-ml-0.5 size-4 rounded-full border-amber-400 border-3 ring-background ring-3"/>
+          <div className="size-4 rounded-full border-amber-400 border-dashed border-3 ring-background ring-3" />
+          <div className="-ml-0.5 size-4 rounded-full border-amber-400 border-dashed border-3 ring-background ring-3" />
+          <div className="-ml-0.5 size-4 rounded-full border-amber-400 border-3 ring-background ring-3" />
         </div>
         Keyframe Animations
       </h2>
@@ -29,7 +29,7 @@ export default function SectionKeyframeAnimation() {
       </p>
       <div
         id="container"
-        className="relative mt-8 h-60 w-full bg-white border border-dashed border-gray-300 rounded-4xl flex flex-col items-center justify-center"
+        className="relative mt-8 csc"
       >
         <div
           className="relative size-[56px] animation-rotate transform-3d perspective-distant"
@@ -64,7 +64,7 @@ export default function SectionKeyframeAnimation() {
         <p className="cp">A key point is that each round shape has the property <code>backface-hidden</code> to hide the back side when it is rotated.</p>
         <div
           id="container"
-          className="relative mt-8 h-80 w-full bg-white border border-dashed border-gray-300 rounded-4xl flex flex-col items-center"
+          className="relative mt-8 csc"
         >
           <div className="my-20 relative size-[56px] transform-3d" style={{ transform: `rotateY(${coinRotation}deg)` }}>
             {coinParts.side && (
@@ -96,8 +96,8 @@ export default function SectionKeyframeAnimation() {
             }
           `}</style>
 
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-3 sm:flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -153,10 +153,8 @@ export default function SectionKeyframeAnimation() {
                 className="w-full"
               />
             </div>
-          </div>
-
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-            <label className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+              <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={isBackfaceHidden}
@@ -164,7 +162,9 @@ export default function SectionKeyframeAnimation() {
                 />
                 <span>backface-hidden</span>
               </label>
+            </div>
           </div>
+
 
         </div>
       </div>

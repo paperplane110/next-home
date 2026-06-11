@@ -31,6 +31,16 @@
     }
   }
 
+  .ch2,
+  .content-h2 {
+    @apply font-bold text-2xl;
+  }
+
+  .ch3,
+  .content-h3 {
+    @apply font-bold;
+  }
+
   .cp,
   .content-p {
     @apply mt-8 space-y-6 text-base text-muted-foreground;
@@ -38,6 +48,11 @@
     &>p+ol {
       margin-top: -1rem;
     }
+  }
+
+  .csc,
+  .content-showcase {
+    @apply py-16 px-4 w-full bg-white border border-dashed border-gray-300 rounded-4xl flex flex-col items-center overflow-hidden;
   }
 
 
