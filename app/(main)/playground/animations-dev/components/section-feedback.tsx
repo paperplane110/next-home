@@ -30,7 +30,7 @@ export function SectionFeedback() {
           难点1: 点击按钮后，feedback 文字移动到左上角的动画过度
         </p>
         <ol>
-          <li>使用 <code>layoutId</code> 来关联按钮上的文字和 feedback 文字</li>
+          <li>使用 <code>layoutId</code> 来关联按钮上的文字和 <code>textarea</code> 上的 feedback 文字</li>
           <li>弹窗展开后的 feedback 使用 <code>absolute</code> 定位，若使用 <code>flex</code> 则文字在变化过程中，无法保持形状</li>
         </ol>
         <p>
