@@ -2,6 +2,10 @@ import OuterLink from "@/components/link";
 import { SectionClipPath } from "./components/section-clip-path";
 import SectionKeyframeAnimation from "./components/section-keyframe-animation";
 import SectionFramerBasic from "./components/section-framer-basic";
+import SectionFramerAdvanced from "./components/section-framer-advanced";
+import { SectionFeedback } from "./components/section-feedback";
+import { SectionMultiStep } from "./components/section-multi-step";
+
 
 export default function AnimationsDev() {
   return (
@@ -40,6 +44,9 @@ export default function AnimationsDev() {
         <hr className="my-4" />
       </div>
       <SectionFramerBasic />
+      <SectionFramerAdvanced />
+      <SectionFeedback />
+      <SectionMultiStep />
     </div>
   )
 }

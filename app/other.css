@@ -52,7 +52,7 @@
 
   .csc,
   .content-showcase {
-    @apply py-16 px-4 w-full bg-white border border-dashed border-gray-300 rounded-4xl flex flex-col items-center;
+    @apply py-16 px-4 w-full bg-white border border-dashed border-gray-300 rounded-4xl flex flex-col items-center overflow-hidden;
   }
 
 
