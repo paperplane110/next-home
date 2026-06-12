@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button";
-import { BookOpenIcon, CircleUserIcon, ComponentIcon, HomeIcon, PenLineIcon, RefreshCwIcon, TrashIcon } from "lucide-react";
+import { BookOpenIcon, HomeIcon, PenLineIcon, RefreshCwIcon, TrashIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 
