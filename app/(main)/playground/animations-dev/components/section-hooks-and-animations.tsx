@@ -123,8 +123,8 @@ function UseSpringTrackMouseMove() {
       className="h-[300px] w-full bg-white border border-dashed border-gray-300 rounded-4xl mt-8"
       onPointerMove={(e) => {
         const bounds = e.currentTarget.getBoundingClientRect()
-        x.set(e.clientX - bounds.left)
-        y.set(e.clientY - bounds.top)
+        x.set(e.clientX - bounds.left - 25)
+        y.set(e.clientY - bounds.top - 25)
       }}
       onPointerEnter={() => {
         opacity.set(1)
@@ -134,7 +134,7 @@ function UseSpringTrackMouseMove() {
       }}
     >
       <motion.div
-        className="h-[50px] w-[50px] translate-x-[-50%] translate-y-[-50%] rounded-full border-2 border-green-600 bg-green-300"
+        className="h-[50px] w-[50px] rounded-full border-2 border-green-600 bg-green-300"
         style={{ x: x, y: y, opacity: opacity }}
       >
       </motion.div>
@@ -153,8 +153,8 @@ function UseTransformScaleCircle() {
       className="h-[300px] w-full bg-white border border-dashed border-gray-300 rounded-4xl mt-8"
       onPointerMove={(e) => {
         const bounds = e.currentTarget.getBoundingClientRect()
-        x.set(e.clientX - bounds.left)
-        y.set(e.clientY - bounds.top)
+        x.set(e.clientX - bounds.left - 25)
+        y.set(e.clientY - bounds.top - 25)
       }}
       onPointerEnter={() => {
         opacity.set(1)
@@ -164,7 +164,7 @@ function UseTransformScaleCircle() {
       }}
     >
       <motion.div
-        className="h-[50px] w-[50px] translate-x-[-50%] translate-y-[-50%] rounded-full border-2 border-green-600 bg-green-300"
+        className="h-[50px] w-[50px] rounded-full border-2 border-green-600 bg-green-300"
         style={{ x: x, y: y, opacity: opacity, scale: scale }}
       >
       </motion.div>
