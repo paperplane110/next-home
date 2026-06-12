@@ -18,11 +18,12 @@ export function TrashAnimation() {
 
   useEffect(() => {
     if (removed) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setImagesToRemove([]);
         setReadyToRemove(false);
         setRemoved(false);
       }, 1200);
+      return () => clearTimeout(timeoutId);
     }
   }, [removed]);
 
@@ -81,7 +82,7 @@ export function TrashAnimation() {
                       ) : null}
                     </div>
                     <button
-                      aria-label="Remove book"
+                      aria-label="Remove image"
                       onClick={() => {
                         if (isSelected) {
                           setImagesToRemove((images) =>
@@ -96,7 +97,7 @@ export function TrashAnimation() {
                         layoutId={`image-${image}`}
                         transition={{ duration: 0 }} // When images are deleted, this will prevent the images move from the trash bin to the grid
                         className="rounded-xl"
-                        alt="A guy"
+                        alt="A pic"
                         src={`https://animations.dev/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
                         height={100}
                         width={100}
@@ -243,7 +244,7 @@ export function TrashAnimation() {
                   <li key={image} className="flex h-1 items-center gap-2">
                     <motion.img
                       layoutId={`image-${image}`}
-                      alt="A guy"
+                      alt="A pic"
                       className="rounded"
                       src={`https://animations.dev/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
                       height={65}
