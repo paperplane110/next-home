@@ -2,7 +2,7 @@
 
 import OuterLink from "@/components/link"
 import { motion, useMotionTemplate, useSpring } from "motion/react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 
 export function SectionInteractiveGraph() {
   return (
@@ -48,6 +48,15 @@ function Graph() {
   const rightInset = useSpring(0, SPRING)
   const clipPathTemplate = useMotionTemplate`inset(0 ${rightInset}% 0 0)`
   const timeoutRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current !== null) {
+        window.clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
   return (
     <div
       className="relative w-full"
