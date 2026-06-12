@@ -6,6 +6,7 @@ import SectionFramerAdvanced from "./components/section-framer-advanced";
 import { SectionFeedback } from "./components/section-feedback";
 import { SectionMultiStep } from "./components/section-multi-step";
 import { SectionTrashAnimation } from "./components/trash-animation/section-trash-animation";
+import { SectionHooksAndAnimations } from "./components/section-hooks-and-animations";
 
 
 export default function AnimationsDev() {
@@ -49,6 +50,7 @@ export default function AnimationsDev() {
       <SectionFeedback />
       <SectionMultiStep />
       <SectionTrashAnimation />
+      <SectionHooksAndAnimations />
     </div>
   )
 }
