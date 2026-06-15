@@ -54,7 +54,7 @@ export function SectionFeedback() {
   )
 }
 
-function FeedbackPopover() {
+export function FeedbackPopover() {
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
   useClickInsideOutside(popoverRef, () => { }, () => setIsOpen(false))
@@ -104,7 +104,7 @@ function FeedbackPopover() {
         style={{
           borderRadius: "8px",
         }} onClick={() => setIsOpen(!isOpen)}>
-        <motion.span className="block text-sm" layoutId="feedback-title">Feedback</motion.span>
+        <motion.span className="block text-sm text-accent-foreground" layoutId="feedback-title">Feedback</motion.span>
       </motion.button>
       <AnimatePresence>
         {

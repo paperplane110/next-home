@@ -1,0 +1,25 @@
+.stagger p {
+    animation: fade-in 0.3s ease-in-out;
+    animation-delay: var(--delay);
+    animation-fill-mode: both;
+
+    will-change: opacity, transform;
+}
+
+.stagger h1 {
+    animation: fade-in 0.3s ease-in-out;
+    will-change: opacity, transform;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+        filter: blur(2px);
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
