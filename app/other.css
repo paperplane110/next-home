@@ -48,6 +48,10 @@
     &>p+ol {
       margin-top: -1rem;
     }
+
+    .highlight {
+      @apply font-semibold text-accent-foreground;
+    }
   }
 
   .csc,

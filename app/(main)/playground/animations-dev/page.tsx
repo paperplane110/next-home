@@ -8,6 +8,8 @@ import { SectionMultiStep } from "./components/section-multi-step";
 import { SectionTrashAnimation } from "./components/trash-animation/section-trash-animation";
 import { SectionHooksAndAnimations } from "./components/section-hooks-and-animations";
 import { SectionInteractiveGraph } from "./components/section-interactive-graph";
+import { SectionTheBigLittleDetails } from "./components/section-the-big-little-details";
+
 
 
 export default function AnimationsDev() {
@@ -53,6 +55,18 @@ export default function AnimationsDev() {
       <SectionTrashAnimation />
       <SectionHooksAndAnimations />
       <SectionInteractiveGraph />
+      <div className="subsection mt-32">
+        <h3 className="text-md font-medium text-muted-foreground mt-4">
+          Module 4
+        </h3>
+        <h1
+          className="text-5xl font-semibold"
+          style={{
+            fontFamily: "var(--font-crimson-pro)",
+          }}>Good vs Great animations</h1>
+        <hr className="my-4" />
+      </div>
+      <SectionTheBigLittleDetails />
     </div>
   )
 }
