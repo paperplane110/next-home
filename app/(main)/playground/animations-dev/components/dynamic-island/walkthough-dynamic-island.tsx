@@ -89,8 +89,8 @@ export function WalkthoughDynamicIsland() {
                     <li>铃铛的红色背景：同上，但使用 <code>absolute</code> 定位，方便 <code>motion</code> 定位</li>
                     <li>铃铛的横向移动：虽然视觉上铃铛没有移动，但是它的布局计算是相对灵动岛左侧的，因此需要一个向右的移动，以维持 <span className="highlight">视觉上位置的静止</span></li>
                     <li>铃铛的禁止斜线：静音时，铃铛被斜线挡住，这个斜线是个 <code>div</code>，因此在进入和退出时配置其宽度变化即可</li>
-                    <li>铃铛的摇晃：对铃铛的旋转属性进行动画化，为了实现左右摇晃的效果，可以给 <code>rotate</code> 属性配置
-                      <OuterLink href="https://motion.dev/docs/react-animation#keyframes" target="_blank">Keyframes</OuterLink>
+                    <li>铃铛的摇晃：对铃铛的旋转属性进行动画化，为了实现左右摇晃的效果，
+                      可以给 <code>rotate</code> 属性配置 <OuterLink href="https://motion.dev/docs/react-animation#keyframes" target="_blank">Keyframes</OuterLink>
                       让旋转角度反复变化
                     </li>
                     <li>
@@ -169,8 +169,7 @@ export function WalkthoughDynamicIsland() {
                       内容淡出：灵动岛的淡出不仅仅是简单的透明度+模糊的淡出。
                       当从一个小组件变化到大组件时，内容的淡出是<span className="highlight">放大+向下微小位移</span>的淡出。
                       当从一个大组件变化到小组件组件时，内容的淡出是<span className="highlight">缩小+向上微小位移</span>的淡出。
-                      为了实现这一效果，需要使用 <code>AnimatePresence</code> 的
-                      <OuterLink href="https://motion.dev/docs/react-animate-presence#custom" target="_blank">custom</OuterLink>，
+                      为了实现这一效果，需要使用 <code>AnimatePresence</code> 的 <OuterLink href="https://motion.dev/docs/react-animate-presence#custom" target="_blank">custom</OuterLink>，
                       以及 <OuterLink href="https://motion.dev/docs/react-animation#dynamic-variants" target="_blank">dynamic-variants</OuterLink>
                     </li>
                   </ol>
