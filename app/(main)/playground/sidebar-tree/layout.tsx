@@ -68,11 +68,11 @@ export default async function TreePage({ children }: { children: React.ReactNode
     <div className="section page-top-margin">
       <div className="subsection">
         <h1 className="headline font-serif font-light soft-70">
-          Node Tree Component
+          Sidebar Tree Component
         </h1>
       </div>
       <div className="subsection mt-16 text-muted-foreground">
-        节点树/侧边栏布局
+        侧边栏布局的树
         <ul className="mt-2">
           <li>点击节点后，跳转到该节点的路由，支持节点详情页（动态路由）</li>
           <li>节点树位于侧边栏，侧边栏宽度支持左右变动</li>

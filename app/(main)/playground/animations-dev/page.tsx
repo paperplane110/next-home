@@ -9,6 +9,9 @@ import { SectionTrashAnimation } from "./components/trash-animation/section-tras
 import { SectionHooksAndAnimations } from "./components/section-hooks-and-animations";
 import { SectionInteractiveGraph } from "./components/section-interactive-graph";
 import { SectionTheBigLittleDetails } from "./components/section-the-big-little-details";
+import { SectionAccessibility } from "./components/section-accessibility";
+import { WalkthoughFamilyDrawer } from "./components/family-drawer/walkthough-family-drawer";
+import { WalkthoughDynamicIsland } from "./components/dynamic-island/walkthough-dynamic-island";
 
 
 
@@ -67,6 +70,21 @@ export default function AnimationsDev() {
         <hr className="my-4" />
       </div>
       <SectionTheBigLittleDetails />
+      <SectionAccessibility />
+
+      <div className="subsection mt-32">
+        <h3 className="text-md font-medium text-muted-foreground mt-4">
+          Module 5
+        </h3>
+        <h1
+          className="text-5xl font-semibold"
+          style={{
+            fontFamily: "var(--font-crimson-pro)",
+          }}>Walkthoughs</h1>
+        <hr className="my-4" />
+      </div>
+      <WalkthoughFamilyDrawer />
+      <WalkthoughDynamicIsland />
     </div>
   )
 }
