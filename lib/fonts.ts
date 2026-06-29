@@ -41,6 +41,32 @@ export const zpix = localFont({
   variable: "--font-zpix",
 });
 
+export const open_runde = localFont({
+  src: [
+    {
+      path: "../app/fonts/open-runde-1.0.1/src/web/OpenRunde-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/open-runde-1.0.1/src/web/OpenRunde-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/open-runde-1.0.1/src/web/OpenRunde-Semibold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/open-runde-1.0.1/src/web/OpenRunde-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-open-runde",
+})
+
 export const fontVariables = `
   ${inter.variable} 
   ${jetbrains_mono.variable} 
@@ -49,4 +75,5 @@ export const fontVariables = `
   ${pingXianZhenSong.variable}
   ${departure_mono.variable}
   ${zpix.variable}
+  ${open_runde.variable}
 `;

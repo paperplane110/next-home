@@ -6,8 +6,8 @@ export default function Playground() {
       theme: "Fundamentals",
       routeList: [
         {
-          name: "Node Tree (Dynamic Routes)",
-          path: "/tree",
+          name: "Sidebar Tree (Dynamic Routes)",
+          path: "/sidebar-tree",
           tags: ["framework"]
         },
         {
