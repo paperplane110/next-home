@@ -12,6 +12,7 @@ import { SectionTheBigLittleDetails } from "./components/section-the-big-little-
 import { SectionAccessibility } from "./components/section-accessibility";
 import { WalkthoughFamilyDrawer } from "./components/family-drawer/walkthough-family-drawer";
 import { WalkthoughDynamicIsland } from "./components/dynamic-island/walkthough-dynamic-island";
+import { WalkthoughNavigationBar } from "./components/navigation-bar/walkthrough-nav";
 
 
 
@@ -85,6 +86,7 @@ export default function AnimationsDev() {
       </div>
       <WalkthoughFamilyDrawer />
       <WalkthoughDynamicIsland />
+      <WalkthoughNavigationBar />
     </div>
   )
 }
