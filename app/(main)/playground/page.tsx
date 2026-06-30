@@ -71,6 +71,11 @@ export default function Playground() {
           name: "Animations.dev",
           path: "/animations-dev",
         },
+        {
+          name: "Family Tree",
+          path: "/family-tree",
+          tags: ["react-flow", "graph"]
+        },
       ]
     }
   ]

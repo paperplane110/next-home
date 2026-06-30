@@ -45,6 +45,7 @@ export type PersonCategory =
   | 'political'     // 政界人物（如肯尼迪总统、麦克纳马拉）
   | 'business'      // 商业伙伴/投资人（如巴菲特）
   | 'social';       // 纯私人朋友/社交圈密友
+  | 'other';        // 其他人物
 
 // ==========================================
 // 2. 真实人物节点类型 (Person Node)
