@@ -3,7 +3,7 @@
 import type { GraphDataset, GraphViewMode, MarriageNode, PersonNode } from "../_types/graph";
 
 const STAR_CENTER = { x: 0, y: 0 };
-const FAMILY_SCALE = 2;
+export const FAMILY_SCALE = 2;
 const STAR_RING_RADIUS = {
   center: 0,
   inner: 280,
@@ -28,10 +28,17 @@ function getStarPosition(order: number, total: number, radius: number) {
   };
 }
 
-function scaleFamilyPosition(position: { x: number; y: number }) {
+export function scaleFamilyPosition(position: { x: number; y: number }) {
   return {
     x: position.x * FAMILY_SCALE,
     y: position.y * FAMILY_SCALE,
+  };
+}
+
+export function toFamilyDraftPosition(position: { x: number; y: number }) {
+  return {
+    x: Math.round(position.x / FAMILY_SCALE),
+    y: Math.round(position.y / FAMILY_SCALE),
   };
 }
 
@@ -48,10 +55,18 @@ export function buildViewGraph(dataset: GraphDataset, mode: GraphViewMode): Grap
     const visibleNodeIds = new Set(
       familyEdges.flatMap((edge) => [edge.source, edge.target]),
     );
+    const standaloneFamilyNodes = dataset.nodes.filter(
+      (node) =>
+        node.type === "biographyPersonNode" && Boolean(node.data.viewMeta.familyTree),
+    );
 
     return {
       nodes: dataset.nodes
-        .filter((node) => visibleNodeIds.has(node.id))
+        .filter(
+          (node) =>
+            visibleNodeIds.has(node.id) ||
+            standaloneFamilyNodes.some((familyNode) => familyNode.id === node.id),
+        )
         .map((node) => {
           if (node.type === "biographyPersonNode") {
             return {
@@ -82,6 +97,13 @@ export function buildViewGraph(dataset: GraphDataset, mode: GraphViewMode): Grap
 
   const starPersonNodes = personNodes.map((node) => {
     const starMeta = node.data.viewMeta.starNetwork;
+
+    if (starMeta?.position) {
+      return {
+        ...node,
+        position: starMeta.position,
+      };
+    }
 
     if (!starMeta || starMeta.ring === "center") {
       return {

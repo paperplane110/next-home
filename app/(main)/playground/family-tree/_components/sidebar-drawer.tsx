@@ -73,9 +73,15 @@ export function SidebarDrawer({ person, onClose }: SidebarDrawerProps) {
             ))}
           </div>
 
-          <div className="mt-4 space-y-3 text-sm leading-6 text-stone-600">
-            <p>{person.bioSummary}</p>
-          </div>
+          {person.bioSummary ? (
+            <div className="mt-4 space-y-3 text-sm leading-6 text-stone-600">
+              <p>{person.bioSummary}</p>
+            </div>
+          ) : (
+            <div className="mt-4 text-sm leading-6 text-stone-500">
+              这个人物节点还没有补充简介，你可以继续在右侧编辑面板里完善信息。
+            </div>
+          )}
         </>
       ) : null}
     </aside>

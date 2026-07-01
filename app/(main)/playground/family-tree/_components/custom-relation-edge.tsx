@@ -10,12 +10,18 @@ import {
 import { cn } from "@/lib/utils";
 
 import type { RelationshipEdgeData, RelationshipType } from "../_types/graph";
+import { getEdgeDisplayLabel } from "../_utils/edge-meta";
 
 const relationStyles: Record<
   RelationshipType,
   { stroke: string; labelClassName: string; strokeWidth?: number; dashArray?: string }
 > = {
   blood: {
+    stroke: "#57534e",
+    labelClassName: "border-stone-200 bg-white text-stone-600",
+    strokeWidth: 1.8,
+  },
+  adoption: {
     stroke: "#57534e",
     labelClassName: "border-stone-200 bg-white text-stone-600",
     strokeWidth: 1.8,
@@ -31,22 +37,26 @@ const relationStyles: Record<
     dashArray: "7 5",
   },
   peer: {
-    stroke: "#7c3aed",
-    labelClassName: "border-violet-200 bg-violet-50 text-violet-700",
+    stroke: "#0369a1",
+    labelClassName: "border-sky-200 bg-sky-50 text-sky-700",
     dashArray: "6 4",
   },
   ally: {
-    stroke: "#be123c",
-    labelClassName: "border-rose-200 bg-rose-50 text-rose-700",
+    stroke: "#7c3aed",
+    labelClassName: "border-purple-200 bg-purple-50 text-purple-700",
   },
   mentor: {
-    stroke: "#047857",
-    labelClassName: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  },
-  friendship: {
     stroke: "#f59e0b",
     labelClassName: "border-amber-200 bg-amber-50 text-amber-700",
+  },
+  friendship: {
+    stroke: "#047857",
+    labelClassName: "border-emerald-200 bg-emerald-50 text-emerald-700",
     dashArray: "4 4",
+  },
+  other: {
+    stroke: "#000",
+    labelClassName: "border-black bg-white text-black",
   },
 };
 
@@ -58,9 +68,11 @@ export function CustomRelationEdge({
   sourcePosition,
   targetPosition,
   data,
+  selected,
 }: EdgeProps) {
   const edgeData = data as RelationshipEdgeData;
   const relationStyle = relationStyles[edgeData.relationshipType];
+  const displayLabel = getEdgeDisplayLabel(edgeData);
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -77,11 +89,12 @@ export function CustomRelationEdge({
         path={edgePath}
         style={{
           stroke: relationStyle.stroke,
-          strokeWidth: relationStyle.strokeWidth ?? 2,
+          strokeWidth: (relationStyle.strokeWidth ?? 2) + (selected ? 1.2 : 0),
           strokeDasharray: relationStyle.dashArray,
+          filter: selected ? "drop-shadow(0 0 6px rgba(15, 23, 42, 0.15))" : undefined,
         }}
       />
-      {edgeData.label ? (
+      {displayLabel ? (
         <EdgeLabelRenderer>
           <div
             style={{
@@ -93,7 +106,7 @@ export function CustomRelationEdge({
               relationStyle.labelClassName,
             )}
           >
-            {edgeData.label}
+            {displayLabel}
           </div>
         </EdgeLabelRenderer>
       ) : null}

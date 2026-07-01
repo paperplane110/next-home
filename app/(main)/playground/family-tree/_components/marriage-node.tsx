@@ -10,6 +10,7 @@ export function MarriageNode({ data }: NodeProps) {
   return (
     <div className="grid place-items-center">
       <Handle
+        id="marriage-target"
         type="target"
         position={Position.Top}
         className="h-2.5! w-2.5! border-0! bg-stone-400!"
@@ -22,6 +23,7 @@ export function MarriageNode({ data }: NodeProps) {
         ) : null}
       </div>
       <Handle
+        id="marriage-source"
         type="source"
         position={Position.Bottom}
         className="h-2.5! w-2.5! border-0! bg-stone-400!"
