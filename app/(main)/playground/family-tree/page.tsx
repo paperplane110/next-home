@@ -636,7 +636,7 @@ export default function FamilyTreePage() {
     }));
   }, [editorState.personId, personFormDraft]);
 
-  function handleEdgeEditorOpenChange(open: boolean) {
+  const handleEdgeEditorOpenChange = useCallback((open: boolean) => {
     setEdgeEditorState((currentState) => ({
       ...currentState,
       open,
@@ -647,7 +647,7 @@ export default function FamilyTreePage() {
       setSelectedEdgeId(null);
       setEdgeFormDraft(createEdgeFormDraft());
     }
-  }
+  }, []);
 
   const handleDeleteRelationshipEdge = useCallback((edgeId: string) => {
     setGraphDraft((currentGraph) => ({
@@ -669,7 +669,7 @@ export default function FamilyTreePage() {
     setEdgeFormDraft(createEdgeFormDraft());
   }, []);
 
-  function handleSubmitEdgeEditor() {
+  const handleSubmitEdgeEditor = useCallback(() => {
     if (!selectedEdge || !edgeEditorContext) {
       return;
     }
@@ -731,7 +731,7 @@ export default function FamilyTreePage() {
     setSelectedEdgeId(null);
     setEdgeContextMenu(null);
     setEdgeFormDraft(createEdgeFormDraft());
-  }
+  }, [edgeEditorContext, edgeFormDraft, selectedEdge, viewMode]);
 
   const nextViewMode = viewMode === "family" ? "star" : "family";
   const viewSwitchLabel =
@@ -767,6 +767,24 @@ export default function FamilyTreePage() {
       }
 
       if (edgeEditorState.open) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          handleEdgeEditorOpenChange(false);
+          return;
+        }
+
+        if (
+          event.key === "Enter" &&
+          !event.metaKey &&
+          !event.ctrlKey &&
+          !event.altKey &&
+          !event.shiftKey &&
+          !isTextareaTarget(event.target)
+        ) {
+          event.preventDefault();
+          handleSubmitEdgeEditor();
+        }
+
         return;
       }
 
@@ -797,7 +815,9 @@ export default function FamilyTreePage() {
     editorState.open,
     handleDeleteRelationshipEdge,
     handleEditorOpenChange,
+    handleEdgeEditorOpenChange,
     handleSubmitPersonEditor,
+    handleSubmitEdgeEditor,
     personFormDraft.name,
     selectedEdgeId,
   ]);

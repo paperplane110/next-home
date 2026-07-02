@@ -136,7 +136,10 @@ export function PersonNode({ id, data, selected }: NodeProps) {
       >
         <div className={cn("size-2 border rounded-full", theme.border, theme.bg)}></div>
       </Handle>
-      <div className="flex flex-wrap gap-1 mb-2">
+      <div className={cn(
+        "flex flex-wrap gap-1",
+        person.badges?.length !== 0 && "mb-2"
+      )}>
         {person.badges?.map((badge) => (
           <Badge
             key={badge}

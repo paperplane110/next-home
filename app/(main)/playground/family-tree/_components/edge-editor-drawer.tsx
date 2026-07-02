@@ -10,6 +10,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
+import { Kbd } from "@/components/ui/kbd";
 import { Label } from "@/components/ui/label";
 import type { EdgeFormDraft, RelationshipType } from "../_types/graph";
 import { RELATIONSHIP_TYPE_META } from "../_utils/edge-meta";
@@ -118,11 +119,13 @@ export function EdgeEditorDrawer({
         </div>
 
         <DrawerFooter className="border-t border-stone-200/80 bg-background/80">
-          <Button type="button" onClick={onSubmit}>
+          <Button type="button" variant="secondary" onClick={onSubmit}>
             保存关系
+            <Kbd className="bg-gray-200">Enter</Kbd>
           </Button>
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
             取消
+            <Kbd>Esc</Kbd>
           </Button>
         </DrawerFooter>
       </DrawerContent>
