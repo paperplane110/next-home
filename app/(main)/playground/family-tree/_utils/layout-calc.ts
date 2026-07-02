@@ -52,9 +52,7 @@ export function buildViewGraph(dataset: GraphDataset, mode: GraphViewMode): Grap
 
   if (mode === "family") {
     const familyEdges = dataset.edges.filter((edge) => edge.data?.views.includes("family"));
-    const visibleNodeIds = new Set(
-      familyEdges.flatMap((edge) => [edge.source, edge.target]),
-    );
+    const visibleNodeIds = new Set(familyEdges.flatMap((edge) => [edge.source, edge.target]));
     const standaloneFamilyNodes = dataset.nodes.filter(
       (node) =>
         node.type === "biographyPersonNode" && Boolean(node.data.viewMeta.familyTree),

@@ -25,7 +25,7 @@ interface PersonEditorDrawerProps {
 
 const categoryOptions = [
   { value: "family", label: "家族" },
-  { value: "professional", label: "职业" },
+  { value: "professional", label: "职场" },
   { value: "media", label: "媒体" },
   { value: "political", label: "政治" },
   { value: "business", label: "商业" },

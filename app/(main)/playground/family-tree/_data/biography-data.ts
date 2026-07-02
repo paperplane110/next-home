@@ -137,10 +137,7 @@ export const biographyData: GraphDataset = {
         bioSummary:
           "Buffett 不是家族树的直系成员，但在星形网络里是重要的商业关系，用来体现关系图模型优于严格树结构。",
         viewMeta: {
-          familyTree: {
-            generation: 1,
-            position: { x: 760, y: 160 },
-          },
+          
           starNetwork: {
             ring: "inner",
             order: 2,
@@ -161,10 +158,7 @@ export const biographyData: GraphDataset = {
         bioSummary:
           "Ben Bradlee 是新闻业务中的关键同僚，适合在网络视图里展示 peer 类型关系与边标签。",
         viewMeta: {
-          familyTree: {
-            generation: 1,
-            position: { x: 760, y: 340 },
-          },
+
           starNetwork: {
             ring: "inner",
             order: 3,
@@ -185,10 +179,7 @@ export const biographyData: GraphDataset = {
         bioSummary:
           "政治人物节点用来演示星形网络中的跨领域人物连接，以及不同 category 的视觉风格。",
         viewMeta: {
-          familyTree: {
-            generation: 1,
-            position: { x: 760, y: 520 },
-          },
+          
           starNetwork: {
             ring: "outer",
             order: 3,

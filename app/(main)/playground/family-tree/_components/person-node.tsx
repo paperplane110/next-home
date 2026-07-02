@@ -9,78 +9,12 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import type { BiographyPersonData } from "../_types/graph";
-
-type CategoryTheme = {
-  border: string;
-  bg: string;
-  text: string;
-  badgeBg: string;
-  badgeText: string;
-  ring: string;
-};
-
-const categoryTheme: Record<BiographyPersonData["category"], CategoryTheme> = {
-  family: {
-    border: "border-amber-300",
-    bg: "bg-amber-50/90",
-    text: "text-amber-900",
-    badgeBg: "bg-amber-100/80",
-    badgeText: "text-amber-800",
-    ring: "ring-amber-400/70",
-  },
-  professional: {
-    border: "border-slate-300",
-    bg: "bg-slate-50",
-    text: "text-slate-900",
-    badgeBg: "bg-slate-100/90",
-    badgeText: "text-slate-700",
-    ring: "ring-slate-400/70",
-  },
-  media: {
-    border: "border-sky-300",
-    bg: "bg-sky-50/90",
-    text: "text-sky-900",
-    badgeBg: "bg-sky-100/85",
-    badgeText: "text-sky-800",
-    ring: "ring-sky-400/70",
-  },
-  political: {
-    border: "border-violet-300",
-    bg: "bg-violet-50/90",
-    text: "text-violet-900",
-    badgeBg: "bg-violet-100/85",
-    badgeText: "text-violet-800",
-    ring: "ring-violet-400/70",
-  },
-  business: {
-    border: "border-emerald-300",
-    bg: "bg-emerald-50/90",
-    text: "text-emerald-900",
-    badgeBg: "bg-emerald-100/85",
-    badgeText: "text-emerald-800",
-    ring: "ring-emerald-400/70",
-  },
-  social: {
-    border: "border-rose-300",
-    bg: "bg-rose-50/90",
-    text: "text-rose-900",
-    badgeBg: "bg-rose-100/85",
-    badgeText: "text-rose-800",
-    ring: "ring-rose-400/70",
-  },
-  other: {
-    border: "border-zinc-300",
-    bg: "bg-zinc-50/90",
-    text: "text-zinc-900",
-    badgeBg: "bg-zinc-100/90",
-    badgeText: "text-zinc-700",
-    ring: "ring-zinc-400/70",
-  },
-};
+import { useFamilyTreeTheme } from "./family-tree-theme-provider";
 
 export function PersonNode({ id, data, selected }: NodeProps) {
   const person = data as BiographyPersonData;
-  const theme = categoryTheme[person.category];
+  const { personCategoryMeta } = useFamilyTreeTheme();
+  const theme = personCategoryMeta[person.category].theme;
 
   function stopNodeActionEvent(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();

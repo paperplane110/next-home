@@ -5,9 +5,11 @@ import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Kbd } from "@/components/ui/kbd";
 
 interface ToolIconButtonProps {
   label: string;
+  shortcut?: string;
   active?: boolean;
   onClick?: () => void;
   disabled?: boolean;
@@ -16,6 +18,7 @@ interface ToolIconButtonProps {
 
 export function ToolIconButton({
   label,
+  shortcut,
   active = false,
   onClick,
   disabled = false,
@@ -45,7 +48,7 @@ export function ToolIconButton({
         </span>
       </TooltipTrigger>
       <TooltipContent side="top" align="center">
-        {label}
+        {label} {shortcut && <Kbd className="bg-muted! text-muted-foreground!">{shortcut}</Kbd>}
       </TooltipContent>
     </Tooltip>
   );

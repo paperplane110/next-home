@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { createPortal } from "react-dom";
 import {
   Background,
@@ -18,17 +18,17 @@ import {
   type ReactFlowInstance,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { FolderOpen, Network, Save, WaypointsIcon } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
+import { CanvasToolbar } from "./_components/canvas-toolbar";
+import { ConfirmLoadDialog } from "./_components/confirm-load-dialog";
 import { CustomRelationEdge } from "./_components/custom-relation-edge";
 import { EdgeEditorDrawer } from "./_components/edge-editor-drawer";
+import { FamilyTreeThemeProvider } from "./_components/family-tree-theme-provider";
 import { MarriageNode } from "./_components/marriage-node";
 import { PersonEditorDrawer } from "./_components/person-editor-drawer";
 import { PersonNode } from "./_components/person-node";
 import { SidebarDrawer } from "./_components/sidebar-drawer";
-import { ToolIconButton } from "./_components/tool-icon-button";
 import { biographyData } from "./_data/biography-data";
 import type {
   BiographyPersonData,
@@ -53,8 +53,18 @@ import {
   MARRIAGE_ONLY_RELATIONSHIP_TYPES,
   sanitizeEdgeFormDraft,
 } from "./_utils/edge-meta";
+import {
+  createExportFileName,
+  createFamilyTreeExportFile,
+  downloadJsonFile,
+  parseFamilyTreeImportFile,
+} from "./_utils/export-file";
 import { buildViewGraph, toFamilyDraftPosition } from "./_utils/layout-calc";
 import { createPersonFormDraft, mergePersonDraftIntoNode } from "./_utils/person-form";
+import {
+  DEFAULT_EDGE_RELATIONSHIP_META,
+  DEFAULT_PERSON_CATEGORY_META,
+} from "./_utils/theme-meta";
 
 const nodeTypes: NodeTypes = {
   biographyPersonNode: PersonNode,
@@ -94,7 +104,32 @@ function isTextareaTarget(target: EventTarget | null) {
   return target instanceof HTMLElement && (target.tagName === "TEXTAREA" || target.isContentEditable);
 }
 
-/** Prune marriage nodes without wife and husband */
+function formatTimeAgo(savedAt: string, now: number) {
+  const diffMs = Math.max(0, now - new Date(savedAt).getTime());
+  const diffSeconds = Math.floor(diffMs / 1000);
+
+  if (diffSeconds < 10) {
+    return "几秒前";
+  }
+
+  if (diffSeconds < 60) {
+    return `${diffSeconds} 秒前`;
+  }
+
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  if (diffMinutes < 60) {
+    return `${diffMinutes} 分钟前`;
+  }
+
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) {
+    return `${diffHours} 小时前`;
+  }
+
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays} 天前`;
+}
+
 function pruneOrphanMarriageNodes(dataset: GraphDataset): GraphDataset {
   const marriageNodeIds = new Set(
     dataset.nodes.filter((node) => node.type === "marriageNode").map((node) => node.id),
@@ -104,9 +139,11 @@ function pruneOrphanMarriageNodes(dataset: GraphDataset): GraphDataset {
     return dataset;
   }
 
-  // Find all marriage nodes that has wife or husband
   const connectedMarriageNodeIds = new Set<string>();
   dataset.edges.forEach((edge) => {
+    if (marriageNodeIds.has(edge.source)) {
+      connectedMarriageNodeIds.add(edge.source);
+    }
     if (marriageNodeIds.has(edge.target)) {
       connectedMarriageNodeIds.add(edge.target);
     }
@@ -136,7 +173,7 @@ function getNodeDisplayName(node: CustomNode) {
   if (node.type === "biographyPersonNode") {
     return node.data.name;
   }
-  // For marriage node
+
   return node.data.label || "婚姻";
 }
 
@@ -179,6 +216,22 @@ export default function FamilyTreePage() {
   const [viewMode, setViewMode] = useState<GraphViewMode>("family");
   const [selectedPersonId, setSelectedPersonId] = useState("katharine");
   const [graphDraft, setGraphDraft] = useState<GraphDataset>(biographyData);
+  const [exportMeta, setExportMeta] = useState(() => ({
+    bookTitle: "Personal History",
+    author: "",
+    description: "",
+  }));
+  const [personCategoryMeta, setPersonCategoryMeta] = useState(() => DEFAULT_PERSON_CATEGORY_META);
+  const [edgeRelationshipMeta, setEdgeRelationshipMeta] = useState(
+    () => DEFAULT_EDGE_RELATIONSHIP_META,
+  );
+  const [isDirty, setIsDirty] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+  const [nowTick, setNowTick] = useState(() => Date.now());
+  const [isLoadConfirmOpen, setIsLoadConfirmOpen] = useState(false);
+  const hasInitializedDraftRef = useRef(false);
+  const skipNextDirtyTrackingRef = useRef(false);
+  const importFileInputRef = useRef<HTMLInputElement | null>(null);
   const [editorState, setEditorState] = useState<PersonEditorState>({
     open: false,
     mode: "create",
@@ -201,6 +254,34 @@ export default function FamilyTreePage() {
 
   const viewGraph = useMemo(() => buildViewGraph(graphDraft, viewMode), [graphDraft, viewMode]);
   const [edges, setEdges, onEdgesChange] = useEdgesState(viewGraph.edges);
+
+  useEffect(() => {
+    if (!hasInitializedDraftRef.current) {
+      hasInitializedDraftRef.current = true;
+      return;
+    }
+
+    if (skipNextDirtyTrackingRef.current) {
+      skipNextDirtyTrackingRef.current = false;
+      return;
+    }
+
+    setIsDirty(true);
+  }, [graphDraft]);
+
+  useEffect(() => {
+    if (!lastSavedAt) {
+      return;
+    }
+
+    const handle = window.setInterval(() => {
+      setNowTick(Date.now());
+    }, 1000);
+
+    return () => {
+      window.clearInterval(handle);
+    };
+  }, [lastSavedAt]);
 
   const selectedPerson = useMemo(() => {
     const foundNode = graphDraft.nodes.find(
@@ -281,10 +362,10 @@ export default function FamilyTreePage() {
     setEditorState((currentState) =>
       currentState.personId === personId
         ? {
-            open: false,
-            mode: "create",
-            personId: null,
-          }
+          open: false,
+          mode: "create",
+          personId: null,
+        }
         : currentState,
     );
     setPersonFormDraft(createPersonFormDraft());
@@ -292,13 +373,104 @@ export default function FamilyTreePage() {
     setEdgeEditorState((currentState) =>
       currentState.edgeId && removedEdgeIds.has(currentState.edgeId)
         ? {
-            open: false,
-            edgeId: null,
-          }
+          open: false,
+          edgeId: null,
+        }
         : currentState,
     );
     setEdgeFormDraft(createEdgeFormDraft());
   }, [graphDraft.edges]);
+
+  const resetTransientUiState = useCallback(() => {
+    setSelectedPersonId("");
+    setSelectedEdgeId(null);
+    setEdgeContextMenu(null);
+    setEditorState({
+      open: false,
+      mode: "create",
+      personId: null,
+    });
+    setEdgeEditorState({
+      open: false,
+      edgeId: null,
+    });
+    setPersonFormDraft(createPersonFormDraft());
+    setEdgeFormDraft(createEdgeFormDraft());
+  }, []);
+
+  const handleSaveToLocal = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const payload = createFamilyTreeExportFile({
+      graphDraft,
+      meta: exportMeta,
+      theme: {
+        personCategory: personCategoryMeta,
+        edgeRelationship: edgeRelationshipMeta,
+      },
+    });
+    const fileName = createExportFileName(exportMeta.bookTitle);
+    downloadJsonFile(fileName, payload);
+    setIsDirty(false);
+    setLastSavedAt(payload.savedAt);
+  }, [edgeRelationshipMeta, exportMeta, graphDraft, personCategoryMeta]);
+
+  const applyImportedFile = useCallback(
+    (payload: ReturnType<typeof parseFamilyTreeImportFile>) => {
+      skipNextDirtyTrackingRef.current = true;
+      setGraphDraft(payload.graph);
+      setExportMeta(payload.meta);
+      setPersonCategoryMeta(payload.theme.personCategory);
+      setEdgeRelationshipMeta(payload.theme.edgeRelationship);
+      setLastSavedAt(payload.savedAt);
+      setIsDirty(false);
+      resetTransientUiState();
+    },
+    [resetTransientUiState],
+  );
+
+  const handleImportFileChange = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const input = event.currentTarget;
+      const file = input.files?.[0];
+
+      if (!file) {
+        return;
+      }
+
+      try {
+        const rawText = await file.text();
+        const payload = parseFamilyTreeImportFile(rawText);
+        applyImportedFile(payload);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "加载失败";
+        window.alert(message);
+      } finally {
+        input.value = "";
+      }
+    },
+    [applyImportedFile],
+  );
+
+  const handleLoadFromLocal = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (isDirty) {
+      setIsLoadConfirmOpen(true);
+      return;
+    }
+
+    importFileInputRef.current?.click();
+  }, [isDirty]);
+
+  const handleConfirmLoadFromLocal = useCallback(() => {
+    setIsLoadConfirmOpen(false);
+    importFileInputRef.current?.click();
+  }, []);
 
   const interactiveNodes = useMemo<CustomNode[]>(
     () =>
@@ -331,28 +503,28 @@ export default function FamilyTreePage() {
   const edgeContextMenuContent =
     edgeContextMenu && typeof window !== "undefined"
       ? createPortal(
-          <div
-            ref={edgeContextMenuRef}
-            className="fixed z-60 min-w-[140px] rounded-xl border border-stone-200/90 bg-white/95 p-1 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-md"
-            style={{
-              left: edgeContextMenu.x + 8,
-              top: edgeContextMenu.y + 4,
-            }}
+        <div
+          ref={edgeContextMenuRef}
+          className="fixed z-60 min-w-[140px] rounded-xl border border-stone-200/90 bg-white/95 p-1 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-md"
+          style={{
+            left: edgeContextMenu.x + 8,
+            top: edgeContextMenu.y + 4,
+          }}
+        >
+          <Button
+            type="button"
+            variant="ghost"
+            className="w-full justify-between gap-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            onClick={() => handleDeleteRelationshipEdge(edgeContextMenu.edgeId)}
           >
-            <Button
-              type="button"
-              variant="ghost"
-              className="w-full justify-between gap-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
-              onClick={() => handleDeleteRelationshipEdge(edgeContextMenu.edgeId)}
-            >
-              <span>
-                删除关系
-              </span>
-              <Kbd className="text-destructive">⌦</Kbd>
-            </Button>
-          </div>,
-          document.body,
-        )
+            <span>
+              删除关系
+            </span>
+            <Kbd className="text-destructive">⌦</Kbd>
+          </Button>
+        </div>,
+        document.body,
+      )
       : null;
 
   useEffect(() => {
@@ -703,9 +875,9 @@ export default function FamilyTreePage() {
     setEdgeEditorState((currentState) =>
       currentState.edgeId === edgeId
         ? {
-            open: false,
-            edgeId: null,
-          }
+          open: false,
+          edgeId: null,
+        }
         : currentState,
     );
     setEdgeFormDraft(createEdgeFormDraft());
@@ -755,14 +927,14 @@ export default function FamilyTreePage() {
       edges: currentGraph.edges.map((edge): CustomEdge =>
         edge.id === selectedEdge.id
           ? {
-              ...edge,
-              data: {
-                relationshipType,
-                label: nextDraft.label,
-                description: nextDraft.description,
-                views: edge.data?.views ?? selectedEdge.data?.views ?? [viewMode],
-              },
-            }
+            ...edge,
+            data: {
+              relationshipType,
+              label: nextDraft.label,
+              description: nextDraft.description,
+              views: edge.data?.views ?? selectedEdge.data?.views ?? [viewMode],
+            },
+          }
           : edge,
       ),
     }));
@@ -778,11 +950,39 @@ export default function FamilyTreePage() {
   const nextViewMode = viewMode === "family" ? "star" : "family";
   const viewSwitchLabel =
     viewMode === "family" ? "切换到 Social Network 视图" : "切换到 Family Tree 视图";
+  const saveLabel = lastSavedAt
+    ? isDirty
+      ? `保存到本地（未保存改动，上次：${formatTimeAgo(lastSavedAt, nowTick)}）`
+      : `保存到本地（上次：${formatTimeAgo(lastSavedAt, nowTick)}）`
+    : isDirty
+      ? "保存到本地（未保存）"
+      : "保存到本地（尚未保存）";
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.isComposing) {
         return;
+      }
+
+      // ⌘+⇧+S 保存到本地
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey) {
+        const key = event.key.toLowerCase();
+        if (key === "s") {
+          event.preventDefault();
+          handleSaveToLocal();
+          return;
+        }
+      }
+
+      // ⌘ U 从本地加载
+      if ((event.metaKey || event.ctrlKey) && !event.shiftKey && !event.altKey) {
+        const key = event.key.toLowerCase();
+
+        if (key === "u") {
+          event.preventDefault();
+          handleLoadFromLocal();
+          return;
+        }
       }
 
       if (editorState.open) {
@@ -867,84 +1067,100 @@ export default function FamilyTreePage() {
     handleEdgeEditorOpenChange,
     handleSubmitPersonEditor,
     handleSubmitEdgeEditor,
+    handleSaveToLocal,
+    handleLoadFromLocal,
     personFormDraft.name,
     selectedEdgeId,
     selectedPersonId,
   ]);
 
   return (
-    <div className="relative left-1/2 h-[calc(100vh-8rem-2px)] w-screen -translate-x-1/2 overflow-hidden -mb-16">
-      <div className="absolute inset-0">
-        <ReactFlow
-          key={viewMode}
-          onInit={setReactFlowInstance}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onNodeClick={handleNodeClick}
-          onNodeDoubleClick={handleNodeDoubleClick}
-          onNodeDragStop={handleNodeDragStop}
-          onEdgeClick={handleEdgeClick}
-          onEdgeDoubleClick={handleEdgeDoubleClick}
-          onEdgeContextMenu={handleEdgeContextMenu}
-          onPaneClick={handlePaneClick}
-          onConnect={handleConnect}
-          isValidConnection={isValidConnection}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          deleteKeyCode={null}
-          fitView
-          fitViewOptions={{ padding: 0.16, duration: 0 }}
-          minZoom={0.35}
-          maxZoom={1.6}
-          panOnScroll
-          selectionOnDrag
-          proOptions={{ hideAttribution: true }}
-        >
-          <Background variant={BackgroundVariant.Dots} />
-          <Controls showInteractive={false} />
-        </ReactFlow>
-      </div>
-
-      <div className="pointer-events-none absolute left-4 top-4 z-20  md:top-6">
-        <div className="pointer-events-auto rounded-[24px] border border-stone-200/80 bg-white/20 px-5 py-3 shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-lg">
-          <div className="text-lg font-serif font-semibold text-accent-foreground">
-            Personal History
-          </div>
-          <div className="mt-1 text-sm leading-6 text-muted-foreground">
-            {viewMode === "family"
-              ? "The family tree of Katharine Graham"
-              : "The network of Katharine Graham"}
-          </div>
-        </div>
-      </div>
-
-      <div className="pointer-events-none absolute right-4 top-4 z-20 flex flex-col items-end gap-3 md:right-6 md:top-6">
-        <div className="pointer-events-auto rounded-[24px] border border-stone-200/80 bg-white/88 p-1 shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl">
-          <div className="flex items-center gap-1">
-            <ToolIconButton label={viewSwitchLabel} active onClick={() => setViewMode(nextViewMode)}>
-              {viewMode === "family" ? <Network /> : <WaypointsIcon />}
-            </ToolIconButton>
-            <ToolIconButton label="保存到本地（即将支持）" disabled>
-              <Save />
-            </ToolIconButton>
-            <ToolIconButton label="从本地加载（即将支持）" disabled>
-              <FolderOpen />
-            </ToolIconButton>
-          </div>
+    <FamilyTreeThemeProvider
+      value={{
+        personCategoryMeta,
+        edgeRelationshipMeta,
+      }}
+    >
+      <input
+        ref={importFileInputRef}
+        type="file"
+        accept="application/json,.json"
+        className="hidden"
+        onChange={handleImportFileChange}
+      />
+      <ConfirmLoadDialog
+        open={isLoadConfirmOpen}
+        onOpenChange={setIsLoadConfirmOpen}
+        onConfirm={handleConfirmLoadFromLocal}
+      />
+      <div className="relative left-1/2 h-[calc(100vh-8rem-2px)] w-screen -translate-x-1/2 overflow-hidden -mb-16">
+        <div className="absolute inset-0">
+          <ReactFlow
+            key={viewMode}
+            onInit={setReactFlowInstance}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={handleNodeClick}
+            onNodeDoubleClick={handleNodeDoubleClick}
+            onNodeDragStop={handleNodeDragStop}
+            onEdgeClick={handleEdgeClick}
+            onEdgeDoubleClick={handleEdgeDoubleClick}
+            onEdgeContextMenu={handleEdgeContextMenu}
+            onPaneClick={handlePaneClick}
+            onConnect={handleConnect}
+            isValidConnection={isValidConnection}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            deleteKeyCode={null}
+            fitView
+            fitViewOptions={{ padding: 0.16, duration: 0 }}
+            minZoom={0.35}
+            maxZoom={1.6}
+            panOnScroll
+            selectionOnDrag
+            proOptions={{ hideAttribution: true }}
+          >
+            <Background variant={BackgroundVariant.Dots} />
+            <Controls showInteractive={false} />
+          </ReactFlow>
         </div>
 
-        {/* Person Info Sidebar */}
-        <div className="pointer-events-auto max-w-[280px]">
-          <SidebarDrawer
-            person={selectedPerson as BiographyPersonData | null}
-            onClose={() => setSelectedPersonId("")}
+        <div className="pointer-events-none absolute left-4 top-4 z-20  md:top-6">
+          <div className="pointer-events-auto rounded-[24px] border border-stone-200/80 bg-white/20 px-5 py-3 shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-lg">
+            <div className="text-lg font-serif font-semibold text-accent-foreground">
+              {exportMeta.bookTitle || "Personal History"}
+            </div>
+            <div className="mt-1 text-sm leading-6 text-muted-foreground">
+              {viewMode === "family"
+                ? "The family tree of Katharine Graham"
+                : "The network of Katharine Graham"}
+            </div>
+          </div>
+        </div>
+
+        <div className="pointer-events-none absolute right-4 top-4 z-20 flex flex-col items-end gap-3 md:right-6 md:top-6">
+          <CanvasToolbar
+            viewMode={viewMode}
+            viewSwitchLabel={viewSwitchLabel}
+            saveLabel={saveLabel}
+            isDirty={isDirty}
+            onToggleView={() => setViewMode(nextViewMode)}
+            onSave={handleSaveToLocal}
+            onLoad={handleLoadFromLocal}
           />
-        </div>
 
-        {/* Legend */}
-        {/* <div className="pointer-events-auto rounded-[24px] border border-stone-200/80 bg-white/88 p-4 shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl">
+          {/* Person Info Sidebar */}
+          <div className="pointer-events-auto max-w-[280px]">
+            <SidebarDrawer
+              person={selectedPerson as BiographyPersonData | null}
+              onClose={() => setSelectedPersonId("")}
+            />
+          </div>
+
+          {/* Legend */}
+          {/* <div className="pointer-events-auto rounded-[24px] border border-stone-200/80 bg-white/88 p-4 shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl">
           <div className="space-y-2.5 text-sm text-stone-600">
             {[
               ["amber", "家族 / 血缘"],
@@ -967,27 +1183,28 @@ export default function FamilyTreePage() {
             ))}
           </div>
         </div> */}
-      </div>
+        </div>
 
-      <PersonEditorDrawer
-        open={editorState.open}
-        mode={editorState.mode}
-        value={personFormDraft}
-        onOpenChange={handleEditorOpenChange}
-        onChange={setPersonFormDraft}
-        onSubmit={handleSubmitPersonEditor}
-      />
-      <EdgeEditorDrawer
-        open={edgeEditorState.open}
-        value={edgeFormDraft}
-        sourceName={edgeEditorContext?.sourceName ?? ""}
-        targetName={edgeEditorContext?.targetName ?? ""}
-        relationshipTypes={edgeEditorContext?.relationshipTypes ?? ALL_RELATIONSHIP_TYPES}
-        onOpenChange={handleEdgeEditorOpenChange}
-        onChange={setEdgeFormDraft}
-        onSubmit={handleSubmitEdgeEditor}
-      />
-      {edgeContextMenuContent}
-    </div>
+        <PersonEditorDrawer
+          open={editorState.open}
+          mode={editorState.mode}
+          value={personFormDraft}
+          onOpenChange={handleEditorOpenChange}
+          onChange={setPersonFormDraft}
+          onSubmit={handleSubmitPersonEditor}
+        />
+        <EdgeEditorDrawer
+          open={edgeEditorState.open}
+          value={edgeFormDraft}
+          sourceName={edgeEditorContext?.sourceName ?? ""}
+          targetName={edgeEditorContext?.targetName ?? ""}
+          relationshipTypes={edgeEditorContext?.relationshipTypes ?? ALL_RELATIONSHIP_TYPES}
+          onOpenChange={handleEdgeEditorOpenChange}
+          onChange={setEdgeFormDraft}
+          onSubmit={handleSubmitEdgeEditor}
+        />
+        {edgeContextMenuContent}
+      </div>
+    </FamilyTreeThemeProvider>
   );
 }

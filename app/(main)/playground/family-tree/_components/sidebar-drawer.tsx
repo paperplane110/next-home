@@ -7,16 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import type { BiographyPersonData } from "../_types/graph";
-
-const categoryLabel: Record<BiographyPersonData["category"], string> = {
-  family: "家族",
-  professional: "职业",
-  media: "媒体",
-  political: "政治",
-  business: "商业",
-  social: "社交",
-  other: "其他",
-};
+import { useFamilyTreeTheme } from "./family-tree-theme-provider";
 
 interface SidebarDrawerProps {
   person: BiographyPersonData | null;
@@ -24,6 +15,8 @@ interface SidebarDrawerProps {
 }
 
 export function SidebarDrawer({ person, onClose }: SidebarDrawerProps) {
+  const { personCategoryMeta } = useFamilyTreeTheme();
+
   return (
     <aside
       className={cn(
@@ -59,7 +52,7 @@ export function SidebarDrawer({ person, onClose }: SidebarDrawerProps) {
         <>
           <div className="mt-4 flex flex-wrap gap-1.5">
             <Badge variant="outline" className="rounded-full text-[10px]">
-              {categoryLabel[person.category]}
+              {personCategoryMeta[person.category].label}
             </Badge>
             {person.birthDeath ? (
               <Badge variant="secondary" className="rounded-full text-[10px]">
