@@ -94,12 +94,50 @@ function isTextareaTarget(target: EventTarget | null) {
   return target instanceof HTMLElement && (target.tagName === "TEXTAREA" || target.isContentEditable);
 }
 
+/** Prune marriage nodes without wife and husband */
+function pruneOrphanMarriageNodes(dataset: GraphDataset): GraphDataset {
+  const marriageNodeIds = new Set(
+    dataset.nodes.filter((node) => node.type === "marriageNode").map((node) => node.id),
+  );
+
+  if (marriageNodeIds.size === 0) {
+    return dataset;
+  }
+
+  // Find all marriage nodes that has wife or husband
+  const connectedMarriageNodeIds = new Set<string>();
+  dataset.edges.forEach((edge) => {
+    if (marriageNodeIds.has(edge.target)) {
+      connectedMarriageNodeIds.add(edge.target);
+    }
+  });
+
+  const orphanMarriageNodeIds = new Set(
+    [...marriageNodeIds].filter((nodeId) => !connectedMarriageNodeIds.has(nodeId)),
+  );
+
+  if (orphanMarriageNodeIds.size === 0) {
+    return dataset;
+  }
+
+  return {
+    ...dataset,
+    nodes: dataset.nodes.filter(
+      (node) => !(node.type === "marriageNode" && orphanMarriageNodeIds.has(node.id)),
+    ),
+    edges: dataset.edges.filter(
+      (edge) =>
+        !orphanMarriageNodeIds.has(edge.source) && !orphanMarriageNodeIds.has(edge.target),
+    ),
+  };
+}
+
 function getNodeDisplayName(node: CustomNode) {
   if (node.type === "biographyPersonNode") {
     return node.data.name;
   }
-
-  return node.data.label || "夫妻";
+  // For marriage node
+  return node.data.label || "婚姻";
 }
 
 function getAllowedRelationshipTypes(
@@ -228,15 +266,17 @@ export default function FamilyTreePage() {
         .map((edge) => edge.id),
     );
 
-    setGraphDraft((currentGraph) => ({
-      ...currentGraph,
-      nodes: currentGraph.nodes.filter(
-        (node) => !(node.id === personId && node.type === "biographyPersonNode"),
-      ),
-      edges: currentGraph.edges.filter(
-        (edge) => edge.source !== personId && edge.target !== personId,
-      ),
-    }));
+    setGraphDraft((currentGraph) =>
+      pruneOrphanMarriageNodes({
+        ...currentGraph,
+        nodes: currentGraph.nodes.filter(
+          (node) => !(node.id === personId && node.type === "biographyPersonNode"),
+        ),
+        edges: currentGraph.edges.filter(
+          (edge) => edge.source !== personId && edge.target !== personId,
+        ),
+      }),
+    );
     setSelectedPersonId((currentId) => (currentId === personId ? "" : currentId));
     setEditorState((currentState) =>
       currentState.personId === personId
@@ -650,10 +690,12 @@ export default function FamilyTreePage() {
   }, []);
 
   const handleDeleteRelationshipEdge = useCallback((edgeId: string) => {
-    setGraphDraft((currentGraph) => ({
-      ...currentGraph,
-      edges: currentGraph.edges.filter((edge) => edge.id !== edgeId),
-    }));
+    setGraphDraft((currentGraph) =>
+      pruneOrphanMarriageNodes({
+        ...currentGraph,
+        edges: currentGraph.edges.filter((edge) => edge.id !== edgeId),
+      }),
+    );
     setSelectedEdgeId((currentId) => (currentId === edgeId ? null : currentId));
     setEdgeContextMenu((currentMenu) =>
       currentMenu?.edgeId === edgeId ? null : currentMenu,
@@ -796,11 +838,17 @@ export default function FamilyTreePage() {
 
       if (
         event.key === "Backspace" &&
-        selectedEdgeId &&
         !isEditableTarget(event.target)
       ) {
         event.preventDefault();
-        handleDeleteRelationshipEdge(selectedEdgeId);
+        if (selectedEdgeId) {
+          handleDeleteRelationshipEdge(selectedEdgeId);
+          return;
+        }
+
+        if (selectedPersonId) {
+          handleDeletePerson(selectedPersonId);
+        }
       }
     }
 
@@ -814,12 +862,14 @@ export default function FamilyTreePage() {
     edgeEditorState.open,
     editorState.open,
     handleDeleteRelationshipEdge,
+    handleDeletePerson,
     handleEditorOpenChange,
     handleEdgeEditorOpenChange,
     handleSubmitPersonEditor,
     handleSubmitEdgeEditor,
     personFormDraft.name,
     selectedEdgeId,
+    selectedPersonId,
   ]);
 
   return (
@@ -843,6 +893,7 @@ export default function FamilyTreePage() {
           isValidConnection={isValidConnection}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
+          deleteKeyCode={null}
           fitView
           fitViewOptions={{ padding: 0.16, duration: 0 }}
           minZoom={0.35}

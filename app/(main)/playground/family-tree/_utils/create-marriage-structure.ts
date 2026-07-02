@@ -31,7 +31,7 @@ export function createMarriageStructure(sourceNode: PersonNode, targetNode: Pers
     data: {
       husbandId: sourceNode.id,
       wifeId: targetNode.id,
-      label: "夫妻",
+      label: "婚姻",
       viewMeta: {
         familyTree: {
           position: marriagePosition,

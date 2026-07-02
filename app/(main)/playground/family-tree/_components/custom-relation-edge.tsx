@@ -19,17 +19,17 @@ const relationStyles: Record<
   blood: {
     stroke: "#57534e",
     labelClassName: "border-stone-200 bg-white text-stone-600",
-    strokeWidth: 1.8,
+    strokeWidth: 1,
   },
   adoption: {
     stroke: "#57534e",
     labelClassName: "border-stone-200 bg-white text-stone-600",
-    strokeWidth: 1.8,
+    strokeWidth: 1,
   },
   marriage: {
     stroke: "#0f172a",
     labelClassName: "border-stone-200 bg-stone-900 text-stone-50",
-    strokeWidth: 2.2,
+    strokeWidth: 1.2,
   },
   employ: {
     stroke: "#0369a1",
