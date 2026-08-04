@@ -58,7 +58,7 @@ export function EdgeEditorDrawer({
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="space-y-5 overflow-y-auto px-4 py-5">
+        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-5">
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label>来源节点</Label>
@@ -121,7 +121,7 @@ export function EdgeEditorDrawer({
         <DrawerFooter className="border-t border-stone-200/80 bg-background/80">
           <Button type="button" variant="secondary" onClick={onSubmit}>
             保存关系
-            <Kbd className="bg-gray-200">Enter</Kbd>
+            <Kbd className="bg-gray-200">⌘ Enter</Kbd>
           </Button>
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
             取消

@@ -104,6 +104,18 @@ function isTextareaTarget(target: EventTarget | null) {
   return target instanceof HTMLElement && (target.tagName === "TEXTAREA" || target.isContentEditable);
 }
 
+function shouldDeferPersonSubmitToBadgeInput(target: EventTarget | null) {
+  if (!(target instanceof HTMLInputElement)) {
+    return false;
+  }
+
+  if (target.dataset.personBadgeInput !== "true") {
+    return false;
+  }
+
+  return target.value.trim().length > 0 || target.dataset.badgeEditing === "true";
+}
+
 function formatTimeAgo(savedAt: string, now: number) {
   const diffMs = Math.max(0, now - new Date(savedAt).getTime());
   const diffSeconds = Math.floor(diffMs / 1000);
@@ -141,9 +153,6 @@ function pruneOrphanMarriageNodes(dataset: GraphDataset): GraphDataset {
 
   const connectedMarriageNodeIds = new Set<string>();
   dataset.edges.forEach((edge) => {
-    if (marriageNodeIds.has(edge.source)) {
-      connectedMarriageNodeIds.add(edge.source);
-    }
     if (marriageNodeIds.has(edge.target)) {
       connectedMarriageNodeIds.add(edge.target);
     }
@@ -994,11 +1003,11 @@ export default function FamilyTreePage() {
 
         if (
           event.key === "Enter" &&
-          !event.metaKey &&
-          !event.ctrlKey &&
+          (event.metaKey || event.ctrlKey) &&
           !event.altKey &&
           !event.shiftKey &&
           !isTextareaTarget(event.target) &&
+          !shouldDeferPersonSubmitToBadgeInput(event.target) &&
           personFormDraft.name.trim()
         ) {
           event.preventDefault();
@@ -1017,8 +1026,7 @@ export default function FamilyTreePage() {
 
         if (
           event.key === "Enter" &&
-          !event.metaKey &&
-          !event.ctrlKey &&
+          (event.metaKey || event.ctrlKey) &&
           !event.altKey &&
           !event.shiftKey &&
           !isTextareaTarget(event.target)

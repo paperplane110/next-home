@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
@@ -13,6 +15,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import type { PersonEditorMode, PersonFormDraft } from "../_types/graph";
+import { PersonBadgesInput } from "./person-badges-input";
 
 interface PersonEditorDrawerProps {
   open: boolean;
@@ -51,6 +54,26 @@ export function PersonEditorDrawer({
   onSubmit,
 }: PersonEditorDrawerProps) {
   const isCreateMode = mode === "create";
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      nameInputRef.current?.focus();
+      nameInputRef.current?.select();
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [open]);
+
+  function normalizeYearInput(raw: string) {
+    return raw.replace(/\D/g, "").slice(0, 4);
+  }
 
   function updateField<K extends keyof PersonFormDraft>(key: K, fieldValue: PersonFormDraft[K]) {
     onChange({
@@ -71,11 +94,12 @@ export function PersonEditorDrawer({
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="space-y-5 overflow-y-auto px-4 py-5">
+        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-5">
           <div className="grid gap-2">
             <Label htmlFor="person-name">姓名</Label>
             <Input
               id="person-name"
+              ref={nameInputRef}
               value={value.name}
               placeholder="例如：Katharine Graham"
               onChange={(event) => updateField("name", event.target.value)}
@@ -133,21 +157,36 @@ export function PersonEditorDrawer({
               <Label htmlFor="person-birth-date">出生日期</Label>
               <Input
                 id="person-birth-date"
-                type="date"
+                inputMode="numeric"
                 value={value.birthDate}
-                onChange={(event) => updateField("birthDate", event.target.value)}
+                maxLength={4}
+                placeholder="例如：1917"
+                onChange={(event) => updateField("birthDate", normalizeYearInput(event.target.value))}
               />
+              <p className="text-xs leading-5 text-muted-foreground">一般只需填写年份。</p>
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="person-death-date">死亡日期</Label>
               <Input
                 id="person-death-date"
-                type="date"
+                inputMode="numeric"
                 value={value.deathDate}
-                onChange={(event) => updateField("deathDate", event.target.value)}
+                maxLength={4}
+                placeholder="例如：2001"
+                onChange={(event) => updateField("deathDate", normalizeYearInput(event.target.value))}
               />
+              <p className="text-xs leading-5 text-muted-foreground">一般只需填写年份。</p>
             </div>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="person-badges-input">标签</Label>
+            <PersonBadgesInput
+              inputId="person-badges-input"
+              value={value.badges}
+              onChange={(badges) => updateField("badges", badges)}
+            />
           </div>
 
           <div className="grid gap-2">
@@ -165,7 +204,7 @@ export function PersonEditorDrawer({
         <DrawerFooter className="border-t border-stone-200/80 bg-background/80">
           <Button type="button" variant="secondary" onClick={onSubmit} disabled={!value.name.trim()}>
             {isCreateMode ? "创建人物" : "保存更改"}
-            <Kbd className="bg-gray-200">Enter</Kbd>
+            <Kbd className="bg-gray-200">⌘ Enter</Kbd>
           </Button>
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
             取消

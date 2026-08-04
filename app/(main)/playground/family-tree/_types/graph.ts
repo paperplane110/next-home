@@ -106,6 +106,7 @@ export interface PersonFormDraft {
   deathDate: string;
   category: PersonCategory;
   title: string;
+  badges: string[];
   bioSummary: string;
 }
 

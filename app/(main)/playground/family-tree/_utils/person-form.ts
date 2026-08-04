@@ -7,6 +7,47 @@ function trimToUndefined(value: string) {
   return trimmed ? trimmed : undefined;
 }
 
+export function normalizeYearValue(raw?: string) {
+  if (!raw) {
+    return "";
+  }
+
+  const trimmed = raw.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (/^\d{1,4}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  const isoDateMatch = trimmed.match(/^(\d{1,4})[-/]\d{1,2}[-/]\d{1,2}$/);
+  if (isoDateMatch) {
+    return isoDateMatch[1];
+  }
+
+  return trimmed;
+}
+
+export function sanitizeBadgeList(badges: string[]) {
+  const normalizedBadges: string[] = [];
+  const seen = new Set<string>();
+
+  badges.forEach((badge) => {
+    const trimmedBadge = badge.trim();
+
+    if (!trimmedBadge || seen.has(trimmedBadge)) {
+      return;
+    }
+
+    seen.add(trimmedBadge);
+    normalizedBadges.push(trimmedBadge);
+  });
+
+  return normalizedBadges;
+}
+
 export function buildBirthDeathLabel(birthDate?: string, deathDate?: string) {
   if (!birthDate && !deathDate) {
     return undefined;
@@ -27,10 +68,11 @@ export function createPersonFormDraft(person?: BiographyPersonData | null): Pers
   return {
     name: person?.name ?? "",
     gender: person?.gender ?? "unknown",
-    birthDate: person?.birthDate ?? "",
-    deathDate: person?.deathDate ?? "",
+    birthDate: normalizeYearValue(person?.birthDate),
+    deathDate: normalizeYearValue(person?.deathDate),
     category: person?.category ?? "other",
     title: person?.title ?? "",
+    badges: sanitizeBadgeList(person?.badges ?? []),
     bioSummary: person?.bioSummary ?? "",
   };
 }
@@ -40,8 +82,9 @@ export function sanitizePersonDraft(draft: PersonFormDraft): PersonFormDraft {
     ...draft,
     name: draft.name.trim(),
     title: draft.title.trim(),
-    birthDate: draft.birthDate.trim(),
-    deathDate: draft.deathDate.trim(),
+    birthDate: normalizeYearValue(draft.birthDate),
+    deathDate: normalizeYearValue(draft.deathDate),
+    badges: sanitizeBadgeList(draft.badges),
     bioSummary: draft.bioSummary.trim(),
   };
 }
@@ -62,6 +105,7 @@ export function mergePersonDraftIntoNode(node: PersonNode, draft: PersonFormDraf
       birthDeath: buildBirthDeathLabel(birthDate, deathDate),
       category: sanitized.category,
       title: trimToUndefined(sanitized.title),
+      badges: sanitized.badges,
       bioSummary: trimToUndefined(sanitized.bioSummary),
     },
   };

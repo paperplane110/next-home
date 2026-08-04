@@ -38,7 +38,7 @@ export function ConfirmLoadDialog({
             加载本地文件后，将覆盖当前内容。
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="bg-stone-100 px-4 py-3">
+        <AlertDialogFooter className="bg-stone-100 px-4 py-3 border-t">
           <AlertDialogCancel size="sm">取消</AlertDialogCancel>
           <AlertDialogAction
             size="sm"

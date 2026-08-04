@@ -91,9 +91,33 @@ priority: @p1, @p2 ...
 
 ## 99. 细节
 
-- [ ] 更加方便对齐 node 的功能
+person node
+- [x] person-node editor 存在问题
+  - 出生日期、死亡日期无法设置更新
+  - 无法打 badges
 - [ ] 更加方便输入英文名的功能：自动补全？
-- [ ] 在family视图下建立的person node 默认 category 为 family
+  - [ ] 或者根据父亲的英文名，自动补全当前节点的姓氏
+- [ ] 更轻量化的交互，现在填写节点信息主要靠的是 form
+  - [ ] 姓名的修改直接在node中，
+  - [ ] 其他功能考虑做成一个出现在 node 下方条形的 tool bar
+    - [ ] 像性别就可以用 icon button 来解决
+    - [ ] category 可以显示一个 badge，hover 后出现 select menu ，用户可以选择不同的 category
+    - [ ] badge 的添加/删除/修改
+
+node
+- [ ] 更加方便对齐 node 的功能，比如node的移动按照合适的刻度来移动，而不是任意位置
+- [ ] 新增右键node弹出 menu 功能
+  - [ ] menu分为三个区域
+    - [ ] 编辑
+    - [ ] 层次：向上一层、向下一层、最上层、最下层
+    - [ ] 删除
 - [ ] handle 的 source 和 target 似乎不用区分，因为本身并非 有方向 的图
-- [ ] handle只允许两个点，是不是太少了，如何增加自由移动的handle？或者暂时实现上下左右四个handle
-- [ ] 
+- [ ] handle只允许两个点，是不是太少了。
+  - [ ] source handle 有四个，分别是上、下、左、右
+  - [ ] target handle 有四个，分别是上、下、左、右；同时包括动态handle，根据新建edge时拖拽的位置，生成对应的 target handle
+
+- [ ] 在family视图下建立的person node 默认 category 为 family
+- [ ] 在family视图下建立的 edge 默认为 blood 关系
+
+画布
+- [ ] 左键单击后拖动，进行框选 node
