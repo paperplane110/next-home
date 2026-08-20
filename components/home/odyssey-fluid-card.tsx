@@ -78,131 +78,148 @@ void main() {
 const COMPOSITE_FRAG = `#version 300 es
 precision highp float;
 precision highp sampler2D;
+
 in vec2 v_uv;
 out vec4 outColor;
+
 uniform sampler2D u_normal;
 uniform vec2 u_res;
 uniform float u_time;
 
-vec3 sky(vec2 uv) {
-  vec3 deep = vec3(0.027, 0.055, 0.102);  // #070e1a
-  vec3 mid  = vec3(0.100, 0.255, 0.435);  // ≈ #1a466f
-  vec3 hi   = vec3(0.285, 0.500, 0.770);  // ≈ #4980c4
-  float grad = smoothstep(-0.15, 1.15, uv.y * 0.85 + uv.x * 0.25);
-  vec3 base = mix(mid, deep, grad);
-  float haze = smoothstep(0.0, 1.0, uv.x * 0.6 + (1.0 - uv.y) * 0.5);
-  base = mix(base, hi, haze * 0.15);
-  // caustic 用法线扰动 uv 计算，不再有固定方向的椭圆飘移
-  float c1 = sin((uv.x * 14.0 + sin(u_time * 0.22 + uv.y * 9.0) * 1.3 + u_time * 0.55)) * 0.5 + 0.5;
-  float c2 = sin((uv.y * 20.0 + cos(u_time * 0.28 + uv.x * 7.0) * 0.9 + u_time * 0.42)) * 0.5 + 0.5;
-  float caustic = c1 * c2;
-  base += vec3(0.05, 0.10, 0.20) * pow(caustic, 2.6) * 0.70;
-  return base;
+vec3 oceanColor(vec2 uv) {
+  float depth = smoothstep(0.04, 0.96, 1.0 - uv.y);
+
+  vec3 farColor  = vec3(0.040, 0.105, 0.190); // #0A1B30
+  vec3 midColor  = vec3(0.085, 0.225, 0.390); // #163964
+  vec3 nearColor = vec3(0.055, 0.175, 0.315); // #0E2D50
+
+  vec3 col = mix(farColor, midColor, smoothstep(0.0, 0.62, depth));
+  col = mix(col, nearColor, smoothstep(0.52, 1.0, depth) * 0.72);
+
+  float horizon = 1.0 - smoothstep(0.0, 0.34, uv.y);
+  col += vec3(0.025, 0.055, 0.085) * horizon * 0.32;
+
+  float skyLift = smoothstep(0.2, 1.0, uv.x) * horizon;
+  col += vec3(0.018, 0.038, 0.065) * skyLift;
+
+  return col;
 }
 
-// 4 组叠加的 Gerstner-like 平面波，提供永不平息的"微起伏"法线
+float waterTexture(vec2 uv, float t) {
+  vec2 flow = normalize(vec2(0.92, -0.38));
+
+  flow.x += sin(uv.y * 5.0 + t * 0.15) * 0.08;
+  flow.y += sin(uv.x * 4.0 - t * 0.12) * 0.05;
+  flow = normalize(flow);
+
+  vec2 p = uv - flow * t * 0.18;
+
+  float a = sin(
+    p.x * 18.0 +
+    sin(p.y * 7.0 + t * 0.16) * 1.6
+  );
+
+  float b = sin(
+    p.y * 13.0 +
+    cos(p.x * 8.0 - t * 0.20) * 1.1
+  );
+
+  return a * b * 0.5 + 0.5;
+}
+
 vec2 gerstnerNormal(vec2 uv, float t) {
-  float n = 0.0;
-  float nx = 0.0;
-  float ny = 0.0;
+  vec2 flow = normalize(vec2(0.92, -0.38));
 
-  // 方向 1：右上 → 左下（225°），短波浪
-  vec2 d1 = normalize(vec2( 0.82, -0.57));
-  float w1 = dot(d1, uv) * 32.0 + t * 1.35;
-  float a1 = 0.26;
-  n  += sin(w1) * a1;
-  nx += cos(w1) * d1.x * a1 * 32.0;
-  ny += cos(w1) * d1.y * a1 * 32.0;
+  flow.x += sin(uv.y * 5.0 + t * 0.15) * 0.08;
+  flow.y += sin(uv.x * 4.0 - t * 0.12) * 0.05;
+  flow = normalize(flow);
 
-  // 方向 2：右下 → 左上（135°），中等波浪
-  vec2 d2 = normalize(vec2(-0.70, -0.71));
-  float w2 = dot(d2, uv) * 21.0 + t * 0.92;
-  float a2 = 0.40;
-  n  += sin(w2) * a2;
-  nx += cos(w2) * d2.x * a2 * 21.0;
-  ny += cos(w2) * d2.y * a2 * 21.0;
+  float depth = smoothstep(0.05, 0.95, uv.y);
 
-  // 方向 3：横波（水平 0°），长波浪主起伏
-  vec2 d3 = normalize(vec2( 1.00,  0.05));
-  float w3 = dot(d3, uv) * 11.0 + t * 0.50;
-  float a3 = 0.68;
-  n  += sin(w3) * a3;
-  nx += cos(w3) * d3.x * a3 * 11.0;
-  ny += cos(w3) * d3.y * a3 * 11.0;
+  vec2 farDir = normalize(vec2(0.96, 0.28));
+  float farPhase = dot(farDir, uv - flow * t * 0.05);
+  float farWave = cos(farPhase * 26.0);
 
-  // 方向 4：竖波（垂直 90°），缓起伏主起伏
-  vec2 d4 = normalize(vec2(-0.08,  1.00));
-  float w4 = dot(d4, uv) * 8.0 + t * 0.36;
-  float a4 = 0.85;
-  n  += sin(w4) * a4;
-  nx += cos(w4) * d4.x * a4 * 8.0;
-  ny += cos(w4) * d4.y * a4 * 8.0;
+  vec2 midDir = normalize(vec2(0.88, 0.48));
+  float midPhase = dot(midDir, uv - flow * t * 0.13);
+  float midWave = cos(midPhase * 15.0);
 
-  return -vec2(nx, ny) * 0.0018;  // 换算成法线 xy 差值（越小 z 越大）
+  vec2 nearDir = normalize(vec2(0.78, 0.63));
+  float nearPhase = dot(nearDir, uv - flow * t * 0.24);
+  float nearWave = cos(nearPhase * 7.0);
+
+  vec2 detailDir = normalize(vec2(0.98, -0.18));
+  float detailPhase = dot(detailDir, uv - flow * t * 0.38);
+  float detailWave = cos(detailPhase * 34.0);
+
+  vec2 n = vec2(0.0);
+  n += farDir * farWave * 0.025;
+  n += midDir * midWave * 0.085;
+  n += nearDir * nearWave * mix(0.07, 0.19, depth);
+  n += detailDir * detailWave * mix(0.008, 0.025, depth);
+
+  n *= mix(0.55, 1.0, depth);
+
+  return n;
 }
 
 void main() {
-  // Wave Eq 模拟出来的法线（动态投石波列）
   vec2 nSim = texture(u_normal, v_uv).xy;
-  // 4 组 Gerstner 波叠加的"永不停息微起伏"法线
-  vec2 nGer = gerstnerNormal(v_uv, u_time);
-  // 按 0.6:0.4 混合；投石波占主导，Gerstner 做基础呼吸
-  vec2 n = nSim * 0.60 + nGer * 1.00;
+  vec2 nGer = gerstnerNormal(v_uv, u_time * 1.35);
+  vec2 n = nSim * 0.82 + nGer * 0.34;
 
-  // 强折射：0.13（之前 0.06，×2.2）+ Gerstner 微起伏的额外二次扰动 uv
-  vec2 refUv = v_uv + n * 0.13 + vec2(sin(u_time * 0.3 + v_uv.y * 4.0) * 0.004, 0.0);
+  float depth = smoothstep(0.05, 0.95, v_uv.y);
+  float refractionStrength = mix(0.022, 0.055, depth);
 
-  // 折射采样底色
-  vec3 col = sky(refUv);
+  vec2 refUv = v_uv + n * refractionStrength;
 
-  // 光源：3 方向光（主光 + 次光 + fill 环境补光，fill 用水平方向更柔和）
-  vec3 vlight1 = normalize(vec3(-0.62, -0.48, 0.72));
-  vec3 vlight2 = normalize(vec3(+0.68, -0.28, 0.76));
-  vec3 vlight3 = normalize(vec3( 0.08, +0.72, 0.64));
-  vec3 view = vec3(0.0, 0.0, 1.0);
+  vec2 flow = normalize(vec2(0.92, -0.38));
+  refUv += flow * 0.0035;
+  refUv += vec2(
+    sin(u_time * 0.32 + v_uv.y * 6.0) * 0.0015,
+    0.0
+  );
 
-  // 构造 3D 法线（法线 z 方向用 n 长度算，起伏越大 z 越倾斜）
-  float nz = sqrt(max(0.0, 1.0 - min(dot(n, n), 0.99)));
+  vec3 col = oceanColor(refUv);
+
+  float tex = waterTexture(refUv, u_time * 1.15);
+  float texMask = mix(0.18, 1.0, depth);
+  col += vec3(0.018, 0.035, 0.055) * pow(tex, 3.2) * texMask;
+
+  float normalLen = dot(n, n);
+  float nz = sqrt(max(0.0, 1.0 - min(normalLen, 0.92)));
   vec3 norm = normalize(vec3(-n.x, -n.y, nz));
 
-  vec3 half1 = normalize(vlight1 + view);
-  vec3 half2 = normalize(vlight2 + view);
-  vec3 half3 = normalize(vlight3 + view);
+  vec3 light = normalize(vec3(-0.55, -0.48, 0.68));
+  vec3 view = vec3(0.0, 0.0, 1.0);
+  vec3 halfVec = normalize(light + view);
 
-  // Blinn-Phong：主/次光 pow72/pow120（比之前 96/160 略宽一点，高光线更明显）
-  float spec1 = pow(max(dot(norm, half1), 0.0), 72.0);
-  float spec2 = pow(max(dot(norm, half2), 0.0), 120.0);
-  float spec3 = pow(max(dot(norm, half3), 0.0), 36.0) * 0.35;   // fill 柔高光（非常宽）
+  float spec = pow(max(dot(norm, halfVec), 0.0), 180.0);
+  col += vec3(0.78, 0.90, 1.0) * spec * mix(0.35, 0.75, depth);
 
-  // Lambert 漫反射 3 光加权 → 给凹凸面"伪侧面着色"，产生明显的体积凹凸感
-  float lam1 = max(dot(norm, vlight1), 0.0);
-  float lam2 = max(dot(norm, vlight2), 0.0);
-  float lam3 = max(dot(norm, vlight3), 0.0);
-  vec3 lambertTint = vec3(0.13, 0.22, 0.36) * lam1 * 0.30
-                   + vec3(0.10, 0.18, 0.30) * lam2 * 0.22
-                   + vec3(0.08, 0.14, 0.22) * lam3 * 0.18;
-  col += lambertTint;
+  vec3 softLight = normalize(vec3(0.55, -0.25, 0.80));
+  vec3 softHalf = normalize(softLight + view);
+  float softSpec = pow(max(dot(norm, softHalf), 0.0), 48.0);
+  col += vec3(0.12, 0.25, 0.40) * softSpec * mix(0.03, 0.11, depth);
 
-  // Fresnel 边缘光
-  float fres = pow(1.0 - max(dot(norm, view), 0.0), 3.0);
+  float fresnel = pow(1.0 - max(dot(norm, view), 0.0), 4.0);
+  col += vec3(0.08, 0.18, 0.30) * fresnel * mix(0.10, 0.28, depth);
 
-  // 3 路高光叠加：纯白主 + 淡蓝白次 + fill 浅蓝柔
-  vec3 white = vec3(0.94, 0.97, 1.0);
-  vec3 hiWhite = vec3(0.85, 0.93, 1.0);
-  vec3 fillWhite = vec3(0.72, 0.84, 0.98);
-  col += white * (spec1 * 1.10 + spec2 * 0.85);
-  col += hiWhite * (spec1 * 1.45 + spec2 * 1.15);
-  col += fillWhite * spec3;
+  float caustic = waterTexture(v_uv * 0.85, u_time * 0.85);
+  col += vec3(0.025, 0.055, 0.095) * pow(caustic, 4.0) * 0.13 * mix(0.35, 1.0, depth);
 
-  col += vec3(0.18, 0.32, 0.55) * fres * 0.32;
+  col = mix(
+    col * 0.82,
+    col * 1.04,
+    smoothstep(0.0, 1.0, depth)
+  );
 
-  // vignette 略微压暗四周
-  float vig = smoothstep(1.25, 0.2, length(v_uv - 0.5));
-  col *= mix(0.78, 1.0, vig);
+  float vig = smoothstep(1.15, 0.25, length(v_uv - 0.5));
+  col *= mix(0.94, 1.0, vig);
 
   outColor = vec4(col, 1.0);
-}`;
-
+}
+`;
 function createProgram(gl: WebGL2RenderingContext, vsrc: string, fsrc: string) {
   const compile = (t: number, s: string) => {
     const sh = gl.createShader(t)!;
@@ -318,8 +335,8 @@ export function OdysseyFluidCard({ className }: Props) {
       gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     };
 
-    const SIM_W = 384;
-    const SIM_H = 144;
+    const SIM_W = 320;
+    const SIM_H = 120;
     let fA = createFbo(gl, SIM_W, SIM_H);
     let fB = createFbo(gl, SIM_W, SIM_H);
     const fN = createFbo(gl, SIM_W, SIM_H, gl.RG16F, gl.RG);
@@ -377,8 +394,8 @@ export function OdysseyFluidCard({ className }: Props) {
       gl.bindTexture(gl.TEXTURE_2D, fB.tex);
       gl.uniform1i(uniforms.wave.u_prev, 1);
       gl.uniform2f(uniforms.wave.u_texel, 1 / SIM_W, 1 / SIM_H);
-      gl.uniform1f(uniforms.wave.u_c2, 0.30);
-      gl.uniform1f(uniforms.wave.u_damp, 0.9945);
+      gl.uniform1f(uniforms.wave.u_c2, 0.24);
+      gl.uniform1f(uniforms.wave.u_damp, 0.9965);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       const tmp = fA;
       fA = fB;
@@ -395,7 +412,7 @@ export function OdysseyFluidCard({ className }: Props) {
       gl.bindTexture(gl.TEXTURE_2D, fA.tex);
       gl.uniform1i(uniforms.norm.u_u, 0);
       gl.uniform2f(uniforms.norm.u_texel, 1 / SIM_W, 1 / SIM_H);
-      gl.uniform1f(uniforms.norm.u_strength, 46.0);
+      gl.uniform1f(uniforms.norm.u_strength, 36.0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     };
@@ -424,7 +441,6 @@ export function OdysseyFluidCard({ className }: Props) {
     let lastDrop = 0;
     let initialDrops = 0;
     let lastPointer = 0;
-    let lastAmbient = 0;
     let startTs = 0;
     let lastPtrX = -1;
     let lastPtrY = -1;
@@ -449,54 +465,44 @@ export function OdysseyFluidCard({ className }: Props) {
       const elapsed = ts - startTs;
 
       if (!paused) {
-        // 初始波列：8 条随机方向短线，间隔 110ms，力度 ×1.8
-        if (initialDrops < 8 && elapsed > 160 + initialDrops * 110) {
-          const cx = 0.20 + Math.random() * 0.60;
-          const cy = 0.20 + Math.random() * 0.60;
-          const dir = Math.random() * Math.PI * 2;
-          const len = 0.06 + Math.random() * 0.08;
-          const dx = Math.cos(dir) * len;
-          const dy = Math.sin(dir) * len;
-          dropLinePulse(
-            cx - dx, cy - dy, cx + dx, cy + dy,
-            6, 0.045 + Math.random() * 0.03, 0.90 + Math.random() * 0.85
+        if (
+          initialDrops < 3 &&
+          elapsed > 500 + initialDrops * 700
+        ) {
+          const cx =
+            0.22 + Math.random() * 0.56;
+
+          const cy =
+            0.20 + Math.random() * 0.60;
+
+          dropPulse(
+            cx,
+            cy,
+            0.026,
+            0.38
           );
+
           initialDrops++;
         }
 
-        // 自动投石：0.55~0.95s 投 2~3 条随机方向短线，波会互相叠加干涉
-        if (ts - lastDrop > 550 + Math.random() * 400) {
+        if (
+          ts - lastDrop >
+          1700 + Math.random() * 1100
+        ) {
           lastDrop = ts;
-          const batches = 2 + (Math.random() < 0.55 ? 1 : 0);
-          for (let b = 0; b < batches; b++) {
-            const cx = 0.08 + Math.random() * 0.84;
-            const cy = 0.12 + Math.random() * 0.76;
-            const dir = Math.random() * Math.PI * 2;
-            const len = 0.03 + Math.random() * 0.06;
-            const dx = Math.cos(dir) * len;
-            const dy = Math.sin(dir) * len;
-            dropLinePulse(
-              cx - dx, cy - dy, cx + dx, cy + dy,
-              5, 0.018 + Math.random() * 0.02, 0.40 + Math.random() * 0.55
-            );
-          }
-        }
 
-        // 4 角环境微震动：每 130ms 轮流从 1 个角投一个 tiny 脉冲，保持永不平息的微涟漪
-        if (ts - lastAmbient > 130) {
-          lastAmbient = ts;
-          const pick = Math.floor(Math.random() * 4.999);
-          const corners = [
-            [0.06, 0.94],   // 左上
-            [0.94, 0.94],   // 右上
-            [0.06, 0.06],   // 左下
-            [0.94, 0.06],   // 右下
-            [0.50, 0.50],   // 中心
-          ];
-          const c = corners[pick];
-          const jitterX = (Math.random() - 0.5) * 0.05;
-          const jitterY = (Math.random() - 0.5) * 0.05;
-          dropPulse(c[0] + jitterX, c[1] + jitterY, 0.010, 0.13 + Math.random() * 0.12);
+          const cx =
+            0.12 + Math.random() * 0.76;
+
+          const cy =
+            0.15 + Math.random() * 0.70;
+
+          dropPulse(
+            cx,
+            cy,
+            0.020 + Math.random() * 0.012,
+            0.28 + Math.random() * 0.20
+          );
         }
 
         for (let i = 0; i < 3; i++) stepWaveOnce();
@@ -562,12 +568,12 @@ export function OdysseyFluidCard({ className }: Props) {
           const bx = x + dx * pad - nx * 0.004;
           const by = y + dy * pad - ny * 0.004;
           const count = 3 + Math.min(3, Math.floor(d * 60));
-          dropLinePulse(ax, ay, bx, by, count, 0.022, 0.78);
+          dropLinePulse(ax, ay, bx, by, count, 0.018, 0.38);
         } else {
-          dropPulse(x, y, 0.028, 0.70);
+          dropPulse(x, y, 0.022, 0.34);
         }
       } else {
-        dropPulse(x, y, 0.032, 0.82);
+        dropPulse(x, y, 0.026, 0.42);
       }
       lastPtrX = x;
       lastPtrY = y;
