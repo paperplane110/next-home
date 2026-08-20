@@ -1,7 +1,7 @@
 @layer components {
   .mdx-content {
     h2 {
-      @apply font-serif text-3xl pt-8 pb-4;
+      @apply font-serif text-3xl pt-8 pb-4 scroll-mt-18;
 
       span[data-rehype-pretty-code-figure] code {
         @apply text-xl;
@@ -10,7 +10,7 @@
     }
 
     h3 {
-      @apply font-serif text-xl pt-4 pb-2;
+      @apply font-serif text-xl pt-4 pb-2 scroll-mt-18;
 
       /* font-mono looks bigger than p, so manually set the font-size */
       span[data-rehype-pretty-code-figure] code {
