@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRightIcon, Waves } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fraunces } from "@/lib/fonts";
+import { getOdysseyHomeHref } from "@/lib/odyssey-i18n";
 
 const VERT_SRC = `#version 300 es
 precision highp float;
@@ -606,7 +607,7 @@ export function OdysseyFluidCard({ className }: Props) {
   return (
     <Link
       ref={linkRef}
-      href="/the-odyssey"
+      href={getOdysseyHomeHref()}
       className={cn(
         "odyssey-fluid-card group relative block w-full overflow-hidden rounded-2xl",
         "bg-[linear-gradient(135deg,#0a1628_0%,#123459_50%,#030814_100%)]",

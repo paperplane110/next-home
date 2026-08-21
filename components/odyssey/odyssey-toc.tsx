@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { getOdysseyCopy } from "@/lib/odyssey-i18n";
 import { cn } from "@/lib/utils";
 
 interface Heading {
@@ -12,26 +14,37 @@ interface Heading {
 interface OdysseyTocProps {
   headings: Heading[];
   className?: string;
+  locale?: Locale;
 }
 
-export function OdysseyToc({ headings, className }: OdysseyTocProps) {
-  const [activeSlug, setActiveSlug] = useState<string>("");
+export function OdysseyToc({
+  headings,
+  className,
+  locale = DEFAULT_LOCALE,
+}: OdysseyTocProps) {
+  const [activeSlugs, setActiveSlugs] = useState<Set<string>>(() => new Set());
+  const copy = getOdysseyCopy(locale);
 
   useEffect(() => {
     if (headings.length === 0) return;
 
+    // 观察带：从 sticky header 下方一直延伸到视口底部，
+    // 所有出现在正文可见区域内的 heading 都会同时高亮
+    const visible = new Set<string>();
+
     const observer = new IntersectionObserver(
       (entries) => {
-        const visibleEntries = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-        if (visibleEntries.length > 0) {
-          setActiveSlug(visibleEntries[0].target.id);
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            visible.add(entry.target.id);
+          } else {
+            visible.delete(entry.target.id);
+          }
         }
+        setActiveSlugs(new Set(visible));
       },
       {
-        rootMargin: "-80px 0px -60% 0px",
+        rootMargin: "-80px 0px 0px 0px",
         threshold: 0,
       }
     );
@@ -52,7 +65,7 @@ export function OdysseyToc({ headings, className }: OdysseyTocProps) {
       className={cn("w-full", className)}
     >
       <p className="text-sm font-semibold mb-3">
-        On this page
+        {copy.tocLabel}
       </p>
       <ul className="space-y-1 flex flex-col gap-1">
         {headings.map((heading) => (
@@ -64,7 +77,7 @@ export function OdysseyToc({ headings, className }: OdysseyTocProps) {
                 heading.level === 2 && "pl-0",
                 heading.level === 3 && "pl-3",
                 heading.level >= 4 && "pl-6",
-                activeSlug === heading.slug
+                activeSlugs.has(heading.slug)
                   ? "text-odyssey font-medium"
                   : "text-muted-foreground hover:text-foreground"
               )}
@@ -73,7 +86,6 @@ export function OdysseyToc({ headings, className }: OdysseyTocProps) {
                 const el = document.getElementById(heading.slug);
                 if (el) {
                   el.scrollIntoView({ behavior: "smooth", block: "start" });
-                  setActiveSlug(heading.slug);
                 }
               }}
             >

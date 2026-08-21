@@ -38,9 +38,10 @@ Todo
 - [ ] CharacterCard styles
 
 * [ ] 国际化
-  - [ ] MDX 翻译成中文
-  - [ ] slug 策略：不同语言共用同一套 slug
-  - [ ] Popover / InlineLink 也要语言感知
+  - 当前路由骨架已升级为 `/zh/the-odyssey/...` / `/en/the-odyssey/...`，默认中文；旧 `/the-odyssey/...` 重定向到中文路径
+  - [x] MDX 翻译成中文
+  - [x] slug 策略：不同语言共用同一套 slug
+  - [x] Popover / InlineLink 也要语言感知
   - [ ] SEO 也要一起做
     - hreflang
     - locale-specific canonical
@@ -49,4 +50,3 @@ Todo
 * [ ] odysessy/page&#x20;
   - [ ] 文案需要打磨，减少ai感
   - [ ] 中下半部分的内容需要重新设计
-

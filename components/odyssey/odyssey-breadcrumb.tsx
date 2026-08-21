@@ -3,14 +3,17 @@ import { cn } from "@/lib/utils";
 import { fraunces } from "@/lib/fonts";
 import { ChevronRight } from "lucide-react";
 import type { OdysseyCategory } from "@/lib/odyssey";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { getOdysseyCategoryLabel, getOdysseyHomeHref } from "@/lib/odyssey-i18n";
 
 interface OdysseyBreadcrumbProps {
   category: OdysseyCategory;
   title: string;
   className?: string;
+  locale?: Locale;
 }
 
-export function OdysseyBreadcrumb({ category, title, className }: OdysseyBreadcrumbProps) {
+export function OdysseyBreadcrumb({ category, title, className, locale = DEFAULT_LOCALE }: OdysseyBreadcrumbProps) {
   return (
     <nav
       aria-label="Breadcrumb"
@@ -22,7 +25,7 @@ export function OdysseyBreadcrumb({ category, title, className }: OdysseyBreadcr
     >
 
       <Link
-        href="/the-odyssey"
+        href={getOdysseyHomeHref(locale)}
         className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
       >
         {/* <BookOpen className="size-3.5" /> */}
@@ -30,10 +33,10 @@ export function OdysseyBreadcrumb({ category, title, className }: OdysseyBreadcr
       </Link>
       <ChevronRight className="size-3.5 text-neutral-400" />
       <Link
-        href={`/the-odyssey/#category-${category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")}`}
+        href={`${getOdysseyHomeHref(locale)}#category-${category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")}`}
         className="transition-colors hover:text-foreground"
       >
-        {category}
+        {getOdysseyCategoryLabel(category, locale)}
       </Link>
       <ChevronRight className="size-3.5 text-neutral-400" />
       <span className="text-foreground font-medium line-clamp-1">{title}</span>

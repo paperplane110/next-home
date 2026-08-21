@@ -137,6 +137,16 @@ const ODYSSEY_CATEGORIES = [
   "Reading Guide",
 ] as const;
 
+const createOdysseyLocalizedFields = (z: Parameters<Parameters<typeof defineCollection>[0]["schema"]>[0]) =>
+  z.object({
+    title: z.string().optional(),
+    shortTitle: z.string().optional(),
+    aliases: z.array(z.string()).optional(),
+    summary: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    cover: z.string().optional(),
+  });
+
 // odyssey wiki 集合
 const odyssey = defineCollection({
   name: "odyssey",
@@ -154,6 +164,12 @@ const odyssey = defineCollection({
     related: z.array(z.string()).optional().default([]),
     references: z.array(z.string()).optional().default([]),
     cover: z.string().optional(),
+    i18n: z
+      .object({
+        zh: createOdysseyLocalizedFields(z).optional(),
+        en: createOdysseyLocalizedFields(z).optional(),
+      })
+      .optional(),
   }),
   transform: async (document, context) => {
     const mdx = await compileMDX(

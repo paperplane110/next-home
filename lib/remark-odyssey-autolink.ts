@@ -3,9 +3,11 @@ import path from "node:path";
 
 import matter from "gray-matter";
 import { visitParents } from "unist-util-visit-parents";
+import type { Locale } from "@/lib/i18n";
 
 type OdysseyGlossaryEntry = {
   slug: string;
+  locale: Locale;
   terms: string[];
 };
 
@@ -29,7 +31,9 @@ const SKIP_ANCESTOR_TYPES = new Set([
   "mdxFlowExpression",
   "mdxjsEsm",
 ]);
-const WORD_CHAR_RE = /[\p{L}\p{N}]/u;
+// 只把拉丁字母（含变音符号）、数字、组合符号视为「词内字符」；CJK、希腊文等视为非词字符，
+// 这样中文正文里「奥德修斯」「雅典娜」等词条也能满足词边界并自动链接
+const WORD_CHAR_RE = /[A-Za-z0-9À-ɏ̀-ͯ]/u;
 
 function listOdysseyFiles(dir: string): string[] {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -74,13 +78,23 @@ function addTerm(target: Set<string>, value: string | undefined) {
   }
 }
 
+// content/odyssey/{en,zh}/<slug>.mdx 双目录；无前缀的文件按英文处理
+function parseOdysseyEntryPath(filePath: string): { locale: Locale; slug: string } {
+  const match = filePath.match(/^(en|zh)\//);
+  if (match) {
+    return { locale: match[1] as Locale, slug: filePath.slice(match[0].length) };
+  }
+  return { locale: "en", slug: filePath };
+}
+
 function buildOdysseyGlossary(): OdysseyGlossaryEntry[] {
   const files = listOdysseyFiles(ODYSSEY_CONTENT_DIR);
 
   return files
     .map((filePath) => {
       const relativePath = path.relative(ODYSSEY_CONTENT_DIR, filePath);
-      const slug = relativePath.replace(/\\/g, "/").replace(/\.mdx$/u, "");
+      const pathWithoutExt = relativePath.replace(/\\/g, "/").replace(/\.mdx$/u, "");
+      const { locale, slug } = parseOdysseyEntryPath(pathWithoutExt);
       const source = fs.readFileSync(filePath, "utf8");
       const { data } = matter(source);
       const frontmatter = data as OdysseyFrontmatter;
@@ -94,6 +108,7 @@ function buildOdysseyGlossary(): OdysseyGlossaryEntry[] {
 
       return {
         slug,
+        locale,
         terms: Array.from(terms).sort((a, b) => b.length - a.length),
       };
     })
@@ -115,6 +130,7 @@ function hasWordBoundary(text: string, start: number, end: number) {
 
 function createLinkedChildren(
   text: string,
+  locale: Locale,
   currentSlug: string | undefined,
   usedSlugs: Set<string>
 ) {
@@ -122,11 +138,15 @@ function createLinkedChildren(
   let buffer = "";
   let cursor = 0;
   let changed = false;
+  // 中文正文允许匹配中文词条与英文词条（如「奥德修斯（Odysseus）」），英文正文只用英文词条
+  const allowedLocales: ReadonlySet<Locale> =
+    locale === "zh" ? new Set<Locale>(["zh", "en"]) : new Set<Locale>(["en"]);
 
   while (cursor < text.length) {
     let match: { slug: string; term: string } | null = null;
 
     for (const entry of odysseyGlossary) {
+      if (!allowedLocales.has(entry.locale)) continue;
       if (entry.slug === currentSlug || usedSlugs.has(entry.slug)) continue;
 
       for (const term of entry.terms) {
@@ -153,7 +173,7 @@ function createLinkedChildren(
 
     children.push({
       type: "link",
-      url: `/the-odyssey/${match.slug}`,
+      url: `/${locale}/the-odyssey/${match.slug}`,
       children: [{ type: "text", value: match.term }],
     });
     usedSlugs.add(match.slug);
@@ -170,6 +190,7 @@ function createLinkedChildren(
 export function remarkOdysseyAutolink(options: { currentSlug?: string } = {}) {
   return function transformer(tree: any) {
     const usedSlugs = new Set<string>();
+    const { locale, slug: currentSlug } = parseOdysseyEntryPath(options.currentSlug ?? "");
 
     visitParents(tree, "text", (node: any, ancestors: any[]) => {
       if (!node.value || typeof node.value !== "string") return;
@@ -181,7 +202,7 @@ export function remarkOdysseyAutolink(options: { currentSlug?: string } = {}) {
       const index = parent.children.indexOf(node);
       if (index === -1) return;
 
-      const replacement = createLinkedChildren(node.value, options.currentSlug, usedSlugs);
+      const replacement = createLinkedChildren(node.value, locale, currentSlug, usedSlugs);
       if (!replacement) return;
 
       parent.children.splice(index, 1, ...replacement);

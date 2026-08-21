@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
 
 export interface CharacterCardProps {
   name: string;
@@ -10,7 +11,13 @@ export interface CharacterCardProps {
   imageUrl?: string;
   description?: string;
   family?: string[];
+  locale?: Locale;
 }
+
+const CHARACTER_CARD_LABELS: Record<Locale, { aliases: string; family: string }> = {
+  zh: { aliases: "别名：", family: "家族：" },
+  en: { aliases: "Also known as: ", family: "Family:" },
+};
 
 export function CharacterCard({
   name,
@@ -20,8 +27,10 @@ export function CharacterCard({
   imageUrl,
   description,
   family = [],
+  locale = DEFAULT_LOCALE,
 }: CharacterCardProps) {
   const firstLetter = name.charAt(0).toUpperCase();
+  const labels = CHARACTER_CARD_LABELS[locale];
 
   return (
     <div
@@ -79,7 +88,7 @@ export function CharacterCard({
 
         {aliases.length > 0 && (
           <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground/80">Also known as: </span>
+            <span className="font-medium text-foreground/80">{labels.aliases}</span>
             {aliases.join(", ")}
           </p>
         )}
@@ -87,7 +96,7 @@ export function CharacterCard({
         {family.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-sm font-medium text-foreground/80">
-              Family:
+              {labels.family}
             </span>
             {family.map((member, index) => (
               <span

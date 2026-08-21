@@ -4,15 +4,23 @@ import { SearchIcon } from "lucide-react";
 import { useSetAtom } from "jotai";
 import { Badge } from "@/components/ui/badge";
 import { helperCommandOpenAtom } from "@/lib/atoms";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { getOdysseyCopy } from "@/lib/odyssey-i18n";
 import { cn } from "@/lib/utils";
 
 interface OdysseyCommandTriggerProps {
   onClick?: () => void;
   className?: string;
+  locale?: Locale;
 }
 
-export function OdysseyCommandTrigger({ onClick, className }: OdysseyCommandTriggerProps) {
+export function OdysseyCommandTrigger({
+  onClick,
+  className,
+  locale = DEFAULT_LOCALE,
+}: OdysseyCommandTriggerProps) {
   const setHelperOpen = useSetAtom(helperCommandOpenAtom);
+  const copy = getOdysseyCopy(locale);
 
   const handleClick = () => {
     if (onClick) {
@@ -32,7 +40,7 @@ export function OdysseyCommandTrigger({ onClick, className }: OdysseyCommandTrig
       )}
     >
       <SearchIcon className="size-4" />
-      <span className="flex-1 text-left">Search Odyssey</span>
+      <span className="flex-1 text-left">{copy.searchLabel}</span>
       <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-mono font-normal">
         ⌘K
       </Badge>

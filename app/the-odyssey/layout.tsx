@@ -9,13 +9,20 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fraunces } from "@/lib/fonts";
 import { HelperCommand } from "@/components/helper-command";
+import { OdysseyLocaleSwitcher } from "@/components/odyssey/odyssey-locale-switcher";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { getOdysseyCopy, getOdysseyHomeHref } from "@/lib/odyssey-i18n";
+import { Separator } from "@/components/ui/separator";
 
-export default function TheOdysseyLayout({
+export function OdysseyLayoutFrame({
   children,
+  locale = DEFAULT_LOCALE,
 }: {
   children: React.ReactNode;
+  locale?: Locale;
 }) {
   const [isMounted, setIsMounted] = useState(false);
+  const copy = getOdysseyCopy(locale);
   useEffect(() => setIsMounted(true), []);
 
   return (
@@ -32,7 +39,7 @@ export default function TheOdysseyLayout({
         <div className="w-full mx-auto px-6">
           <div className="h-16 flex items-center gap-4 w-full">
             <Link
-              href="/the-odyssey"
+              href={getOdysseyHomeHref(locale)}
               className="flex items-center gap-2 shrink-0 group"
             >
               <div className="flex flex-col leading-tight">
@@ -42,16 +49,18 @@ export default function TheOdysseyLayout({
                     fraunces.className
                   )}
                 >
-                  The Odyssey Walkthrough
+                  {copy.layoutTitle}
                 </span>
                 <span className="text-[11px] text-neutral-500 -mt-0.5">
-                  Tianyu&apos;s Reading Notes
+                  {copy.layoutSubtitle}
                 </span>
               </div>
             </Link>
 
             <div className="ml-auto flex items-center gap-2 shrink-0">
               <HelperCommand />
+              <Separator orientation="vertical" />
+              <OdysseyLocaleSwitcher />
             </div>
           </div>
         </div>
@@ -86,7 +95,7 @@ export default function TheOdysseyLayout({
                 href="/"
                 className="text-xs text-neutral-500 hover:text-odyssey"
               >
-                ← Back to Blog
+                ← {copy.backToBlog}
               </Link>
               <Button
                 asChild
@@ -94,9 +103,9 @@ export default function TheOdysseyLayout({
                 variant="outline"
                 className="cursor-pointer"
               >
-                <Link href="/the-odyssey">
+                <Link href={getOdysseyHomeHref(locale)}>
                   <BookOpen className="size-3.5 mr-1.5" />
-                  The Odyssey Walkthrough Wiki
+                  {copy.wikiButton}
                 </Link>
               </Button>
             </div>
@@ -108,16 +117,23 @@ export default function TheOdysseyLayout({
         <div className="py-6 px-8 flex flex-col sm:flex-row items-start sm:items-center justify-center gap-1 text-xs text-neutral-500">
           <p className="flex items-center gap-1">
             <span className="font-semibold text-amber-700/90">
-              The Odyssey Walkthrough
+              {copy.footerTitle}
             </span>
           </p>
           <p>·</p>
           <p>
-            © {new Date().getFullYear()} compiled by Tianyu · Content
-            under CC BY-NC 4.0
+            © {new Date().getFullYear()} {copy.footerLicense}
           </p>
         </div>
       </footer>
     </div>
   );
+}
+
+export default function TheOdysseyLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <OdysseyLayoutFrame locale={DEFAULT_LOCALE}>{children}</OdysseyLayoutFrame>;
 }

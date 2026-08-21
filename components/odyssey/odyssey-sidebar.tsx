@@ -6,14 +6,21 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n";
 import {
   ODYSSEY_CATEGORIES,
-  CATEGORY_META,
+  getOdysseyEntryDisplayTitle,
+  getOdysseyEntryTitle,
   getEntriesByCategory,
-  getCategoryCounts,
+  getEntrySlug,
   type OdysseyCategory,
-  type OdysseyEntry,
 } from "@/lib/odyssey";
+import {
+  getOdysseyCategoryLabel,
+  getOdysseyEntryHref,
+  getOdysseyHomeHref,
+  getOdysseyLocale,
+} from "@/lib/odyssey-i18n";
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -21,17 +28,14 @@ import {
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-function buildEntryHref(entry: OdysseyEntry): string {
-  return `/the-odyssey/${entry._meta.path}`;
-}
-
 function findCategoryFromPathname(
-  pathname: string
+  pathname: string,
+  locale: Locale
 ): OdysseyCategory | null {
-  const slug = pathname.replace(/^\/the-odyssey\//, "");
+  const slug = pathname.replace(/^\/(?:zh|en)\/the-odyssey\//, "").replace(/^\/the-odyssey\//, "");
   for (const category of ODYSSEY_CATEGORIES) {
-    const entries = getEntriesByCategory(category);
-    if (entries.some((e) => e._meta.path === slug)) {
+    const entries = getEntriesByCategory(category, locale);
+    if (entries.some((e) => getEntrySlug(e) === slug)) {
       return category;
     }
   }
@@ -40,10 +44,10 @@ function findCategoryFromPathname(
 
 export function OdysseySidebar() {
   const pathname = usePathname();
-  const categoryCounts = useMemo(() => getCategoryCounts(), []);
+  const locale = getOdysseyLocale(pathname);
   const activeCategory = useMemo(
-    () => findCategoryFromPathname(pathname),
-    [pathname]
+    () => findCategoryFromPathname(pathname, locale),
+    [pathname, locale]
   );
 
   const [openCategories, setOpenCategories] = useState<
@@ -73,7 +77,7 @@ export function OdysseySidebar() {
     });
   };
 
-  const currentSlug = pathname.replace(/^\/the-odyssey\//, "");
+  const currentSlug = pathname.replace(/^\/(?:zh|en)\/the-odyssey\//, "").replace(/^\/the-odyssey\//, "");
 
   return (
     <div className="w-full h-full min-h-0 flex flex-col" data-lenis-prevent data-lenis-prevent-wheel>
@@ -85,11 +89,11 @@ export function OdysseySidebar() {
         <div className="absolute z-10 bottom-0 left-0 w-full h-10 bg-linear-to-b from-transparent to-white pointer-events-none" />
 
         {/* Sidebar Content */}
-        <div className="h-full lg:w-58">
+        <div className="h-full w-58 pl-1">
           <div className="h-5" />
-          <Link href="/the-odyssey">
+          <Link className="rounded-md" href={getOdysseyHomeHref(locale)}>
             <div className={cn(
-              "w-full flex items-center gap-2 px-2 py-2 rounded-md text-left",
+              "w-full flex items-center gap-2 px-2 py-2 mb-2 rounded-md text-left",
               "transition-colors hover:bg-neutral-100/80",
               "font-serif soft-70 font-bold"
             )}>
@@ -97,8 +101,7 @@ export function OdysseySidebar() {
             </div>
           </Link>
           {ODYSSEY_CATEGORIES.map((category) => {
-            const entries = getEntriesByCategory(category);
-            const meta = CATEGORY_META[category];
+            const entries = getEntriesByCategory(category, locale);
             const isOpen = openCategories.has(category);
             const isActiveCat = activeCategory === category;
 
@@ -131,7 +134,7 @@ export function OdysseySidebar() {
                         isActiveCat ? "text-neutral-900" : "text-neutral-700"
                       )}
                     >
-                      {category}
+                      {getOdysseyCategoryLabel(category, locale)}
                     </div>
                     {/* <div className="hidden lg:block text-[11px] text-neutral-500 truncate">
                       {meta.description}
@@ -143,17 +146,18 @@ export function OdysseySidebar() {
                 <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
                   <div className="pl-6 pr-2 py-1 flex flex-col">
                     {entries.map((entry) => {
-                      const href = buildEntryHref(entry);
-                      const isActiveEntry = entry._meta.path === currentSlug;
-                      const displayTitle = entry.shortTitle?.trim() || entry.title;
+                      const href = getOdysseyEntryHref(locale, entry);
+                      const isActiveEntry = getEntrySlug(entry) === currentSlug;
+                      const displayTitle = getOdysseyEntryDisplayTitle(entry, locale);
+                      const fullTitle = getOdysseyEntryTitle(entry, locale);
 
                       return (
                         <Link
                           key={entry._meta.path}
                           href={href}
                           title={
-                            entry.shortTitle && entry.shortTitle.trim() !== entry.title
-                              ? entry.title
+                            displayTitle !== fullTitle
+                              ? fullTitle
                               : undefined
                           }
                           className={cn(
