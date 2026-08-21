@@ -40,9 +40,9 @@ export function CharacterCard({
     >
       <div
         className={cn(
-          "relative flex-shrink-0 w-full sm:w-36 aspect-square rounded-lg overflow-hidden",
+          "relative shrink-0 w-full sm:w-36 aspect-square rounded-lg overflow-hidden",
           !imageUrl &&
-            "bg-gradient-to-br from-sky-200 via-odyssey-500 to-odyssey-800"
+            "bg-linear-to-br from-sky-200 via-odyssey-500 to-odyssey-800"
         )}
       >
         {imageUrl ? (
