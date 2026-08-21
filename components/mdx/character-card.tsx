@@ -42,7 +42,7 @@ export function CharacterCard({
         className={cn(
           "relative flex-shrink-0 w-full sm:w-36 aspect-square rounded-lg overflow-hidden",
           !imageUrl &&
-            "bg-gradient-to-br from-amber-200 via-amber-300 to-rose-300"
+            "bg-gradient-to-br from-sky-200 via-odyssey-500 to-odyssey-800"
         )}
       >
         {imageUrl ? (

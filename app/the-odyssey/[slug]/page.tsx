@@ -117,7 +117,8 @@ function ArticleContent({
               </div>
               <h1
                 className={cn(
-                  "text-4xl sm:text-6xl font-semibold tracking-tight text-neutral-900 leading-[1.1] mb-6",
+                  "text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.1] mb-6",
+                  "odyssey-gradient-linear",
                   crimsonPro.className
                 )}
               >

@@ -116,7 +116,7 @@ export function OdysseyLayoutFrame({
       <footer className="border-t border-neutral-200/70">
         <div className="py-6 px-8 flex flex-col sm:flex-row items-start sm:items-center justify-center gap-1 text-xs text-neutral-500">
           <p className="flex items-center gap-1">
-            <span className="font-semibold text-amber-700/90">
+            <span className="font-semibold text-odyssey-700">
               {copy.footerTitle}
             </span>
           </p>
