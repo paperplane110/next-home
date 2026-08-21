@@ -1,5 +1,7 @@
 ---
 title: "Template Title"
+shortTitle: "Template Short Title"
+aliases: ["Alias 1", "Alias 2"]
 summary: "A concise one-line summary of what this entry covers."
 category: "Overview"
 tags: ["Tag1", "Tag2"]
@@ -18,6 +20,8 @@ references:
   Frontmatter 字段说明：
   ----------------------------------------------------------------------------
   - title:        页面标题 (string, required)
+  - shortTitle:   短标题，用于卡片和自动链接的优先匹配 (string, optional)
+  - aliases:      别名数组，用于自动识别人名/地名/术语并生成链接 (string[], optional)
   - summary:      简介一句话摘要用于卡片和 SEO 描述 (string, required)
   - category: 分类必须是以下之一 (enum, required):
                 Overview | Plot Summary | Characters | Books | Themes | Symbols |

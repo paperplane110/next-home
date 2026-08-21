@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import rehypePrettyCode, { LineElement } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import GithubSlugger from "github-slugger";
+import { remarkOdysseyAutolink } from "./lib/remark-odyssey-autolink";
 
 
 
@@ -145,6 +146,7 @@ const odyssey = defineCollection({
   schema: (z) => ({
     title: z.string(),
     shortTitle: z.string().optional(),
+    aliases: z.array(z.string()).optional().default([]),
     summary: z.string(),
     category: z.enum(ODYSSEY_CATEGORIES),
     tags: z.array(z.string()).optional().default([]),
@@ -157,7 +159,10 @@ const odyssey = defineCollection({
     const mdx = await compileMDX(
       context, document,
       {
-        remarkPlugins: [remarkGfm],
+        remarkPlugins: [
+          remarkGfm,
+          [remarkOdysseyAutolink, { currentSlug: document._meta.path }],
+        ],
         rehypePlugins: [[rehypePrettyCode, prettyCodeOptions], rehypeSlug],
         files(appender) {
           appender.directory("@/", "components/mdx")

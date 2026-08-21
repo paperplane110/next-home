@@ -9,7 +9,7 @@ import { OdysseyRelated } from "@/components/odyssey/odyssey-related";
 import { getRelatedEntries, type OdysseyEntry } from "@/lib/odyssey";
 import { Badge } from "@/components/ui/badge";
 import { BlockQuote } from "@/components/mdx/block-quote";
-import { A } from "@/components/mdx/a";
+import { OdysseyA } from "@/components/mdx/odyssey-a";
 import { Tips } from "@/components/mdx/tips";
 import { CharacterCard } from "@/components/mdx/character-card";
 import { OdysseyMap } from "@/components/mdx/odyssey-map";
@@ -121,7 +121,7 @@ function ArticleContent({ entry }: { entry: OdysseyEntry }) {
                 code={entry.mdx}
                 components={{
                   blockquote: BlockQuote,
-                  a: A,
+                  a: OdysseyA,
                   Tips: ({
                     children,
                     title,
