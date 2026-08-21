@@ -87,11 +87,11 @@ uniform vec2 u_res;
 uniform float u_time;
 
 vec3 oceanColor(vec2 uv) {
-  float depth = smoothstep(0.04, 0.96, 1.0 - uv.y);
+  float depth = smoothstep(0.04, 0.96, uv.y);
 
   vec3 farColor  = vec3(0.040, 0.105, 0.190); // #0A1B30
-  vec3 midColor  = vec3(0.085, 0.225, 0.390); // #163964
-  vec3 nearColor = vec3(0.055, 0.175, 0.315); // #0E2D50
+  vec3 midColor  = vec3(0.140, 0.335, 0.540); // #1C4979  +25% 提亮
+  vec3 nearColor = vec3(0.055, 0.175, 0.315); // #133962  +22% 提亮
 
   vec3 col = mix(farColor, midColor, smoothstep(0.0, 0.62, depth));
   col = mix(col, nearColor, smoothstep(0.52, 1.0, depth) * 0.72);
@@ -642,11 +642,11 @@ export function OdysseyFluidCard({ className }: Props) {
           </h3>
         </div>
         <div className="flex items-end justify-between w-full">
-          <p className="font-sans font-medium text-sm sm:text-[15px] text-odyssey-200 group-hover:text-white transition-colors duration-200 flex items-center gap-1.5">
+          <p className="font-sans font-medium text-sm sm:text-[15px] text-odyssey-300/40 group-hover:text-white transition-colors duration-200 flex items-center gap-1.5">
             《奥德赛》百科
             <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5" />
           </p>
-          <Waves className="h-7 w-7 sm:h-8 sm:w-8 text-odyssey-300" aria-hidden />
+          <Waves className="size-7 sm:size-8 text-odyssey-300/40 transition-colors group-hover:text-odyssey-100" aria-hidden />
         </div>
       </div>
     </Link>

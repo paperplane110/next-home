@@ -8,10 +8,12 @@ import {
   CATEGORY_META,
   getEntriesByCategory,
   getAllEntries,
+  getEntryBySlug,
   type OdysseyCategory,
   type OdysseyEntry,
 } from "@/lib/odyssey";
 import { OdysseyCommandTrigger } from "@/components/odyssey/odyssey-command";
+import OdysseyInlineLink from "@/components/odyssey/odyssey-inline-link";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { fraunces } from "@/lib/fonts";
@@ -39,15 +41,11 @@ export const metadata: Metadata = {
 
 type InternalLinkDef = { href: string; label: string };
 
-function OdysseyInlineLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="font-medium text-odyssey underline decoration-odyssey/30 underline-offset-4 transition-colors hover:decoration-odyssey hover:text-odyssey/90"
-    >
-      {children}
-    </Link>
-  );
+function resolveOdysseyEntry(href: string): OdysseyEntry | undefined {
+  const prefix = "/the-odyssey/";
+  if (!href.startsWith(prefix)) return undefined;
+  const slug = href.slice(prefix.length);
+  return getEntryBySlug(slug);
 }
 
 export default function TheOdysseyHomePage() {
@@ -128,11 +126,19 @@ export default function TheOdysseyHomePage() {
               《奥德赛》是西方文学源头的两大荷马史诗之一（另一部是《伊利亚特》）。
               全诗 24 卷、约 12000 行六音步扬抑格
               （dactylic hexameter），讲述特洛伊战争结束后，
-              <OdysseyInlineLink href="/the-odyssey/characters-odysseus">
+              <OdysseyInlineLink
+                href="/the-odyssey/characters-odysseus"
+                entry={resolveOdysseyEntry("/the-odyssey/characters-odysseus")}
+              >
                 奥德修斯
               </OdysseyInlineLink>
               （Ὀδυσσεύς / Odysseus）花了十年时间才辗转回到故乡
-              <OdysseyInlineLink href="/the-odyssey/geography-ithaca">伊萨卡</OdysseyInlineLink>
+              <OdysseyInlineLink
+                href="/the-odyssey/geography-ithaca"
+                entry={resolveOdysseyEntry("/the-odyssey/geography-ithaca")}
+              >
+                伊萨卡
+              </OdysseyInlineLink>
               （Ithaca）岛的故事。与《伊利亚特》聚焦战场上的"愤怒"不同，
               《奥德赛》的核心情绪是{" "}
               <em className="font-serif text-odyssey">νόστος · nostos</em>
@@ -141,16 +147,25 @@ export default function TheOdysseyHomePage() {
 
             <p>
               如果你正准备开始读，可以先从{" "}
-              <OdysseyInlineLink href="/the-odyssey/overview-introduction">
+              <OdysseyInlineLink
+                href="/the-odyssey/overview-introduction"
+                entry={resolveOdysseyEntry("/the-odyssey/overview-introduction")}
+              >
                 作品结构简介
               </OdysseyInlineLink>{" "}
               与{" "}
-              <OdysseyInlineLink href="/the-odyssey/overview-homer">
+              <OdysseyInlineLink
+                href="/the-odyssey/overview-homer"
+                entry={resolveOdysseyEntry("/the-odyssey/overview-homer")}
+              >
                 荷马与口传史诗传统
               </OdysseyInlineLink>{" "}
               入手，快速了解史诗的构成、口头诗歌的叠句与 epithet（修饰套语）是怎么回事；
               如果想先看整个故事脉络（不介意剧透），可以读{" "}
-              <OdysseyInlineLink href="/the-odyssey/plot-summary-nostos">
+              <OdysseyInlineLink
+                href="/the-odyssey/plot-summary-nostos"
+                entry={resolveOdysseyEntry("/the-odyssey/plot-summary-nostos")}
+              >
                 The Story Arc: Nostos
               </OdysseyInlineLink>
               ，它把从特洛伊陷落、海上漂泊、回到伊萨卡直至血洗求婚者的全过程串成一条线。
@@ -168,19 +183,31 @@ export default function TheOdysseyHomePage() {
             <p>
               <strong>人物谱系：</strong>
               四大核心角色单独成篇——
-              <OdysseyInlineLink href="/the-odyssey/characters-odysseus">
+              <OdysseyInlineLink
+                href="/the-odyssey/characters-odysseus"
+                entry={resolveOdysseyEntry("/the-odyssey/characters-odysseus")}
+              >
                 奥德修斯
               </OdysseyInlineLink>
               （多谋的 polytropos 英雄）、
-              <OdysseyInlineLink href="/the-odyssey/characters-telemachus">
+              <OdysseyInlineLink
+                href="/the-odyssey/characters-telemachus"
+                entry={resolveOdysseyEntry("/the-odyssey/characters-telemachus")}
+              >
                 忒勒马科斯
               </OdysseyInlineLink>
               （Telemachy，少年寻父的成长线）、
-              <OdysseyInlineLink href="/the-odyssey/characters-penelope">
+              <OdysseyInlineLink
+                href="/the-odyssey/characters-penelope"
+                entry={resolveOdysseyEntry("/the-odyssey/characters-penelope")}
+              >
                 珀涅罗珀
               </OdysseyInlineLink>
               （以织机与梦拖延求婚者的王后）、
-              <OdysseyInlineLink href="/the-odyssey/characters-athena">
+              <OdysseyInlineLink
+                href="/the-odyssey/characters-athena"
+                entry={resolveOdysseyEntry("/the-odyssey/characters-athena")}
+              >
                 雅典娜
               </OdysseyInlineLink>
               （始终在场的庇护者）；
@@ -191,11 +218,17 @@ export default function TheOdysseyHomePage() {
               <strong>逐卷精读：</strong>
               每一卷都会整理要点、引文与关键词。
               目前已经写完{" "}
-              <OdysseyInlineLink href="/the-odyssey/books-book-1">
+              <OdysseyInlineLink
+                href="/the-odyssey/books-book-1"
+                entry={resolveOdysseyEntry("/the-odyssey/books-book-1")}
+              >
                 Book 1 — Athena Inspires the Prince
               </OdysseyInlineLink>
               （忒勒马科马科斯开场）与{" "}
-              <OdysseyInlineLink href="/the-odyssey/books-book-5">
+              <OdysseyInlineLink
+                href="/the-odyssey/books-book-5"
+                entry={resolveOdysseyEntry("/the-odyssey/books-book-5")}
+              >
                 Book 5 — Odysseus: Nymph and Shipwreck
               </OdysseyInlineLink>
               （奥德修斯首次登场，离开卡吕普索，遭遇波塞冬海难登上斯克里亚）。
@@ -205,14 +238,20 @@ export default function TheOdysseyHomePage() {
             <p>
               <strong>主题与象征：</strong>
               史诗的很多妙处藏在反复出现的母题里——
-              <OdysseyInlineLink href="/the-odyssey/themes-xenia">
+              <OdysseyInlineLink
+                href="/the-odyssey/themes-xenia"
+                entry={resolveOdysseyEntry("/the-odyssey/themes-xenia")}
+              >
                 xenia（主客之道）
               </OdysseyInlineLink>
               （宙斯作为 Xenios 所守护的待客法则，既被求婚者与独目巨人破坏，也被
               涅斯托尔、墨涅拉奥斯、费埃克斯人践行）、
               伪装（disguise）、nostos 之外的归家条件，
               以及更具象的{" "}
-              <OdysseyInlineLink href="/the-odyssey/symbols-bow">
+              <OdysseyInlineLink
+                href="/the-odyssey/symbols-bow"
+                entry={resolveOdysseyEntry("/the-odyssey/symbols-bow")}
+              >
                 奥德修斯的大弓
               </OdysseyInlineLink>
               （身份与复仇的双重象征，仅合法的主人才能拉开）。
@@ -221,33 +260,60 @@ export default function TheOdysseyHomePage() {
             <p>
               <strong>历史与地理：</strong>
               史诗并非纯粹虚构。了解{" "}
-              <OdysseyInlineLink href="/the-odyssey/history-mycenaean">
+              <OdysseyInlineLink
+                href="/the-odyssey/history-mycenaean"
+                entry={resolveOdysseyEntry("/the-odyssey/history-mycenaean")}
+              >
                 迈锡尼青铜时代的世界
               </OdysseyInlineLink>
               （线形文字 B、宫殿经济、赫梯与埃及档案中所见的 Ahhiyawa），
               以及{" "}
-              <OdysseyInlineLink href="/the-odyssey/history-troy-war">
+              <OdysseyInlineLink
+                href="/the-odyssey/history-troy-war"
+                entry={resolveOdysseyEntry("/the-odyssey/history-troy-war")}
+              >
                 特洛伊战争在考古中到底对应什么
               </OdysseyInlineLink>
               （Schliemann → Dörpfeld → Blegen 三代人对 Hisarlık 的发掘），
               会让你读诗时对"战船数目表""青铜武器""城墙"等细节有更实感的想象。
               地理部分则整理了关键地点——故乡{" "}
-              <OdysseyInlineLink href="/the-odyssey/geography-ithaca">伊萨卡</OdysseyInlineLink>
+              <OdysseyInlineLink
+                href="/the-odyssey/geography-ithaca"
+                entry={resolveOdysseyEntry("/the-odyssey/geography-ithaca")}
+              >
+                伊萨卡
+              </OdysseyInlineLink>
               、史诗起点{" "}
-              <OdysseyInlineLink href="/the-odyssey/geography-troy">特洛伊</OdysseyInlineLink>
+              <OdysseyInlineLink
+                href="/the-odyssey/geography-troy"
+                entry={resolveOdysseyEntry("/the-odyssey/geography-troy")}
+              >
+                特洛伊
+              </OdysseyInlineLink>
               、中转站{" "}
-              <OdysseyInlineLink href="/the-odyssey/geography-scheria">斯克里亚（Scheria）</OdysseyInlineLink>
+              <OdysseyInlineLink
+                href="/the-odyssey/geography-scheria"
+                entry={resolveOdysseyEntry("/the-odyssey/geography-scheria")}
+              >
+                斯克里亚（Scheria）
+              </OdysseyInlineLink>
               ——并提供随文可用的地中海航行地图组件。
             </p>
 
             <p>
               <strong>文化与阅读：</strong>
-              <OdysseyInlineLink href="/the-odyssey/culture-olympian-gods">
+              <OdysseyInlineLink
+                href="/the-odyssey/culture-olympian-gods"
+                entry={resolveOdysseyEntry("/the-odyssey/culture-olympian-gods")}
+              >
                 奥林匹斯信仰与荷马式的诸神
               </OdysseyInlineLink>
               （神人同形同性、Zeus 的至上权但有限、献祭与占卜如何运作）；
               以及在译本方面，{" "}
-              <OdysseyInlineLink href="/the-odyssey/reading-guide-editions">
+              <OdysseyInlineLink
+                href="/the-odyssey/reading-guide-editions"
+                entry={resolveOdysseyEntry("/the-odyssey/reading-guide-editions")}
+              >
                 English Editions &amp; Translations
               </OdysseyInlineLink>{" "}
               会对比 Fagles、Fitzgerald、Lattimore、Loeb 希英对照本、Heubeck 评注版
