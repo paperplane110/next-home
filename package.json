@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:gallery": "tsx scripts/generate-gallery-meta.ts"
+    "generate:gallery": "tsx scripts/generate-gallery-meta.ts",
+    "content:rebuild": "node -e \"const fs=require('fs');for(const d of ['.content-collections/cache','.content-collections/generated'])fs.rmSync(d,{recursive:true,force:true})\" && content-collections build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -63,6 +64,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@content-collections/cli": "^0.1.9",
     "@content-collections/core": "^0.8.2",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/next": "^0.2.6",
