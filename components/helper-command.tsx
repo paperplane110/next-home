@@ -6,6 +6,7 @@ import {
   DatabaseIcon,
   FrameIcon,
   ImagePlusIcon,
+  LanguagesIcon,
   LogInIcon,
   MessageCircleMoreIcon,
   WavesIcon,
@@ -40,6 +41,7 @@ import {
   getOdysseyCopy,
   getOdysseyEntryHref,
   getOdysseyHomeHref,
+  getOdysseyHrefForLocaleFromPathname,
   getOdysseyLocale,
   isOdysseyPathname,
 } from "@/lib/odyssey-i18n";
@@ -263,6 +265,22 @@ export const HelperCommand = () => {
                   </div>
                 ) : null
               )}
+              <CommandGroup heading={`${commandCopy.odysseyGroup} · ${odysseyCopy.languageLabel}`}>
+                <CommandItem
+                  key="odyssey-language-toggle"
+                  value="Switch Language 切换语言 语言 Language English 中文 Chinese zh en"
+                  keywords={["language", "lang", "switch", "translate", "切换", "语言", "翻译", "中文", "英文", "english", "chinese", "zh", "en"]}
+                  onSelect={() => goToURL(getOdysseyHrefForLocaleFromPathname(pathname, alternateOdysseyLocale))}
+                  className="font-medium"
+                >
+                  <LanguagesIcon className="size-4 text-odyssey-400" />
+                  <span>
+                    {odysseyLocale === "zh"
+                      ? "切换到 English（英文）"
+                      : "Switch to 中文（Chinese）"}
+                  </span>
+                </CommandItem>
+              </CommandGroup>
               <CommandSeparator />
             </>
           )}

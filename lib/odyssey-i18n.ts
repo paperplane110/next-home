@@ -151,6 +151,8 @@ export const ODYSSEY_UI_COPY = {
     languageLabel: "语言",
     languageZh: "中文",
     languageEn: "English",
+    expandAllCategories: "展开全部分类",
+    collapseAllCategories: "收起全部分类",
     overviewTitle: "在这里你能查到什么",
   },
   en: {
@@ -177,6 +179,8 @@ export const ODYSSEY_UI_COPY = {
     languageLabel: "Language",
     languageZh: "中文",
     languageEn: "English",
+    expandAllCategories: "Expand all categories",
+    collapseAllCategories: "Collapse all categories",
     overviewTitle: "What You Can Explore Here",
   },
 } as const satisfies Record<Locale, Record<string, string>>;

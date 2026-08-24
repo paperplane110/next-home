@@ -50,3 +50,6 @@ Todo
 * [ ] odysessy/page&#x20;
   - [ ] 文案需要打磨，减少ai感
   - [ ] 中下半部分的内容需要重新设计
+- [ ] Timeline component
+- [ ] 人物众多，需要分类
+- [ ] contents 的顺序是怎么决定的

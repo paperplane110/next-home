@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchIcon } from "lucide-react";
+import { CommandIcon, SearchIcon } from "lucide-react";
 import { useSetAtom } from "jotai";
 import { Badge } from "@/components/ui/badge";
 import { helperCommandOpenAtom } from "@/lib/atoms";
@@ -41,8 +41,11 @@ export function OdysseyCommandTrigger({
     >
       <SearchIcon className="size-4" />
       <span className="flex-1 text-left">{copy.searchLabel}</span>
-      <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-mono font-normal">
-        ⌘K
+      <Badge
+        variant="secondary"
+        className="text-muted-foreground border-none py-1 select-none cursor-pointer"
+      >
+        <CommandIcon className="size-4 -mr-0.5" />K
       </Badge>
     </button>
   );
