@@ -129,11 +129,11 @@ export function getOdysseyHrefForLocaleFromPathname(
 export const ODYSSEY_UI_COPY = {
   zh: {
     layoutTitle: "The Odyssey Walkthrough",
-    layoutSubtitle: "Tianyu Reading Notes",
+    layoutSubtitle: "Tianyu's Reading Notes",
     backToBlog: "返回博客",
-    wikiButton: "奥德赛阅读 Wiki",
+    wikiButton: "Wiki首页",
     footerTitle: "The Odyssey Walkthrough",
-    footerLicense: "compiled by Tianyu · Content under CC BY-NC 4.0",
+    footerLicense: "由 Tianyu 编写 · 开源协议 CC BY-NC 4.0",
     searchLabel: "搜索 Odyssey",
     tocLabel: "本页目录",
     homeTitle: "The Odyssey Walkthrough",
@@ -153,6 +153,9 @@ export const ODYSSEY_UI_COPY = {
     languageEn: "English",
     expandAllCategories: "展开全部分类",
     collapseAllCategories: "收起全部分类",
+    navMenuLabel: "目录",
+    navCloseLabel: "关闭菜单",
+    switchLanguageTo: "切换语言到",
     overviewTitle: "在这里你能查到什么",
   },
   en: {
@@ -181,6 +184,9 @@ export const ODYSSEY_UI_COPY = {
     languageEn: "English",
     expandAllCategories: "Expand all categories",
     collapseAllCategories: "Collapse all categories",
+    navMenuLabel: "Menu",
+    navCloseLabel: "Close Menu",
+    switchLanguageTo: "Switch Language to",
     overviewTitle: "What You Can Explore Here",
   },
 } as const satisfies Record<Locale, Record<string, string>>;

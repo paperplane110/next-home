@@ -35,7 +35,7 @@ export function OdysseyCommandTrigger({
       type="button"
       onClick={handleClick}
       className={cn(
-        "inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+        "inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
         className
       )}
     >

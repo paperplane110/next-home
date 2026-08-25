@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, CommandIcon } from "lucide-react";
 
 import {
   CATEGORY_META,
@@ -226,7 +226,7 @@ function OdysseyHomeOverview({ locale }: { locale: Locale }) {
         </OdysseyGlossaryLink>{" "}
         入手，快速了解史诗的构成、口头诗歌的叠句与 epithet（修饰套语）是怎么回事；如果想先看整个故事脉络（不介意剧透），可以读{" "}
         <OdysseyGlossaryLink locale={locale} slug="plot-summary-nostos">
-          The Story Arc: Nostos
+          故事主线：归乡
         </OdysseyGlossaryLink>
         ，它把从特洛伊陷落、海上漂泊、回到伊萨卡直至血洗求婚者的全过程串成一条线。
       </p>
@@ -300,16 +300,19 @@ function OdysseyHomeOverview({ locale }: { locale: Locale }) {
         </OdysseyGlossaryLink>
         （神人同形同性、Zeus 的至上权但有限、献祭与占卜如何运作）；以及在译本方面，{" "}
         <OdysseyGlossaryLink locale={locale} slug="reading-guide-editions">
-          English Editions &amp; Translations
+          译本推荐
         </OdysseyGlossaryLink>{" "}
         会对比 Fagles、Fitzgerald、Lattimore、Loeb 希英对照本、Heubeck 评注版等常见版本的风格，帮助你挑一册顺手的作为案头书。
       </p>
 
       <p>
         这个站点是我自己读英文原著过程中边查边写的笔记，也希望成为你读到任何位置时，可以随手跳回来的索引与上下文。如果还不知道从哪里进入，推荐顺序：作品简介 → 故事脉络（Nostos）→ Book 1 &amp; Book 5 → 四位核心人物 → xenia 主题 → 再顺着你感兴趣的卷和人物一路展开。按{" "}
-        <kbd className="rounded border border-neutral-300 px-1.5 py-0.5 text-[10px] font-mono text-neutral-600">
-          ⌘K
-        </kbd>{" "}
+        <Badge
+          variant="secondary"
+          className="text-muted-foreground border-none py-1 select-none"
+        >
+          <CommandIcon className="size-4 -mr-0.5" />K
+        </Badge>
         可以随时全局检索任意词条、人名、地名。
       </p>
     </div>

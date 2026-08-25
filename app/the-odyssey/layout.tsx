@@ -1,18 +1,12 @@
-"use client";
-
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
-import { useState, useEffect } from "react";
 
 import { OdysseySidebar } from "@/components/odyssey/odyssey-sidebar";
+import { OdysseyNavigation } from "@/components/odyssey/odyssey-navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { fraunces } from "@/lib/fonts";
-import { HelperCommand } from "@/components/helper-command";
-import { OdysseyLocaleSwitcher } from "@/components/odyssey/odyssey-locale-switcher";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
 import { getOdysseyCopy, getOdysseyHomeHref } from "@/lib/odyssey-i18n";
-import { Separator } from "@/components/ui/separator";
 
 export function OdysseyLayoutFrame({
   children,
@@ -21,50 +15,13 @@ export function OdysseyLayoutFrame({
   children: React.ReactNode;
   locale?: Locale;
 }) {
-  const [isMounted, setIsMounted] = useState(false);
   const copy = getOdysseyCopy(locale);
-  useEffect(() => setIsMounted(true), []);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-neutral-900">
 
-      {/* Navigator Header */}
-      <header
-        className={cn(
-          "sticky top-0 z-40 shrink-0 border-b border-neutral-200/70 bg-white/80 backdrop-blur-md",
-          "transition-opacity",
-          !isMounted && "opacity-0"
-        )}
-      >
-        <div className="w-full mx-auto px-6">
-          <div className="h-16 flex items-center gap-4 w-full">
-            <Link
-              href={getOdysseyHomeHref(locale)}
-              className="flex items-center gap-2 shrink-0 group"
-            >
-              <div className="flex flex-col leading-tight">
-                <span
-                  className={cn(
-                    "text-base font-semibold tracking-tight",
-                    fraunces.className
-                  )}
-                >
-                  {copy.layoutTitle}
-                </span>
-                <span className="text-[11px] text-neutral-500 -mt-0.5">
-                  {copy.layoutSubtitle}
-                </span>
-              </div>
-            </Link>
-
-            <div className="ml-auto flex items-center gap-2 shrink-0">
-              <HelperCommand />
-              <Separator orientation="vertical" />
-              <OdysseyLocaleSwitcher />
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Navigation */}
+      <OdysseyNavigation locale={locale} />
 
       <div className="w-full mx-auto min-h-0 flex">
         {/* Sidebar */}
@@ -114,13 +71,13 @@ export function OdysseyLayoutFrame({
       </div>
 
       <footer className="border-t border-neutral-200/70">
-        <div className="py-6 px-8 flex flex-col sm:flex-row items-start sm:items-center justify-center gap-1 text-xs text-neutral-500">
+        <div className="py-6 px-8 flex flex-col sm:flex-row items-start sm:items-center justify-center gap-2 text-xs text-neutral-500">
           <p className="flex items-center gap-1">
-            <span className="font-semibold text-odyssey-700">
+            <span className="text-lg sm:text-xs  font-semibold odyssey-gradient-linear">
               {copy.footerTitle}
             </span>
           </p>
-          <p>·</p>
+          <p className="hidden sm:block">·</p>
           <p>
             © {new Date().getFullYear()} {copy.footerLicense}
           </p>
@@ -137,3 +94,4 @@ export default function TheOdysseyLayout({
 }) {
   return <OdysseyLayoutFrame locale={DEFAULT_LOCALE}>{children}</OdysseyLayoutFrame>;
 }
+
