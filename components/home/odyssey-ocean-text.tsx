@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import Link from "next/link";
-import { ArrowRightIcon, Waves } from "lucide-react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { fraunces } from "@/lib/fonts";
-import { getOdysseyHomeHref } from "@/lib/odyssey-i18n";
-
 import {
   VERT_SRC,
   SPLAT_FRAG,
@@ -18,31 +13,127 @@ import {
   deleteFbo,
 } from "./odyssey-ocean-shaders";
 
-type Props = { className?: string };
+type OdysseyOceanTextProps = {
+  children: React.ReactNode;
+  /** 作用于外层容器；字体、字号、字重通过它传给内部 span 与 SVG 遮罩文字 */
+  className?: string;
+};
 
-export function OdysseyFluidCard({ className }: Props) {
+/**
+ * 用 WebGL 海洋动画填充文字字形。
+ *
+ * 实现：canvas 全幅渲染不透明海洋，由内联 SVG <text> 构成的 CSS mask
+ * 在合成器层面裁成字形。SVG 文字走浏览器的原生文字栅格化（子像素抗锯齿
+ * 与 hinting），边缘锐度与普通 DOM 文字一致；HTML 文字层保留在顶层
+ * （color: transparent）以维持布局、文本选择与无障碍。
+ *
+ * 字体、字号、字重、letter-spacing 全部从父级（如 h1）继承，SVG 遮罩
+ * 与 DOM 文字天然同款；基线通过测量 span 字形确定。
+ *
+ * WebGL 不可用或用户偏好减少动态时，退回静态渐变文字
+ * （.odyssey-ocean-text-fallback）。
+ */
+export function OdysseyOceanText({
+  children,
+  className,
+}: OdysseyOceanTextProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const textRef = useRef<HTMLSpanElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const linkRef = useRef<HTMLAnchorElement | null>(null);
+  const maskTextRef = useRef<SVGTextElement | null>(null);
+  const [fallback, setFallback] = useState(false);
+
+  // 每个实例独立的遮罩 id，避免同页多实例互相干扰
+  const rawId = useId();
+  const maskId = `odyssey-ocean-mask-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+
+  // 同步 SVG 遮罩文字：内容、基线（相对容器顶部）都与 DOM span 对齐
+  const syncMask = useCallback(() => {
+    const container = containerRef.current;
+    const text = textRef.current;
+    const maskText = maskTextRef.current;
+    if (!container || !text || !maskText) return;
+
+    const cs = getComputedStyle(text);
+    const measure = document.createElement("canvas").getContext("2d");
+    if (!measure) return;
+    measure.font = [
+      cs.fontStyle,
+      cs.fontVariant,
+      cs.fontWeight,
+      cs.fontSize,
+      cs.fontFamily,
+    ].join(" ");
+    const m = measure.measureText(text.textContent ?? "");
+    const fontSize = parseFloat(cs.fontSize);
+    const ascent =
+      m.actualBoundingBoxAscent ?? fontSize * 0.8;
+
+    const textRect = text.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    // DOM 基线 = 行盒顶部 + half-leading + ascent
+    // （line-height: normal 时内容区在行盒内垂直居中）
+    const halfLeading = Math.max(0, (textRect.height - fontSize) / 2);
+    const baselineY =
+      textRect.top - containerRect.top + halfLeading + ascent;
+
+    maskText.textContent = text.textContent ?? "";
+    maskText.setAttribute("y", String(baselineY));
+  }, []);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const link = linkRef.current;
-    if (!canvas || !link || typeof window === "undefined") return;
+    syncMask();
+    const container = containerRef.current;
+    const ro = new ResizeObserver(syncMask);
+    if (container) ro.observe(container);
+    window.addEventListener("resize", syncMask);
+    // 针对当前字体做定向加载等待，避免 fallback 字体的 metrics 造成错位；
+    // fonts.ready 作为兜底再同步一次
+    const text = textRef.current;
+    if (text) {
+      const cs = getComputedStyle(text);
+      const fontSpec = [
+        cs.fontStyle,
+        cs.fontVariant,
+        cs.fontWeight,
+        cs.fontSize,
+        cs.fontFamily,
+      ].join(" ");
+      document.fonts?.load(fontSpec).then(syncMask).catch(() => {});
+    }
+    document.fonts?.ready.then(syncMask).catch(() => {});
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", syncMask);
+    };
+  }, [children, syncMask]);
 
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
+  useEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas || typeof window === "undefined") return;
+
+    // 减少动态偏好：退回静态渐变文字
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setFallback(true);
+      return;
+    }
 
     const gl = canvas.getContext("webgl2", {
       antialias: false,
+      alpha: false,
       premultipliedAlpha: false,
       preserveDrawingBuffer: false,
-      alpha: false,
       powerPreference: "low-power",
     }) as WebGL2RenderingContext | null;
-    if (!gl) return;
-
-    const extColorFloat = gl.getExtension("EXT_color_buffer_float");
-    if (!extColorFloat) return;
+    if (!gl) {
+      setFallback(true);
+      return;
+    }
+    if (!gl.getExtension("EXT_color_buffer_float")) {
+      setFallback(true);
+      return;
+    }
 
     let disposed = false;
     let rafId = 0;
@@ -152,7 +243,7 @@ export function OdysseyFluidCard({ className }: Props) {
     let cw = 0;
     let ch = 0;
     const resize = () => {
-      const rect = link.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const w = Math.max(1, Math.floor(rect.width * dpr));
       const h = Math.max(1, Math.floor(rect.height * dpr));
@@ -165,31 +256,13 @@ export function OdysseyFluidCard({ className }: Props) {
       canvas.style.height = rect.height + "px";
     };
     resize();
-    const ro = typeof ResizeObserver !== "undefined"
-      ? new ResizeObserver(resize)
-      : null;
-    ro?.observe(link);
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(container);
 
     let lastDrop = 0;
     let initialDrops = 0;
-    let lastPointer = 0;
     let startTs = 0;
-    let lastPtrX = -1;
-    let lastPtrY = -1;
-
-    function dropLinePulse(
-      ax: number, ay: number, bx: number, by: number,
-      count = 5, r = 0.022, amp = 0.58
-    ) {
-      for (let i = 0; i < count; i++) {
-        const t = count <= 1 ? 0.5 : i / (count - 1);
-        const px = ax + (bx - ax) * t + (Math.random() - 0.5) * 0.006;
-        const py = ay + (by - ay) * t + (Math.random() - 0.5) * 0.006;
-        const jitterR = r * (0.80 + Math.random() * 0.45);
-        const jitterA = amp * (0.68 + Math.random() * 0.72);
-        dropPulse(px, py, jitterR, jitterA);
-      }
-    }
 
     const step = (ts: number) => {
       if (disposed) return;
@@ -197,44 +270,18 @@ export function OdysseyFluidCard({ className }: Props) {
       const elapsed = ts - startTs;
 
       if (!paused) {
-        if (
-          initialDrops < 3 &&
-          elapsed > 500 + initialDrops * 700
-        ) {
-          const cx =
-            0.22 + Math.random() * 0.56;
-
-          const cy =
-            0.20 + Math.random() * 0.60;
-
-          dropPulse(
-            cx,
-            cy,
-            0.026,
-            0.38
-          );
-
+        if (initialDrops < 3 && elapsed > 500 + initialDrops * 700) {
+          const cx = 0.22 + Math.random() * 0.56;
+          const cy = 0.2 + Math.random() * 0.6;
+          dropPulse(cx, cy, 0.026, 0.38);
           initialDrops++;
         }
 
-        if (
-          ts - lastDrop >
-          1700 + Math.random() * 1100
-        ) {
+        if (ts - lastDrop > 1700 + Math.random() * 1100) {
           lastDrop = ts;
-
-          const cx =
-            0.12 + Math.random() * 0.76;
-
-          const cy =
-            0.15 + Math.random() * 0.70;
-
-          dropPulse(
-            cx,
-            cy,
-            0.020 + Math.random() * 0.012,
-            0.28 + Math.random() * 0.20
-          );
+          const cx = 0.12 + Math.random() * 0.76;
+          const cy = 0.15 + Math.random() * 0.7;
+          dropPulse(cx, cy, 0.02 + Math.random() * 0.012, 0.28 + Math.random() * 0.2);
         }
 
         for (let i = 0; i < 3; i++) stepWaveOnce();
@@ -264,65 +311,23 @@ export function OdysseyFluidCard({ className }: Props) {
       },
       { threshold: 0.05 }
     );
-    io.observe(link);
+    io.observe(container);
 
     const onLost = () => {
       disposed = true;
       cancelAnimationFrame(rafId);
       io.disconnect();
-      ro?.disconnect();
+      ro.disconnect();
       canvas.style.display = "none";
+      setFallback(true);
     };
     canvas.addEventListener("webglcontextlost", onLost);
-
-    const handlePointer = (ev: PointerEvent) => {
-      if (disposed) return;
-      if (tsNow() - lastPointer < 45) return;
-      lastPointer = tsNow();
-      const rect = link.getBoundingClientRect();
-      const x = (ev.clientX - rect.left) / rect.width;
-      const y = 1 - (ev.clientY - rect.top) / rect.height;
-      if (x < 0 || x > 1 || y < 0 || y > 1) {
-        lastPtrX = -1;
-        lastPtrY = -1;
-        return;
-      }
-      if (lastPtrX >= 0) {
-        const dx = x - lastPtrX;
-        const dy = y - lastPtrY;
-        const d = Math.min(0.14, Math.hypot(dx, dy));
-        if (d > 0.002) {
-          const pad = d * 0.45;
-          const nx = -dy / Math.max(d, 1e-5);
-          const ny = dx / Math.max(d, 1e-5);
-          const ax = x - dx * pad + nx * 0.004;
-          const ay = y - dy * pad + ny * 0.004;
-          const bx = x + dx * pad - nx * 0.004;
-          const by = y + dy * pad - ny * 0.004;
-          const count = 3 + Math.min(3, Math.floor(d * 60));
-          dropLinePulse(ax, ay, bx, by, count, 0.018, 0.38);
-        } else {
-          dropPulse(x, y, 0.022, 0.34);
-        }
-      } else {
-        dropPulse(x, y, 0.026, 0.42);
-      }
-      lastPtrX = x;
-      lastPtrY = y;
-    };
-    const tsNow = () => performance.now();
-    link.addEventListener("pointermove", handlePointer);
-
-    const onResize = () => resize();
-    window.addEventListener("resize", onResize);
 
     return () => {
       disposed = true;
       cancelAnimationFrame(rafId);
       io.disconnect();
-      ro?.disconnect();
-      link.removeEventListener("pointermove", handlePointer);
-      window.removeEventListener("resize", onResize);
+      ro.disconnect();
       canvas.removeEventListener("webglcontextlost", onLost);
       deleteFbo(gl, fA);
       deleteFbo(gl, fB);
@@ -336,51 +341,51 @@ export function OdysseyFluidCard({ className }: Props) {
   }, []);
 
   return (
-    <Link
-      ref={linkRef}
-      href={getOdysseyHomeHref()}
-      className={cn(
-        "odyssey-fluid-card group relative block w-full overflow-hidden rounded-2xl",
-        "bg-[linear-gradient(135deg,#0a1628_0%,#123459_50%,#030814_100%)]",
-        "aspect-video sm:aspect-21/9",
-        "ring-1 ring-white/10",
-        "outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[oklch(0.38_0.12_260)]",
-        className
-      )}
-      aria-label="The Odyssey Walkthrough Wiki · 奥德赛阅读指南"
-    >
+    <div ref={containerRef} className={cn("relative inline-block", className)}>
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 z-0 h-full w-full block pointer-events-none"
+        style={
+          fallback
+            ? undefined
+            : {
+                maskImage: `url(#${maskId})`,
+                WebkitMaskImage: `url(#${maskId})`,
+              }
+        }
+        className={cn(
+          "absolute inset-0 z-0 h-full w-full block",
+          fallback && "hidden"
+        )}
         aria-hidden
       />
-      <div className="relative z-10 h-full flex flex-col justify-between p-6 sm:p-6">
-        <div>
-          <h3
-            className={cn(
-              "mt-3 font-semibold soft-70 text-white leading-[1.05] text-3xl sm:text-5xl",
-              fraunces.className
-            )}
+      {/* 遮罩源：与 DOM 文字同款字体（继承自父级），仅作裁剪用 */}
+      <svg
+        className="absolute inset-0 z-0 h-full w-full"
+        aria-hidden
+        focusable="false"
+      >
+        <defs>
+          <mask
+            id={maskId}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
           >
-            The Odyssey
-          </h3>
-          <h3
-            className={cn(
-              "font-light text-white leading-[1.08] mt-1 text-2xl sm:text-4xl",
-              "font-serif"
-            )}
-          >
-            伟大的返航
-          </h3>
-        </div>
-        <div className="flex items-end justify-between w-full">
-          <p className="font-sans font-medium text-sm sm:text-[15px] text-odyssey-300/40 group-hover:text-white transition-colors duration-200 flex items-center gap-1.5">
-            《奥德赛》百科
-            <ArrowRightIcon className="h-4 w-4 opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5" />
-          </p>
-          <Waves className="size-7 sm:size-8 text-odyssey-300/40 transition-colors group-hover:text-odyssey-100" aria-hidden />
-        </div>
-      </div>
-    </Link>
+            <text ref={maskTextRef} x="0" y="0" fill="#fff" />
+          </mask>
+        </defs>
+      </svg>
+      <span
+        ref={textRef}
+        className={cn(
+          "relative z-10",
+          fallback ? "odyssey-ocean-text-fallback" : "text-transparent"
+        )}
+      >
+        {children}
+      </span>
+    </div>
   );
 }

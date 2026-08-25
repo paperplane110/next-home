@@ -217,6 +217,23 @@ strong {
   animation: ocean-shimmer 22s ease-in-out infinite;
 }
 
+.odyssey-ocean-text-fallback {
+  background-image: linear-gradient(
+    135deg,
+    #3a7cc4 0%,
+    #5da9ff 8%,
+    #123459 20%,
+    #1e5a96 38%,
+    #0a1628 55%,
+    #3077be 72%,
+    #5da9ff 90%,
+    #0c2d51 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .odyssey-fluid-card {
   transition:
     transform 280ms cubic-bezier(0.2, 0.82, 0.2, 1),
