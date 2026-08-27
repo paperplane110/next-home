@@ -10,6 +10,7 @@
   - 变体译名只允许出现在 frontmatter 的 `aliases` 字段（用于搜索与自动链接）；
   - 表中没有的新译名，先按文档内的音译规则推导并登记到表中，再使用。
 - 分类内排序由 frontmatter 的 `order` 字段决定（数字越小越靠前），sidebar 与 commandK 都按它排序。
+- **写作风格**：写正文前必查 [docs/project-odyssey/ai-flavor-blacklist.md](docs/project-odyssey/ai-flavor-blacklist.md)（AI 腔调黑名单：词汇/句式 + 写作原则），避开「值得注意的是」「见证了」「不仅……更是……」等表达，不逐段升华；发现新的 AI 味表达时补充进该文档。
 - Markdown 两个坑：
   - 列表条目之间**不要加空行**——否则整张列表变 loose，每个 `<li>` 会被套上 `<p>`；
   - `**加粗**` 的闭合 `**` 后面要跟空格——紧跟标点加字母（如 `**X.**Y`）时加粗会失效。

@@ -26,6 +26,7 @@ import OdysseyInlineLink from "@/components/odyssey/odyssey-inline-link";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { fraunces } from "@/lib/fonts";
+import { OdysseyMapCard } from "@/components/odyssey/odyssey-map-card";
 
 export function buildOdysseyHomeMetadata(locale: Locale = DEFAULT_LOCALE): Metadata {
   const copy = getOdysseyCopy(locale);
@@ -392,6 +393,10 @@ export function TheOdysseyHomePage({ locale = DEFAULT_LOCALE }: { locale?: Local
         <div className="w-full max-w-none">
           <OdysseyHomeOverview locale={locale} />
         </div>
+      </section>
+
+      <section className="w-full py-12 sm:py-16" id="map">
+        <OdysseyMapCard center={[24.2142, 38.4556]} zoom={5.28} />
       </section>
 
       <section className="w-full pb-16 sm:pb-20" id="themes">

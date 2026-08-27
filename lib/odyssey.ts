@@ -17,8 +17,8 @@ import {
 export const ODYSSEY_CATEGORIES = [
   "Overview",
   "Plot Summary",
-  "Characters",
   "Books",
+  "Characters",
   "Themes",
   "Symbols",
   "History & Archaeology",

@@ -18,7 +18,7 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { X, Minus, Plus, Locate, Maximize, Loader2 } from "lucide-react";
+import { X, Minus, Plus, Locate, Maximize, Loader2, Check, Copy } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -808,6 +808,8 @@ type MapControlsProps = {
   showLocate?: boolean;
   /** Show fullscreen toggle button (default: false) */
   showFullscreen?: boolean;
+  /** Show copy viewport button — copies center/zoom/bearing/pitch as JSON (default: true) */
+  showCopy?: boolean;
   /** Additional CSS classes for the controls container */
   className?: string;
   /** Callback with user coordinates when located */
@@ -865,11 +867,22 @@ function MapControls({
   showCompass = false,
   showLocate = false,
   showFullscreen = false,
+  showCopy = true,
   className,
   onLocate,
 }: MapControlsProps) {
   const { map } = useMap();
   const [waitingForLocation, setWaitingForLocation] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const copyTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleZoomIn = useCallback(() => {
     map?.zoomTo(map.getZoom() + 1, { duration: 300 });
@@ -920,6 +933,54 @@ function MapControls({
     }
   }, [map]);
 
+  const handleCopyViewport = useCallback(() => {
+    if (!map) return;
+
+    const round = (value: number, digits: number) => {
+      const factor = 10 ** digits;
+      return Math.round(value * factor) / factor;
+    };
+    const center = map.getCenter();
+    const viewport = {
+      center: [round(center.lng, 4), round(center.lat, 4)],
+      zoom: round(map.getZoom(), 2),
+      bearing: round(map.getBearing(), 1),
+      pitch: round(map.getPitch(), 1),
+    };
+    const text = JSON.stringify(viewport);
+
+    const onDone = () => {
+      setCopied(true);
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = window.setTimeout(() => setCopied(false), 1500);
+    };
+    const onFail = (error: unknown) => {
+      console.error("Failed to copy viewport:", error);
+    };
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).then(onDone).catch(onFail);
+      return;
+    }
+
+    // 非安全上下文降级：临时 textarea + execCommand
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand("copy");
+      onDone();
+    } catch (error) {
+      onFail(error);
+    }
+    document.body.removeChild(textarea);
+  }, [map]);
+
   return (
     <div
       className={cn(
@@ -962,6 +1023,17 @@ function MapControls({
         <ControlGroup>
           <ControlButton onClick={handleFullscreen} label="Toggle fullscreen">
             <Maximize className="size-4" />
+          </ControlButton>
+        </ControlGroup>
+      )}
+      {showCopy && (
+        <ControlGroup>
+          <ControlButton onClick={handleCopyViewport} label="Copy viewport">
+            {copied ? (
+              <Check className="size-4" />
+            ) : (
+              <Copy className="size-4" />
+            )}
           </ControlButton>
         </ControlGroup>
       )}

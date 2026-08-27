@@ -53,3 +53,15 @@ Todo
 - [ ] Timeline component
 - [ ] 人物众多，需要分类
 - [ ] contents 的顺序是怎么决定的
+
+# 2026.8.27
+
+* [x] Write article
+  - [x] character: Zeus
+  - [x] character: Mentor
+  - [x] character: Nestor
+  - [x] Geo: Sparta
+  - [x] Geo: Pylos
+* [ ] Interactive map
+  - [ ] I want to manage the place information in one place, and when I hover the city marker, it should show the place information, like the name, the latitude and longitude, the story related to the place.
+  - [ ] I also want to prepare the route information, showing the whole route of odysseus' journey. Each part of the route should has some description, like what happened, how long it took, etc.

@@ -46,7 +46,15 @@
 | Aegisthus | 埃癸斯托斯 | 埃吉斯托斯 |
 | Orestes | 俄瑞斯忒斯 | — |
 | Nestor | 涅斯托尔 | — |
+| Neleus | 涅琉斯 | — |
+| Antilochus | 安提洛科斯 | — |
+| Diomedes | 狄奥墨得斯 | — |
+| Neoptolemus | 涅俄普托勒摩斯 | — |
+| Philoctetes | 菲罗克忒忒斯 | — |
+| Idomeneus | 伊多墨纽斯 | — |
 | Peisistratus | 佩西斯特拉托斯 | — |
+| Diocles | 狄俄克勒斯 | — |
+| Tyndareus | 廷达瑞俄斯 | — |
 | Priam | 普里阿摩斯 | — |
 | Paris | 帕里斯 | — |
 | Achilles | 阿喀琉斯 | — |
@@ -84,6 +92,8 @@
 | Ctimene | 克提墨涅 | — |
 | Hermione | 赫尔迈厄尼 | — |
 | Eidothea | 埃多忒亚 | — |
+| Polycaste | 波吕卡斯忒 | — |
+| Eurydice | 欧律狄刻 | — |
 
 ## 三、神祇与超自然存在
 
@@ -145,6 +155,15 @@
 | Messene | 墨塞涅 | — |
 | Oechalia | 俄卡利亚 | — |
 | Cephallonia | 凯法利尼亚 | — |
+| Eurotas (river) | 欧罗塔斯河 | — |
+| Taygetus (mount) | 泰格托斯山 | — |
+| Parnon (mount) | 帕尔农山 | — |
+| Laconia | 拉科尼亚 | — |
+| Therapne | 忒拉普涅 | — |
+| Menelaion | 墨涅拉俄斯神殿 | — |
+| Bay of Navarino | 纳瓦里诺湾 | — |
+| Ano Englianos | 阿诺恩格利亚诺斯 | — |
+| Pherae | 菲莱 | — |
 | Neriton (epic name) | 涅里同山 | — |
 | Neretos (modern mountain) | 涅里托斯山 | — |
 | Olympus | 奥林匹斯 | 奥林波斯 |
@@ -178,6 +197,7 @@
 | Cicones | 基克涅斯人 | — |
 | Laestrygonians | 莱斯特律戈涅斯人 | — |
 | Lotus-Eaters | 食莲人 | — |
+| Myrmidons | 密耳弥冬人 | — |
 | Sea Peoples | 海上民族 | — |
 
 ## 七、关键词与术语
@@ -192,6 +212,7 @@
 | dactylic hexameter | 长短短格六音步 | — |
 | polytropos | 多谋善变 | — |
 | polymētis | 足智多谋 | — |
+| Gerenian horseman | 革瑞尼亚的骑手 | 涅斯托尔的称号 |
 | Linear B | 线形文字 B | — |
 | Wanax | 瓦纳克斯 | — |
 | suitors | 求婚者 | — |
