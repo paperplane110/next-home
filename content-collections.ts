@@ -161,6 +161,28 @@ const odyssey = defineCollection({
     category: z.enum(ODYSSEY_CATEGORIES),
     tags: z.array(z.string()).optional().default([]),
     order: z.number().optional().default(99),
+    // 词条本身的地点坐标（地理词条用）
+    geo: z
+      .object({
+        lng: z.number(),
+        lat: z.number(),
+      })
+      .optional(),
+    // 词条内嵌地图：点位与航线，按地理词条的 slug 引用（坐标单一来源）
+    map: z
+      .object({
+        points: z.array(z.string()),
+        routes: z
+          .array(
+            z.object({
+              from: z.string(),
+              to: z.string(),
+            })
+          )
+          .optional()
+          .default([]),
+      })
+      .optional(),
     related: z.array(z.string()).optional().default([]),
     references: z.array(z.string()).optional().default([]),
     cover: z.string().optional(),

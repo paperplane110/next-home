@@ -168,7 +168,15 @@ function ArticleContent({
                     title?: string;
                   }) => <Tips title={title}>{children}</Tips>,
                   CharacterCard: (props: CharacterCardProps) => <CharacterCard {...props} locale={locale} />,
-                  OdysseyMap: (props: OdysseyMapProps) => <OdysseyMap {...props} />,
+                  OdysseyMap: (props: OdysseyMapProps) => (
+                    <OdysseyMap
+                      {...props}
+                      points={entry.map?.points}
+                      routes={entry.map?.routes}
+                      geo={entry.geo}
+                      locale={locale}
+                    />
+                  ),
                 }}
               />
             </div>

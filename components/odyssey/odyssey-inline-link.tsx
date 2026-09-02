@@ -28,7 +28,7 @@ type Props = {
   locale?: Locale;
 };
 
-function OdysseyInlineCard({
+export function OdysseyInlineCard({
   entry,
   locale,
 }: {
