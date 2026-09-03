@@ -1,14 +1,14 @@
-import OuterLink from "@/components/link"
+import OuterLink from "@/components/link";
 
-export const A = ({ children, href }: {
-  children: React.ReactNode,
-  href: string,
-}) => {
+type Props = React.ComponentProps<"a"> & {
+  children: React.ReactNode;
+  href: string;
+};
+
+export const A = ({ children, href, className }: Props) => {
   return (
-    <OuterLink href={href}>
-      <span className="underline">
-        {children}
-      </span>
+    <OuterLink href={href} className={className}>
+      <span className="underline">{children}</span>
     </OuterLink>
   );
-}
+};

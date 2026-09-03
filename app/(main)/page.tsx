@@ -5,6 +5,7 @@ import OuterLink from "@/components/link";
 import { MusicPlayerCard } from "@/components/music-player-card";
 import { Badge } from "@/components/ui/badge";
 import { PostItem } from "@/components/post-item";
+import { OdysseyFluidCard } from "@/components/home/odyssey-fluid-card";
 
 export const metadata = {
   title: "Home",
@@ -58,13 +59,18 @@ export default function Home() {
         <div className="mt-4 flex items-center text-muted-foreground text-sm">
           {/* <div className="hidden sm:block sm:flex-2 font-sans text-sm opacity-0 sm:opacity-100">Today</div> */}
           <div className="flex-1 border-b border-dotted border-muted-foreground transform translate-y-px"></div>
-          <YearProgress/>
-          <div className="flex-1 border-b border-dotted border-muted-foreground transform translate-y-px"/>
+          <YearProgress />
+          <div className="flex-1 border-b border-dotted border-muted-foreground transform translate-y-px" />
           {/* <div className="flex-0 sm:flex-2"/> */}
         </div>
         <p className="mt-2 font-serif">
           夏日炎炎，在大楼里看着蓝天，吹着冷气。
         </p>
+      </div>
+
+      <div className="max-w-160 mx-auto w-full px-6 mb-12">
+        <h2 className="text-muted-foreground font-sans text-sm mb-4">Projects</h2>
+        <OdysseyFluidCard />
       </div>
 
       <div className="subsection mb-12">

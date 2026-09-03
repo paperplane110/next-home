@@ -1,0 +1,60 @@
+---
+title: "Template Title"
+shortTitle: "Template Short Title"
+aliases: ["Alias 1", "Alias 2"]
+summary: "A concise one-line summary of what this entry covers."
+category: "Overview"
+tags: ["Tag1", "Tag2"]
+order: 99
+related: ["related-slug-1", "related-slug-2"]
+references:
+  - "Reference source 1"
+  - "Reference source 2"
+---
+
+{/* 
+  ============================================================================
+  Odyssey MDX Template — _template.mdx
+  ============================================================================
+  使用说明：本文件以 _ 开头，不会被 content-collections 收录，只作为参考模板。
+
+  目录结构（双语，共用同一套 slug = 文件名不含 .mdx）：
+  - content/odyssey/en/<slug>.mdx  —— 英文版（原有文章）
+  - content/odyssey/zh/<slug>.mdx  —— 中文版（同名文件，slug 必须与 en/ 一致）
+  - /zh 优先渲染 zh/ 文件，没有中文版的词条自动回退英文正文
+
+  Frontmatter 字段说明：
+  ----------------------------------------------------------------------------
+  - title:        页面标题 (string, required)
+  - shortTitle:   短标题，用于卡片和自动链接的优先匹配 (string, optional)
+  - aliases:      别名数组，用于自动识别人名/地名/术语并生成链接 (string[], optional)
+  - summary:      简介一句话摘要用于卡片和 SEO 描述 (string, required)
+  - category: 分类必须是以下之一 (enum, required):
+                Overview | Plot Summary | Characters | Books | Themes | Symbols |
+                History & Archaeology | Geography & Places | Culture & Society | Reading Guide
+  - tags:       标签列表 (string[], optional, default: [])
+  - order:      同分类下排序，数字越小越靠前（侧边栏按此字段升序渲染；人物志建议按重要性/出场次数编排）(number, optional, default: 99)
+  - related:    关联文章 slug（文件名不含 .mdx） (string[], optional, default: [])
+  - references: 参考来源列表 (string[], optional, default: [])
+  - cover:      封面图 URL (string, optional)
+
+  正文约定：
+  - 所有正文内容必须包裹在：
+      <div className='odyssey-section'><div className='odyssey-subsection'>  ...  </div></div>
+  - 使用 ## H2 作为主要分节，生成目录 TOC
+  - 人物页开头插入 <CharacterCard ... /> 组件（只放在正文最顶部正文正文人物卡片组件见 characters-odysseus.mdx 参考示例
+  - 主要正文使用英文为主，可以夹杂中文注释 OK
+  - zh/ 下的中文版：title/summary/tags 等顶层字段直接写中文，正文也写中文
+    （同一 slug 的 en/ 版本负责英文，zh/ 版本负责中文，不需要 i18n 字段）
+  ============================================================================
+*/}
+
+<div className='odyssey-section'>
+<div className='odyssey-subsection'>
+
+## Section Heading
+
+Write substantive content here. Use ## for major sections. Paragraphs should contain real explanatory prose, not placeholders.
+
+</div>
+</div>

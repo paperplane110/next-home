@@ -69,6 +69,13 @@
     @apply w-full px-6 max-w-[480px] sm:max-w-screen-sm;
   }
 
+  .odyssey-section {
+    @apply w-full flex flex-col;
+  }
+  .odyssey-subsection {
+    @apply sm:max-w-160;
+  }
+
   /* apple icon squircle rounded */
   .icon-rounded-57 {
     border-radius: 16px;

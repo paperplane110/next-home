@@ -3,6 +3,8 @@ import { compileMDX } from "@content-collections/mdx";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode, { LineElement } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
+import GithubSlugger from "github-slugger";
+import { remarkOdysseyAutolink } from "./lib/remark-odyssey-autolink";
 
 
 
@@ -110,7 +112,6 @@ const reading = defineCollection({
       {
         remarkPlugins: [remarkGfm],
         rehypePlugins: [[rehypePrettyCode, prettyCodeOptions], rehypeSlug],
-        // 引入 components/mdx 目录下的所有文件, 并将其引入路径设置为 @/
         files(appender) {
           appender.directory("@/", "components/mdx")
         },
@@ -123,6 +124,113 @@ const reading = defineCollection({
   },
 });
 
+const ODYSSEY_CATEGORIES = [
+  "Overview",
+  "Plot Summary",
+  "Characters",
+  "Books",
+  "Themes",
+  "Symbols",
+  "History & Archaeology",
+  "Geography & Places",
+  "Culture & Society",
+  "Reading Guide",
+] as const;
+
+const createOdysseyLocalizedFields = (z: Parameters<Parameters<typeof defineCollection>[0]["schema"]>[0]) =>
+  z.object({
+    title: z.string().optional(),
+    shortTitle: z.string().optional(),
+    aliases: z.array(z.string()).optional(),
+    summary: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    cover: z.string().optional(),
+  });
+
+// odyssey wiki 集合
+const odyssey = defineCollection({
+  name: "odyssey",
+  directory: "content/odyssey",
+  include: ["*.mdx", "**/*.mdx"],
+  exclude: ["_*"],
+  schema: (z) => ({
+    title: z.string(),
+    shortTitle: z.string().optional(),
+    aliases: z.array(z.string()).optional().default([]),
+    summary: z.string(),
+    category: z.enum(ODYSSEY_CATEGORIES),
+    tags: z.array(z.string()).optional().default([]),
+    order: z.number().optional().default(99),
+    // 词条本身的地点坐标（地理词条用）
+    geo: z
+      .object({
+        lng: z.number(),
+        lat: z.number(),
+      })
+      .optional(),
+    // 词条内嵌地图：点位与航线，按地理词条的 slug 引用（坐标单一来源）
+    map: z
+      .object({
+        points: z.array(z.string()),
+        routes: z
+          .array(
+            z.object({
+              from: z.string(),
+              to: z.string(),
+            })
+          )
+          .optional()
+          .default([]),
+      })
+      .optional(),
+    related: z.array(z.string()).optional().default([]),
+    references: z.array(z.string()).optional().default([]),
+    cover: z.string().optional(),
+    i18n: z
+      .object({
+        zh: createOdysseyLocalizedFields(z).optional(),
+        en: createOdysseyLocalizedFields(z).optional(),
+      })
+      .optional(),
+  }),
+  transform: async (document, context) => {
+    const mdx = await compileMDX(
+      context, document,
+      {
+        remarkPlugins: [
+          remarkGfm,
+          [remarkOdysseyAutolink, { currentSlug: document._meta.path }],
+        ],
+        rehypePlugins: [[rehypePrettyCode, prettyCodeOptions], rehypeSlug],
+        files(appender) {
+          appender.directory("@/", "components/mdx")
+        },
+      },
+    );
+    const headings = extractHeadings(document.content);
+    return {
+      ...document,
+      mdx,
+      headings,
+    };
+  },
+});
+
+function extractHeadings(markdown: string): { level: number; text: string; slug: string }[] {
+  const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+  const headings: { level: number; text: string; slug: string }[] = [];
+  const slugger = new GithubSlugger();
+  let match;
+
+  while ((match = headingRegex.exec(markdown)) !== null) {
+    const level = match[1].length;
+    const text = match[2].trim();
+    const slug = slugger.slug(text);
+    headings.push({ level, text, slug });
+  }
+  return headings;
+}
+
 export default defineConfig({
-  collections: [posts, projects, reading],
+  collections: [posts, projects, reading, odyssey],
 });

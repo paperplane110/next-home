@@ -1,0 +1,113 @@
+---
+title: "Case Study: Shadcn-ui Website"
+summary: "A case study of the Shadcn-ui website, focusing on the layout design and responsiveness."
+date: 2026-08-20
+tags: ["Case Studies", "Code"]
+readingTime: 8
+---
+<div className='section'>
+<div className='subsection'>
+
+When I was building the [The Odyssey Walkthrough](/the-odyssey), a wiki-like website, I was quite struggling with the layout design, 
+especially the responsiveness. 
+
+So I dive into the website of [Shadcn-ui](https://ui.shadcn.com/docs/components/radix/scroll-area) to learn from their layout design.
+To learn how they make choices about layout and responsiveness breakpoints.
+
+
+
+## Responsiveness Design
+
+### Mobile: \<md
+
+Under `md` breakpoint (768px), the layout is as follows:
+
+Navigation bar:
+- A `Menu` toggle button, which toggles the sidebar menu
+- Search input is hidden
+- Padding: `px:[1.5rem]`
+
+
+Content:
+- Width: 100%
+- Padding: `px:[1.5rem]`, `py:[1.5rem]`
+
+
+Paragraph
+- Font is a bit larger, nearly `18px`
+- Line leading is a bit loose
+- There is no line break in the paragraph
+
+
+### Tablet: md - lg
+
+From `md` breakpoint (768px) to `lg` breakpoint (1024px), the layout is as follows:
+
+Navigation bar:
+- Search input is visible
+- Padding: `px:[1.5rem]`
+
+Content:
+- Might be `flex` layout, the content is centered
+- Content width: `640px`
+- Padding: `px:[1.5rem]`
+
+
+### Laptop: lg - xl
+
+From `lg` breakpoint (1024px) to `xl` breakpoint (1280px), the layout is as follows:
+
+Navigation bar:
+- Menu button is hidden
+- Navigation buttons are visible
+
+The Content are separated into two parts: Sidebar and Main Content.
+- Padding: `px-2`
+
+Sidebar:
+- Sidbar is visible
+- `sticky` layout
+- Position:`top-[calc(var(--header-height)+0.6rem)]`
+- Height: `calc(100svh-10rem)`
+- Width: `260px`
+
+Main Content is flex layout, Same as the Content in tablet breakpoint.
+- Add `1rem` padding at the top
+- Padding: `px:[1.5rem]`, `py:[1.5rem]`
+
+
+### Large Screen: \>xl
+
+For large screen, the layout is as follows:
+
+Navigation bar keeps the same.
+
+Contents and Sidebar keep the same, but the Main Content is separated into two parts: Main Content and Right Sidebar.
+- Main Content is the same as the Content in tablet breakpoint.
+- Right Sidebar 
+
+```bash
+# display
+hidden 
+xl:flex
+flex-col 
+gap-4 
+
+# position
+sticky top-[calc(var(--header-height)+1px)] 
+z-30 
+
+# margin, padding, and size 
+ml-auto 
+pb-8 
+h-[90svh] 
+w-(--sidebar-width) 18rem
+
+# Scroll
+overflow-hidden 
+overscroll-none 
+```
+
+
+</div>
+</div>
