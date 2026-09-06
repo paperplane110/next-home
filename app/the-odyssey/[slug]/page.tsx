@@ -54,11 +54,21 @@ export async function buildOdysseyEntryMetadata({
 
   const href = getOdysseyEntryHref(locale, slug);
   const url = `https://tyyuan.me${href}`;
+  const languages = {
+    zh: `https://tyyuan.me${getOdysseyEntryHref("zh", slug)}`,
+    en: `https://tyyuan.me${getOdysseyEntryHref("en", slug)}`,
+  };
 
   return {
     title: getOdysseyEntryTitle(entry, locale),
     description: getOdysseyEntrySummary(entry, locale),
-    alternates: { canonical: href },
+    alternates: {
+      canonical: href,
+      languages: {
+        ...languages,
+        "x-default": languages[DEFAULT_LOCALE],
+      },
+    },
     robots: { index: true, follow: true },
     openGraph: {
       type: "article",

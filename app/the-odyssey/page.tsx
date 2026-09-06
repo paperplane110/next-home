@@ -32,10 +32,21 @@ export function buildOdysseyHomeMetadata(locale: Locale = DEFAULT_LOCALE): Metad
   const copy = getOdysseyCopy(locale);
   const canonical = getOdysseyHomeHref(locale);
 
+  const languages = {
+    zh: `https://tyyuan.me${getOdysseyHomeHref("zh")}`,
+    en: `https://tyyuan.me${getOdysseyHomeHref("en")}`,
+  };
+
   return {
     title: copy.homeTitle,
     description: copy.homeDescription,
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: {
+        ...languages,
+        "x-default": languages[DEFAULT_LOCALE],
+      },
+    },
     openGraph: {
       type: "website",
       title: copy.homeTitle,
