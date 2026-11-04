@@ -145,15 +145,23 @@ function OdysseyHomeOverview({ locale }: { locale: Locale }) {
         </p>
 
         <p>
-          <strong>Book-by-book notes:</strong> this walkthrough is being expanded alongside my own reading. Right now it includes{" "}
+          <strong>Book-by-book notes:</strong> all 24 books now have their own entry, from{" "}
           <OdysseyGlossaryLink locale={locale} slug="books-book-1">
             Book 1 — Athena Inspires the Prince
           </OdysseyGlossaryLink>{" "}
+          through the wanderings of{" "}
+          <OdysseyGlossaryLink locale={locale} slug="books-book-9">
+            Book 9 — In the One-Eyed Giant's Cave
+          </OdysseyGlossaryLink>{" "}
           and{" "}
-          <OdysseyGlossaryLink locale={locale} slug="books-book-5">
-            Book 5 — Odysseus — Nymph and Shipwreck
+          <OdysseyGlossaryLink locale={locale} slug="books-book-11">
+            Book 11 — The Kingdom of the Dead
+          </OdysseyGlossaryLink>{" "}
+          to the return and{" "}
+          <OdysseyGlossaryLink locale={locale} slug="books-book-22">
+            Book 22 — Death in the Great Hall
           </OdysseyGlossaryLink>
-          , which together give you the opening of the Telemachy and the first on-stage appearance of Odysseus himself.
+          . Each entry collects that book's key scenes, passages, and themes in reading order, so you can follow the poem book by book or jump straight to whichever book you're reading.
         </p>
 
         <p>
@@ -265,15 +273,27 @@ function OdysseyHomeOverview({ locale }: { locale: Locale }) {
       </p>
 
       <p>
-        <strong>逐卷精读：</strong>每一卷都会整理要点、引文与关键词。目前已经写完{" "}
+        <strong>逐卷精读：</strong>24 卷精读已全部完成，每一卷都整理了要点、引文与关键词。从{" "}
         <OdysseyGlossaryLink locale={locale} slug="books-book-1">
-          Book 1 — Athena Inspires the Prince
+          第一卷：雅典娜激励王子
         </OdysseyGlossaryLink>
-        （忒勒马科马科斯开场）与{" "}
-        <OdysseyGlossaryLink locale={locale} slug="books-book-5">
-          Book 5 — Odysseus: Nymph and Shipwreck
+        、{" "}
+        <OdysseyGlossaryLink locale={locale} slug="books-book-9">
+          第九卷：独眼巨人的洞穴
         </OdysseyGlossaryLink>
-        （奥德修斯首次登场，离开卡吕普索，遭遇波塞冬海难登上斯克里亚）。剩余 22 卷会随着我自己阅读进度持续更新。
+        、{" "}
+        <OdysseyGlossaryLink locale={locale} slug="books-book-11">
+          第十一卷：冥府
+        </OdysseyGlossaryLink>
+        ，到归乡后的{" "}
+        <OdysseyGlossaryLink locale={locale} slug="books-book-21">
+          第二十一卷：拉弓
+        </OdysseyGlossaryLink>{" "}
+        与{" "}
+        <OdysseyGlossaryLink locale={locale} slug="books-book-22">
+          第二十二卷：大厅里的屠杀
+        </OdysseyGlossaryLink>
+        ，可以按卷逐读，也可以直接跳到正在读的那一卷。
       </p>
 
       <p>
